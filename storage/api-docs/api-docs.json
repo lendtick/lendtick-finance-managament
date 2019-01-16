@@ -12,7 +12,233 @@
         "http",
         "https"
     ],
-    "paths": {},
+    "paths": {
+        "/doku/va/request": {
+            "post": {
+                "tags": [
+                    "Doku"
+                ],
+                "summary": "VA Request",
+                "description": "VA Request",
+                "operationId": "doku_va",
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "chain_merchant",
+                        "in": "formData",
+                        "description": "Chain Merchant",
+                        "required": true,
+                        "type": "string",
+                        "default": "NA"
+                    },
+                    {
+                        "name": "amount",
+                        "in": "formData",
+                        "description": "Amount",
+                        "required": true,
+                        "type": "integer",
+                        "default": "10000"
+                    },
+                    {
+                        "name": "invoice",
+                        "in": "formData",
+                        "description": "Va Number",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "email",
+                        "in": "formData",
+                        "description": "Email user",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "name",
+                        "in": "formData",
+                        "description": "Name",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "phone",
+                        "in": "formData",
+                        "description": "Name",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "id_user",
+                        "in": "formData",
+                        "description": "id_user",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful"
+                    }
+                }
+            }
+        },
+        "/doku/va/notify": {
+            "post": {
+                "tags": [
+                    "Doku"
+                ],
+                "summary": "VA Notify",
+                "description": "VA Notify From Doku",
+                "operationId": "doku_va_notify",
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "TRANSIDMERCHANT",
+                        "in": "formData",
+                        "description": "TRANS ID / VA Number",
+                        "required": true,
+                        "type": "string",
+                        "default": "0"
+                    },
+                    {
+                        "name": "AMOUNT",
+                        "in": "formData",
+                        "description": "Amount",
+                        "required": true,
+                        "type": "integer",
+                        "default": "10000"
+                    },
+                    {
+                        "name": "WORDS",
+                        "in": "formData",
+                        "description": "Hash WORDS From Doku",
+                        "required": true,
+                        "type": "string",
+                        "default": "0"
+                    },
+                    {
+                        "name": "STATUSTYPE",
+                        "in": "formData",
+                        "description": "Status Type From Doku",
+                        "required": true,
+                        "type": "string",
+                        "default": "0"
+                    },
+                    {
+                        "name": "RESPONSECODE",
+                        "in": "formData",
+                        "description": "Response Code From Doku",
+                        "required": true,
+                        "type": "string",
+                        "default": "0"
+                    },
+                    {
+                        "name": "APPROVALCODE",
+                        "in": "formData",
+                        "description": "Approval Code From Doku",
+                        "required": true,
+                        "type": "string",
+                        "default": "0"
+                    },
+                    {
+                        "name": "RESULTMSG",
+                        "in": "formData",
+                        "description": "Status Message From Doku",
+                        "required": true,
+                        "type": "string",
+                        "default": "0"
+                    },
+                    {
+                        "name": "PAYMENTCHANNEL",
+                        "in": "formData",
+                        "description": "Payment Channel From Doku",
+                        "required": true,
+                        "type": "string",
+                        "default": "0"
+                    },
+                    {
+                        "name": "PAYMENTCODE",
+                        "in": "formData",
+                        "description": "Payment Code From Doku",
+                        "required": true,
+                        "type": "string",
+                        "default": "0"
+                    },
+                    {
+                        "name": "SESSIONID",
+                        "in": "formData",
+                        "description": "Session ID From Doku",
+                        "required": true,
+                        "type": "string",
+                        "default": "0"
+                    },
+                    {
+                        "name": "BANK",
+                        "in": "formData",
+                        "description": "Bank Issuer From Doku",
+                        "required": true,
+                        "type": "string",
+                        "default": "0"
+                    },
+                    {
+                        "name": "MCN",
+                        "in": "formData",
+                        "description": "Card Number From Doku",
+                        "required": true,
+                        "type": "string",
+                        "default": "0"
+                    },
+                    {
+                        "name": "PAYMENTDATETIME",
+                        "in": "formData",
+                        "description": "Payment Datetime From Doku",
+                        "required": true,
+                        "type": "string",
+                        "default": "0"
+                    },
+                    {
+                        "name": "VERIFYID",
+                        "in": "formData",
+                        "description": "Verify ID From Doku",
+                        "required": true,
+                        "type": "string",
+                        "default": "0"
+                    },
+                    {
+                        "name": "VERIFYSCORE",
+                        "in": "formData",
+                        "description": "Verify Score From Doku",
+                        "required": true,
+                        "type": "string",
+                        "default": "0"
+                    },
+                    {
+                        "name": "VERIFYSTATUS",
+                        "in": "formData",
+                        "description": "Verify Status From Doku",
+                        "required": true,
+                        "type": "string",
+                        "default": "0"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful"
+                    }
+                }
+            }
+        }
+    },
     "definitions": {},
     "parameters": {
         "Authorization": {
