@@ -381,13 +381,13 @@ class DokuController extends Controller
           $p_hr = Profile::where('id_user', $id_hr)->get()->first();
           // notify to HR
           $email = [
-            "email"=> $p_hr->email,
-            "to"=> $p_hr->email,
-            "name"=> $p_hr->name,
-            "approval_link"=> "https://lentick-api-user-dev.azurewebsites.net/",
+            "email_customer"=> $p_hr->email,
+            "email_hrd"=> $p_hr->email,
+            "name_customer"=> $p_hr->name,
+            "amount"=> $totalamount,
+            "va_number"=> $order_number
           ];
           $res_email = RestCurl::post(env('LINK_NOTIF','https://lentick-api-notification-dev.azurewebsites.net')."/send-email-approval-hrd", $email);
-          dd($res_email);
         } else {
           if ( $words == $WORDS_GENERATED ) {
             $q = DokuRepo::getTransID($order_number);
