@@ -8,6 +8,7 @@ use App\Repositories\Finance\DokuRepo AS DokuRepo;
 use App\Models\User\RegisterMemberFlowManagement AS MemberFlow;
 use App\Models\User\UserManagement AS User;
 use App\Models\User\ProfileManagement AS Profile;
+use App\Models\Master\RegisterMemberFlowManagement AS MasterFlow;
 
 use App\Helpers\Api;
 use App\Helpers\Template;
@@ -375,10 +376,15 @@ class DokuController extends Controller
           $q_user->where('approve_by', $doku_data->id_user)->update(array('approve_at' => date("Y-m-d H:i:s")));
           $q_user = $q_user->get()->first();
 
+          // update flag from
+          $master_flow = MasterFlow::where('id_master_register_member_flow', $q_user->id_master_register_member_flow)->get()->first();
+          $member = User::where('id_user',$doku_data->id_user)->update(array('id_workflow_status' => $master_flow->set_workflow_status_code));
+
           echo "Continue";
           
           $id_hr = MemberFlow::where('id_user', $doku_data->id_user)->where('level', ((int)$q_user->level+1))->get()->first()->approve_by;
           $p_hr = Profile::where('id_user', $id_hr)->get()->first();
+
           // notify to HR
           $email = [
             "email_customer"=> $p_hr->email,
