@@ -8,7 +8,7 @@ use App\Repositories\Finance\DokuRepo AS DokuRepo;
 use App\Models\User\RegisterMemberFlowManagement AS MemberFlow;
 use App\Models\User\UserManagement AS User;
 use App\Models\User\ProfileManagement AS Profile;
-use App\Models\Master\RegisterMemberFlowManagement AS MasterFlow;
+use App\Models\Master\RegisterMemberFlowMaster AS MasterFlow;
 
 use App\Helpers\Api;
 use App\Helpers\Template;
