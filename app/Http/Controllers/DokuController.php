@@ -390,8 +390,8 @@ class DokuController extends Controller
             "email_customer"=> $p_hr->email,
             "email_hrd"=> $p_hr->email,
             "name_customer"=> $p_hr->name,
-            "amount"=> $totalamount,
-            "va_number"=> $order_number
+            "amount"=> (integer) $totalamount,
+            "va_number"=> (integer) $order_number
           ];
           $res_email = RestCurl::post(env('LINK_NOTIF','https://lentick-api-notification-dev.azurewebsites.net')."/send-email-approval-hrd", $email);
         } else {
