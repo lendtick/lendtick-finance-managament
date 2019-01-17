@@ -393,7 +393,7 @@ class DokuController extends Controller
             "amount"=> (integer) $totalamount,
             "va_number"=> $order_number
           ];
-          $res_email = RestCurl::post(env('LINK_NOTIF','https://lentick-api-notification-dev.azurewebsites.net')."/send-email-approval-hrd", $email);
+          $res_email = RestCurl::post(env('LINK_NOTIF','https://lentick-api-notification-dev.azurewebsites.net')."/send-email-after-payment-register", $email);
         } else {
           if ( $words == $WORDS_GENERATED ) {
             $q = DokuRepo::getTransID($order_number);
