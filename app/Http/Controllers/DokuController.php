@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Helpers\Doku AS Doku;
 use App\Repositories\Finance\DokuRepo AS DokuRepo;
 use App\Models\User\RegisterMemberFlowManagement AS MemberFlow;
+use App\Models\User\UserManagement AS User;
+use App\Models\User\ProfileManagement AS Profile;
 
 use App\Helpers\Api;
 use App\Helpers\Template;
@@ -369,8 +371,20 @@ class DokuController extends Controller
             "verifystatus" => $verifystatus
           ));
           $doku_data = DokuRepo::getByParam("transidmerchant", $order_number)->first();
-          MemberFlow::where('id_user', $doku_data->id_user)->where('approve_by', $doku_data->id_user)->update(array('approve_at' => date("Y-m-d H:i:s")));
+          $q_user = MemberFlow::where('id_user', $doku_data->id_user);
+          $q_user->where('approve_by', $doku_data->id_user)->update(array('approve_at' => date("Y-m-d H:i:s")));
           echo "Continue";
+          
+          $id_hr = MemberFlow::where('id_user', $doku_data->id_user)->where('level', ($q_user->level+1))->get()->first()->id;
+          $p_hr = Profile::where('id_user', $id_hr)->get()->first();
+          // notify to HR
+          $email = [
+            "email"=> $p_hr->email,
+            "to"=> $p_hr->email,
+            "name"=> $p_hr->name,
+            "activation_link"=> "https://lentick-api-user-dev.azurewebsites.net/",
+          ];
+          $res_email = RestCurl::post(env('LINK_NOTIF','https://lentick-api-notification-dev.azurewebsites.net')."/send-email-approval-hrd", $email);
         } else {
           if ( $words == $WORDS_GENERATED ) {
             $q = DokuRepo::getTransID($order_number);
