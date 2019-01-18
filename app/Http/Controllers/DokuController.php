@@ -378,7 +378,8 @@ class DokuController extends Controller
 
           // update flag from
           $master_flow = MasterFlow::where('id_master_register_member_flow', $q_user->id_master_register_member_flow)->get()->first();
-          $member = User::where('id_user',$doku_data->id_user)->update(array('id_workflow_status' => $master_flow->set_workflow_status_code));
+          ($member = User::where('id_user',$doku_data->id_user))->update(array('id_workflow_status' => $master_flow->set_workflow_status_code));
+          $member = $member->get()->first();
 
           echo "Continue";
           
@@ -387,7 +388,7 @@ class DokuController extends Controller
 
           // notify to HR
           $email = [
-            "email_customer"=> $p_hr->email,
+            "email_customer"=> $member->username,
             "email_hrd"=> $p_hr->email,
             "name_customer"=> $p_hr->name,
             "amount"=> (integer) $totalamount,
