@@ -380,21 +380,25 @@ class DokuController extends Controller
           $master_flow = MasterFlow::where('id_master_register_member_flow', $q_user->id_master_register_member_flow)->get()->first();
           ($member = User::where('id_user',$doku_data->id_user))->update(array('id_workflow_status' => $master_flow->set_workflow_status_code));
           $member = $member->get()->first();
+          // get generate id_koperasi
+          $nik = RestCurl::get(env('LINK_USER','https://lentick-api-user-dev.azurewebsites.net')."/profile/generate-nik",[]);
+          $member->username = $nik->data->nomor_NIK;
+          $member->save();
+          $profile = Profile::where('id_user',$doku_data->id_user)->get()->first();
+          $prifile->id_koperasi = $nik->data->nomor_NIK;
+          $profile->save();
 
           echo "Continue";
-          
-          $id_hr = MemberFlow::where('id_user', $doku_data->id_user)->where('level', ((int)$q_user->level+1))->get()->first()->approve_by;
-          $p_hr = Profile::where('id_user', $id_hr)->get()->first();
 
-          // notify to HR
+          // notify to user to get a credential
           $email = [
-            "email_customer"=> $member->username,
-            "email_hrd"=> $p_hr->email,
-            "name_customer"=> $p_hr->name,
-            "amount"=> (integer) $totalamount,
-            "va_number"=> $order_number
+            "password_customer"=> "kop2018",
+            "nik_customer"=> $member->username,
+            "email_customer"=> $profile->email,
+            "name_customer"=> $profile->name
           ];
-          $res_email = RestCurl::post(env('LINK_NOTIF','https://lentick-api-notification-dev.azurewebsites.net')."/send-email-after-payment-register", $email);
+          $res_email = RestCurl::post(env('LINK_NOTIF','https://lentick-api-notification-dev.azurewebsites.net')."/send-email-to-success-registration", $email);
+
         } else {
           if ( $words == $WORDS_GENERATED ) {
             $q = DokuRepo::getTransID($order_number);
