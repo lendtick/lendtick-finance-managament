@@ -1,0 +1,40 @@
+server {
+  listen 8080;
+  listen [::]:8080;
+  #server_tokens off;
+  server_name _ lentick-api-finance-dev.azurewebsites.net;
+
+  root /app/public/;
+  index index.php;
+  
+  # If file is an asset, set expires and break
+  location ~* \.(ico|css|js|gif|jpe?g|png)(\?[0-9]+)?$ {
+    expires max;
+    break;
+  }
+
+  location / {
+    try_files $uri $uri/ /index.php?q=$uri&$args;
+  }
+
+  location ~ /\.ht {
+    deny  all;
+  }
+
+  location ~ /\.git {
+    deny  all;
+  }
+  
+  if (!-e $request_filename)
+  {
+    rewrite ^/(.*)$ /index.php?/$1 last;
+    break;
+  }
+
+  location ~ \.php$ {
+    fastcgi_pass unix:/run/php-fpm.sock;
+    fastcgi_index index.php;
+    fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+    include fastcgi_params;
+  }
+}

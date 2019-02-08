@@ -9,6 +9,7 @@ use App\Models\User\RegisterMemberFlowManagement AS MemberFlow;
 use App\Models\User\UserManagement AS User;
 use App\Models\User\ProfileManagement AS Profile;
 use App\Models\Master\RegisterMemberFlowMaster AS MasterFlow;
+use App\Models\Master\WorkflowMaster AS MasterWorkflow;
 
 use App\Helpers\Api;
 use App\Helpers\Template;
@@ -372,20 +373,19 @@ class DokuController extends Controller
             "verifystatus" => $verifystatus
           ));
           $doku_data = DokuRepo::getByParam("transidmerchant", $order_number)->first();
-          $q_user = MemberFlow::where('id_user', $doku_data->id_user);
-          $q_user->where('approve_by', $doku_data->id_user)->update(array('approve_at' => date("Y-m-d H:i:s")));
-          $q_user = $q_user->get()->first();
 
-          // update flag from
-          $master_flow = MasterFlow::where('id_master_register_member_flow', $q_user->id_master_register_member_flow)->get()->first();
-          ($member = User::where('id_user',$doku_data->id_user))->update(array('id_workflow_status' => $master_flow->set_workflow_status_code));
+          // update flag from not paid to paid
+          $master_flow = MasterWorkflow::where('workflow_status_name', "like", "%paid%")->where('workflow_status_desc', "like", "%user status%")->get()->first();
+          ($member = User::where('id_user',$doku_data->id_user))->update(array('id_workflow_status' => $master_flow->id_workflow_status));
           $member = $member->get()->first();
+
           // get generate id_koperasi
           $nik = RestCurl::get(env('LINK_USER','https://lentick-api-user-dev.azurewebsites.net')."/profile/generate-nik",[]);
-          $member->username = $nik->data->nomor_NIK;
+          $member->username = $nik["data"]->data->nomor_NIK;
           $member->save();
-          $profile = Profile::where('id_user',$doku_data->id_user)->get()->first();
-          $prifile->id_koperasi = $nik->data->nomor_NIK;
+
+          $profile = Profile::where('id_user',$member->id_user)->get()->first();
+          $profile->id_koperasi = $nik["data"]->data->nomor_NIK;
           $profile->save();
 
           echo "Continue";
@@ -432,7 +432,32 @@ class DokuController extends Controller
                      die ("Stop2");
                   else{
                     $doku_data = DokuRepo::getByParam("transidmerchant", $order_number)->first();
-                    MemberFlow::where('id_user', $doku_data->id_user)->where('approve_by', $doku_data->id_user)->update(array('approve_at' => date("Y-m-d H:i:s")));
+
+                    // update flag from not paid to paid
+                    $master_flow = MasterWorkflow::where('workflow_status_name', "like", "%paid%")->where('workflow_status_desc', "like", "%user status%")->get()->first();
+                    ($member = User::where('id_user',$doku_data->id_user))->update(array('id_workflow_status' => $master_flow->id_workflow_status));
+                    $member = $member->get()->first();
+          
+                    // get generate id_koperasi
+                    $nik = RestCurl::get(env('LINK_USER','https://lentick-api-user-dev.azurewebsites.net')."/profile/generate-nik",[]);
+                    $member->username = $nik["data"]->data->nomor_NIK;
+                    $member->save();
+          
+                    $profile = Profile::where('id_user',$member->id_user)->get()->first();
+                    $profile->id_koperasi = $nik["data"]->data->nomor_NIK;
+                    $profile->save();
+          
+                    echo "Continue";
+          
+                    // notify to user to get a credential
+                    $email = [
+                      "password_customer"=> "kop2018",
+                      "nik_customer"=> $member->username,
+                      "email_customer"=> $profile->email,
+                      "name_customer"=> $profile->name
+                    ];
+                    $res_email = RestCurl::post(env('LINK_NOTIF','https://lentick-api-notification-dev.azurewebsites.net')."/send-email-to-success-registration", $email);
+
                   }
                   // // 	$this->response(array('error' => 'Can\'t update success data'));
                 } else {
