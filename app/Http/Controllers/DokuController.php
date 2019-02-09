@@ -375,7 +375,7 @@ class DokuController extends Controller
           $doku_data = DokuRepo::getByParam("transidmerchant", $order_number)->first();
 
           // update flag from not paid to paid
-          $master_flow = MasterWorkflow::where('workflow_status_name', "like", "%active%")->where('workflow_status_desc', "like", "%user status%")->get()->first();
+          $master_flow = MasterWorkflow::where('workflow_status_name', "like", "Active%")->where('workflow_status_desc', "like", "%user status%")->get()->first();
           ($member = User::where('id_user',$doku_data->id_user))->update(array('id_workflow_status' => $master_flow->id_workflow_status));
           $member = $member->get()->first();
 
