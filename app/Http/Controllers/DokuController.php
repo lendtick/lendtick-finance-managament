@@ -355,8 +355,8 @@ class DokuController extends Controller
 
 
         $WORDS_GENERATED 		= sha1($totalamount.$MALLID.$SHAREDKEY.$order_number.$status.$verifystatus);
-        $pass = Api::randomString(8,'alphanumeric');
-    
+        $pass = Api::rstring(8,'alphanumeric');
+
         if(env("BYPASS_DOKU", 0) == 1){
           $doku_update = DokuRepo::update($order_number, array(
             "words" => $words, 
