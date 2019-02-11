@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Hashing\BcryptHasher AS Hash;
 use App\Helpers\Doku AS Doku;
 use App\Repositories\Finance\DokuRepo AS DokuRepo;
 use App\Models\User\RegisterMemberFlowManagement AS MemberFlow;
@@ -324,7 +325,7 @@ class DokuController extends Controller
     *     }
     * )
     * */
-	public function notify(Request $r){
+	public function notify(Request $r, Hash $h){
 		if($this->__check_post()){
 			// $ip_range = "103.10.129.16";
 			// if ( $_SERVER['REMOTE_ADDR'] != '103.10.129.16' && (substr($_SERVER['REMOTE_ADDR'],0,strlen($ip_range)) !== $ip_range) ){
@@ -354,6 +355,7 @@ class DokuController extends Controller
 
 
         $WORDS_GENERATED 		= sha1($totalamount.$MALLID.$SHAREDKEY.$order_number.$status.$verifystatus);
+        $pass = Api::randomString(8,'alphanumeric');
     
         if(env("BYPASS_DOKU", 0) == 1){
           $doku_update = DokuRepo::update($order_number, array(
@@ -388,16 +390,20 @@ class DokuController extends Controller
           $profile->id_koperasi = $nik["data"]->data->nomor_NIK;
           $profile->save();
 
+          // save password to user
+          $user = User::where('id_user', $profile->id_user)->get()->first();
+          $user->password = $h->make($pass);
+          $user->save();
+
           echo "Continue";
 
           // notify to user to get a credential
           $email = [
-            "password_customer"=> "kop2018",
-            "nik_customer"=> $member->username,
-            "email_customer"=> $profile->email,
-            "name_customer"=> $profile->name
+            "phone_number" => $profile->phone,
+            "anggota_id" => $profile->id_user,
+            "password" => $pass
           ];
-          $res_email = RestCurl::post(env('LINK_NOTIF','https://lentick-api-notification-dev.azurewebsites.net')."/send-email-to-success-registration", $email);
+          $res_email = RestCurl::post(env('LINK_NOTIF','https://lentick-api-notification-dev.azurewebsites.net')."/send-sms-after-payment", $email);
 
         } else {
           if ( $words == $WORDS_GENERATED ) {
@@ -446,17 +452,21 @@ class DokuController extends Controller
                     $profile = Profile::where('id_user',$member->id_user)->get()->first();
                     $profile->id_koperasi = $nik["data"]->data->nomor_NIK;
                     $profile->save();
+
+                    // save password to user
+                    $user = User::where('id_user', $profile->id_user)->get()->first();
+                    $user->password = $h->make($pass);
+                    $user->save();
           
                     echo "Continue";
           
                     // notify to user to get a credential
                     $email = [
-                      "password_customer"=> "kop2018",
-                      "nik_customer"=> $member->username,
-                      "email_customer"=> $profile->email,
-                      "name_customer"=> $profile->name
+                      "phone_number" => $profile->phone,
+                      "anggota_id" => $profile->id_user,
+                      "password" => $pass
                     ];
-                    $res_email = RestCurl::post(env('LINK_NOTIF','https://lentick-api-notification-dev.azurewebsites.net')."/send-email-to-success-registration", $email);
+                    $res_email = RestCurl::post(env('LINK_NOTIF','https://lentick-api-notification-dev.azurewebsites.net')."/send-sms-after-payment", $email);
 
                   }
                   // // 	$this->response(array('error' => 'Can\'t update success data'));
