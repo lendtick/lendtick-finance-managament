@@ -388,6 +388,7 @@ class DokuController extends Controller
 
           $profile = Profile::where('id_user',$member->id_user)->get()->first();
           $profile->id_koperasi = $nik["data"]->data->nomor_NIK;
+          $profile->date_become_member = date("Y-m-d H:i:s");
           $profile->save();
 
           // save password to user
