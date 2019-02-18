@@ -1,1 +1,0 @@
-# lendtick-finance-managament
