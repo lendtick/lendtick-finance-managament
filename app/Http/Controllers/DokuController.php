@@ -415,12 +415,14 @@ class DokuController extends Controller
           // notify to user to get a credential
           $email = [
             "phone_number" => $profile->phone_number,
-            "anggota_id" => $profile->username,
+            "anggota_id" => $member->username,
             "password" => $pass
           ];
 
-          // print_r($email); die();
+          // print_r($nik); die();
           $res_email = RestCurl::post(env('LINK_NOTIF','https://lentick-api-notification-dev.azurewebsites.net')."/send-sms-after-payment", $email);
+
+          // print_r($res_email);
 
           echo "Continue";
           // echo "berhasil kaka";
@@ -482,9 +484,9 @@ class DokuController extends Controller
           
                     // notify to user to get a credential
                     $email = [
-                      "phone_number" => $profile->phone,
-                      "anggota_id" => $profile->id_user,
-                      "password" => $pass
+                      "phone_number" => $profile->phone_number,
+                        "anggota_id" => $profile->username,
+                        "password" => $pass
                     ];
                     $res_email = RestCurl::post(env('LINK_NOTIF','https://lentick-api-notification-dev.azurewebsites.net')."/send-sms-after-payment", $email);
 
