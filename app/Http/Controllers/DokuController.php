@@ -394,7 +394,7 @@ class DokuController extends Controller
           // get generate id_koperasi
           $nik = RestCurl::get(env('LINK_USER','https://lentick-api-user-dev.azurewebsites.net')."/profile/generate-nik",[]);
           $member->username = $nik["data"]->data->nomor_NIK;
-          // $member->save();
+          $member->save();
 
           // echo "masuk sini";
           // die();/
@@ -415,7 +415,7 @@ class DokuController extends Controller
           // notify to user to get a credential
           $email = [
             "phone_number" => $profile->phone_number,
-            "anggota_id" => $profile->id_user,
+            "anggota_id" => $profile->username,
             "password" => $pass
           ];
 
