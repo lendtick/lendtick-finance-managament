@@ -25,4 +25,7 @@ $router->group(['prefix'=>'doku'], function() use($router){
     $router->post('/va/request', 'DokuController@request');
     // notify from doku
     $router->post('/va/notify', 'DokuController@notify');
+
+    // test
+    $router->get('/test','BillerController@index');
 });
