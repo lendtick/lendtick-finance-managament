@@ -9,7 +9,7 @@ Doku_Initiate::$mallId = '5019';
 
 $params = array(
     'amount' => '100000.00', //$_POST['amount'],
-    'invoice' => 'akupadamujuga1', // $_POST['trans_id'],
+    'invoice' => '1234567890', // $_POST['trans_id'],
     'currency' => '360' // $_POST['currency']
 );
 
@@ -17,7 +17,7 @@ $words = Doku_Library::doCreateWords($params);
 
 $customer = array(
     'name' => 'TEST NAME',
-    'data_phone' => '08121111111',
+    'data_phone' => '085697838135',
     'data_email' => 'test@test.com',
     'data_address' => 'bojong gede #1 08/01'
 );
@@ -27,7 +27,7 @@ $dataPayment = array(
     'req_chain_merchant' => 'NA', //$_POST['chain_merchant'],
     'req_amount' => $params['amount'],
     'req_words' => $words,
-    'req_trans_id_merchant' => 'akupadamujuga1', // $_POST['trans_id'],
+    'req_trans_id_merchant' => '1234567890', // $_POST['trans_id'],
     'req_purchase_amount' => $params['amount'],
     'req_request_date_time' => date('YmdHis'),
     'req_session_id' => sha1(date('YmdHis')),
