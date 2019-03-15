@@ -136,7 +136,7 @@ class InquiryDokuController {
 					return $this->__bill_already_paid($header);
 				}
 
-				
+
 				$check_inquiry = DokuRepo::getTransID($post['PAYMENTCODE']);
 				if (count($check_inquiry) == 0) {
 					return $this->__invalid_account_number($header);
@@ -175,7 +175,7 @@ class InquiryDokuController {
 					'REQUESTDATETIME' => date('YmdHis'),
 					'CURRENCY' => 360,
 					'PURCHASECURRENCY' => 360,
-					'SESSIONID' => sha1(date('YmdHis')),
+					'SESSIONID' => $get->session_id,
 					'NAME' => $get_user->name,
 					'EMAIL' => $get_user->email,
 					'BASKET' => implode(',', $basket),
