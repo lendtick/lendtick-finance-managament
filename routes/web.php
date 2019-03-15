@@ -22,7 +22,7 @@ $router->get('/api', function () use ($router) {
 
 $router->group(['prefix'=>'doku'], function() use($router){
     // request for doku
-    $router->get('/va/inquiry', 'InquiryDokuController@request');
+    $router->post('/va/inquiry', 'InquiryDokuController@request');
 
 
     // request for doku

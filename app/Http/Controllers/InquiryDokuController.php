@@ -20,29 +20,95 @@ use App\Helpers\XMLHelper;
 
 class InquiryDokuController {
 
-	public function request()
-	{
-		$header = '<INQUIRY_RESPONSE/>';
- 		$content = array(
-			'PAYMENTCODE' => '8975011200005642',
-			'AMOUNT' => '100000.0',
-			'PURCHASEAMOUNT' => '100000.00',
-			'MINAMOUNT' => '10000.0',
-			'MAXAMOUNT' => '550000.0',
-			'TRANSIDMERCHANT' => '1396430482839',
-			'WORDS' => 'b5a22f37ad0693ebac1bf03a89a8faeae9e7f390',
-			'REQUESTDATETIME' => '20140402162122',
-			'CURRENCY' => '360',
-			'PURCHASECURRENCY' => '360',
-			'SESSIONID' => 'dxgcmvcbywhu3t5mwye7ngqhpf8i6edu',
-			'NAME' => 'Nama Lengkap',
-			'EMAIL' => 'nama@xyx.com',
-			'BASKET' => 'ITEM 1,10000.00,2,20000.00;ITEM 2,20000.00,4,80000.00',
-			'ADDITIONALDATA' => 'BORNEO TOUR AND TRAVEL',
-			'RESPONSECODE' => '0000',
+	public function __construct(){
+		$this->now = date('YmdHis');
+		$this->fields = array('MALLID', 'CHAINMERCHANT', 'PAYMENTCHANNEL', 'PAYMENTCODE','WORDS');
+	}
+
+	private function __check_var($post){
+		$ret = true;
+		foreach ($post as $field => $val) {
+			if(!in_array($field, $this->fields)){
+				$ret = false;
+				break;
+			}
+		}
+		return (count($post) == count($this->fields) && $ret);
+	}
+
+	private function __check_post(){
+		return strtoupper($_SERVER['REQUEST_METHOD']) == 'POST';
+	}
+
+	private function __invalid_account_number($header){
+		$content = array( 
+			'RESPONSECODE' => '3000',
 		); 
 		return XMLHelper::response($content, new \SimpleXMLElement($header))->asXML();
- 
+		// die();
+	}
+
+	public function request(Request $r)
+	{
+
+		if($this->__check_post()){
+			$post = (array) $r->post();
+
+
+			if($this->__check_var($post)){
+
+				$header = '<INQUIRY_RESPONSE/>';
+				$content = array();
+
+				// echo $r->MALLID = env('DOKU_MALL_ID');
+				if ($post['MALLID'] <> env('DOKU_MALL_ID')) { 
+					return $this->__invalid_account_number($header);
+				}
+
+				$check_inquiry = DokuRepo::getByParam('transidmerchant' , $post['PAYMENTCODE']);
+				if ($check_inquiry->count() == 0) {
+					return $this->__invalid_account_number($header);
+				}
+
+				$get = $check_inquiry->first();
+				// get data user 
+				$get_user = Profile::where('id_user',$get->id_user)->get()->first();
+				
+				$basket = array(
+					'PENDAFTARAN MEMBER KOPERASI ASTRA',
+					number_format($get->totalamount,2,".",""),
+					'1',
+					number_format($get->totalamount,2,".","").';'
+				); 
+
+				$content = array(
+					'PAYMENTCODE' => $get->transidmerchant,
+					'AMOUNT' => number_format($get->totalamount,2,".",""),
+					'PURCHASEAMOUNT' => number_format($get->totalamount,2,".",""),
+					'MINAMOUNT' => number_format($get->totalamount,2,".",""),
+					'MAXAMOUNT' => number_format($get->totalamount,2,".",""),
+					'TRANSIDMERCHANT' => $get->id,
+					'WORDS' =>  sha1(env('DOKU_MALL_ID') . env('DOKU_SHARED_KEY') . $get->transidmerchant),
+					'REQUESTDATETIME' => date('YmdHis'),
+					'CURRENCY' => 360,
+					'PURCHASECURRENCY' => 360,
+					'SESSIONID' => sha1(date('YmdHis')),
+					'NAME' => $get_user->name,
+					'EMAIL' => $get_user->email,
+					'BASKET' => implode(',', $basket),
+					'ADDITIONALDATA' => $get_user->name,
+					'RESPONSECODE' => '0000',
+				); 
+				return XMLHelper::response($content, new \SimpleXMLElement($header))->asXML();
+
+			}
+			return response()->json(
+				Api::response(
+					false,Template::lang('Please check your POST data()')
+				),400);
+		}
+		return response()->json(Api::response(false,Template::lang('Please POST method')),400);
+
 	}
 
 	
