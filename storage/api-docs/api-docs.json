@@ -87,10 +87,73 @@
                 }
             }
         },
+        "/doku/va/inquiry": {
+            "post": {
+                "tags": [
+                    "Doku VA Permata"
+                ],
+                "summary": "VA Request",
+                "description": "VA Inquiry",
+                "operationId": "doku_va",
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "MALLID",
+                        "in": "formData",
+                        "description": "MALLID",
+                        "required": true,
+                        "type": "number",
+                        "default": "1111"
+                    },
+                    {
+                        "name": "CHAINMERCHANT",
+                        "in": "formData",
+                        "description": "Chain Merchant",
+                        "required": true,
+                        "type": "string",
+                        "default": "NA"
+                    },
+                    {
+                        "name": "PAYMENTCHANNEL",
+                        "in": "formData",
+                        "description": "PAYMENT CHANNEL",
+                        "required": true,
+                        "type": "string",
+                        "default": "36"
+                    },
+                    {
+                        "name": "PAYMENTCODE",
+                        "in": "formData",
+                        "description": "PAYMENT CODE",
+                        "required": true,
+                        "type": "number",
+                        "default": "8856095100000013"
+                    },
+                    {
+                        "name": "WORDS",
+                        "in": "formData",
+                        "description": "WORDS",
+                        "required": true,
+                        "type": "number",
+                        "default": "e48b892015a850fb7090a899a76b18783c5d40d9"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful"
+                    }
+                }
+            }
+        },
         "/doku/va/notify": {
             "post": {
                 "tags": [
-                    "Doku"
+                    "Doku VA Permata"
                 ],
                 "summary": "VA Notify",
                 "description": "VA Notify From Doku",

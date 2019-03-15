@@ -18,7 +18,7 @@ use App\Helpers\BlobStorage;
 use App\Helpers\RestCurl;
 use App\Helpers\XMLHelper;
 
-class InquiryDokuController {
+class NotifyDokuController {
 
 	public function __construct(){
 		$this->now = date('YmdHis');
@@ -50,61 +50,149 @@ class InquiryDokuController {
 
 
 	// ======================================================================
-	// This for inquiry to virtual account
+	// This function for feedback from doku service
   // ======================================================================
   /**
     * @SWG\Post(
-    *     path="/doku/va/inquiry",
+    *     path="/doku/va/notify",
     *     consumes={"multipart/form-data"},
-    *     description="VA Inquiry",
-    *     operationId="doku_va",
+    *     description="VA Notify From Doku",
+    *     operationId="doku_va_notify",
     *     consumes={"application/x-www-form-urlencoded"},
     *     produces={"application/json"},
     *     @SWG\Parameter(
-    *         description="MALLID",
+    *         description="TRANS ID / VA Number",
     *         in="formData",
-    *         name="MALLID",
-    *         required=true,
-    *         type="number",
-    *         default="1111"
-    *     ),
-    *     @SWG\Parameter(
-    *         description="Chain Merchant",
-    *         in="formData",
-    *         name="CHAINMERCHANT",
+    *         name="TRANSIDMERCHANT",
     *         required=true,
     *         type="string",
-    *         default="NA"
+    *         default="0"
     *     ),
     *     @SWG\Parameter(
-    *         description="PAYMENT CHANNEL",
+    *         description="Amount",
+    *         in="formData",
+    *         name="AMOUNT",
+    *         required=true,
+    *         type="integer",
+    *         default="10000"
+    *     ),
+    *     @SWG\Parameter(
+    *         description="Hash WORDS From Doku",
+    *         in="formData",
+    *         name="WORDS",
+    *         required=true,
+    *         type="string",
+    *         default="0"
+    *     ),
+    *     @SWG\Parameter(
+    *         description="Status Type From Doku",
+    *         in="formData",
+    *         name="STATUSTYPE",
+    *         required=true,
+    *         type="string",
+    *         default="0"
+    *     ),
+    *     @SWG\Parameter(
+    *         description="Response Code From Doku",
+    *         in="formData",
+    *         name="RESPONSECODE",
+    *         required=true,
+    *         type="string",
+    *         default="0"
+    *     ),
+    *     @SWG\Parameter(
+    *         description="Approval Code From Doku",
+    *         in="formData",
+    *         name="APPROVALCODE",
+    *         required=true,
+    *         type="string",
+    *         default="0"
+    *     ),
+    *     @SWG\Parameter(
+    *         description="Status Message From Doku",
+    *         in="formData",
+    *         name="RESULTMSG",
+    *         required=true,
+    *         type="string",
+    *         default="0"
+    *     ),
+    *     @SWG\Parameter(
+    *         description="Payment Channel From Doku",
     *         in="formData",
     *         name="PAYMENTCHANNEL",
     *         required=true,
     *         type="string",
-    *         default="36"
+    *         default="0"
     *     ),
     *     @SWG\Parameter(
-    *         description="PAYMENT CODE",
+    *         description="Payment Code From Doku",
     *         in="formData",
     *         name="PAYMENTCODE",
     *         required=true,
-    *         type="number",
-    *         default="8856095100000013"
+    *         type="string",
+    *         default="0"
     *     ),
     *     @SWG\Parameter(
-    *         description="WORDS",
+    *         description="Session ID From Doku",
     *         in="formData",
-    *         name="WORDS",
+    *         name="SESSIONID",
     *         required=true,
-    *         type="number",
-    *         default="e48b892015a850fb7090a899a76b18783c5d40d9"
+    *         type="string",
+    *         default="0"
+    *     ),
+    *     @SWG\Parameter(
+    *         description="Bank Issuer From Doku",
+    *         in="formData",
+    *         name="BANK",
+    *         required=true,
+    *         type="string",
+    *         default="0"
+    *     ),
+    *     @SWG\Parameter(
+    *         description="Card Number From Doku",
+    *         in="formData",
+    *         name="MCN",
+    *         required=true,
+    *         type="string",
+    *         default="0"
+    *     ),
+    *     @SWG\Parameter(
+    *         description="Payment Datetime From Doku",
+    *         in="formData",
+    *         name="PAYMENTDATETIME",
+    *         required=true,
+    *         type="string",
+    *         default="0"
+    *     ),
+    *     @SWG\Parameter(
+    *         description="Verify ID From Doku",
+    *         in="formData",
+    *         name="VERIFYID",
+    *         required=true,
+    *         type="string",
+    *         default="0"
+    *     ),
+    *     @SWG\Parameter(
+    *         description="Verify Score From Doku",
+    *         in="formData",
+    *         name="VERIFYSCORE",
+    *         required=true,
+    *         type="string",
+    *         default="0"
+    *     ),
+    *     @SWG\Parameter(
+    *         description="Verify Status From Doku",
+    *         in="formData",
+    *         name="VERIFYSTATUS",
+    *         required=true,
+    *         type="string",
+    *         default="0"
     *     ),
     *     @SWG\Response(
     *         response="200",
     *         description="successful"
     *     ),
-    *     summary="VA Request",
+    *     summary="VA Notify",
     *     tags={
     *         "Doku VA Permata"
     *     }
