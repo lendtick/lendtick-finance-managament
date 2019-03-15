@@ -176,8 +176,18 @@ class DokuController extends Controller
 	}
 
 
-	// ======================================================================
-	// This function for feedback from doku service
+	
+	public function notify(Request $r, Hash $h){
+		if($this->__check_post()){
+			// $ip_range = "103.10.129.16";
+			// if ( $_SERVER['REMOTE_ADDR'] != '103.10.129.16' && (substr($_SERVER['REMOTE_ADDR'],0,strlen($ip_range)) !== $ip_range) ){
+			// if(in_array($_SERVER['REMOTE_ADDR'], array('103.10.129.16','103.10.129.9'))){
+        $post = (array) $r->post();
+
+        
+
+    // ======================================================================
+    // This function for feedback from doku service
   // ======================================================================
   /**
     * @SWG\Post(
@@ -321,16 +331,10 @@ class DokuController extends Controller
     *     ),
     *     summary="VA Notify",
     *     tags={
-    *         "Doku"
+    *         "Doku VA Permata"
     *     }
     * )
     * */
-	public function notify(Request $r, Hash $h){
-		if($this->__check_post()){
-			// $ip_range = "103.10.129.16";
-			// if ( $_SERVER['REMOTE_ADDR'] != '103.10.129.16' && (substr($_SERVER['REMOTE_ADDR'],0,strlen($ip_range)) !== $ip_range) ){
-			// if(in_array($_SERVER['REMOTE_ADDR'], array('103.10.129.16','103.10.129.9'))){
-        $post = (array) $r->post();
 
         // print_r($post); die();
 
@@ -424,8 +428,8 @@ class DokuController extends Controller
 
           // print_r($res_email);
 
-          echo "Continue";
-          // echo "berhasil kaka";
+          // echo "Continue";
+          echo "berhasil kaka";
 
         } else {
           if ( $words == $WORDS_GENERATED ) {

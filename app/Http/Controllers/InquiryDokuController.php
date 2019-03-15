@@ -48,6 +48,14 @@ class InquiryDokuController {
 		// die();
 	}
 
+	private function __bill_already_paid($header){
+		$content = array( 
+			'RESPONSECODE' => '3002',
+		); 
+		return XMLHelper::response($content, new \SimpleXMLElement($header))->asXML();
+		// die();
+	}
+
 
 	// ======================================================================
 	// This for inquiry to virtual account
@@ -123,17 +131,29 @@ class InquiryDokuController {
 				$header = '<INQUIRY_RESPONSE/>';
 				$content = array();
 
+				$check_paid = DokuRepo::getByParam('transidmerchant', $post['PAYMENTCODE'])->first();
+				if ($check_paid->trxstatus == 'SUCCESS') {
+					return $this->__bill_already_paid($header);
+				}
+
+				
+				$check_inquiry = DokuRepo::getTransID($post['PAYMENTCODE']);
+				if (count($check_inquiry) == 0) {
+					return $this->__invalid_account_number($header);
+				}
+				$i = $check_inquiry;
+				$get = $i[0];
 				// echo $r->MALLID = env('DOKU_MALL_ID');
+				// 3002
+				
 				if ($post['MALLID'] <> env('DOKU_MALL_ID')) { 
 					return $this->__invalid_account_number($header);
 				}
 
-				$check_inquiry = DokuRepo::getByParam('transidmerchant' , $post['PAYMENTCODE']);
-				if ($check_inquiry->count() == 0) {
-					return $this->__invalid_account_number($header);
-				}
+				
 
-				$get = $check_inquiry->first();
+				
+
 				// get data user 
 				$get_user = Profile::where('id_user',$get->id_user)->get()->first();
 				
@@ -150,7 +170,7 @@ class InquiryDokuController {
 					'PURCHASEAMOUNT' => number_format($get->totalamount,2,".",""),
 					'MINAMOUNT' => number_format($get->totalamount,2,".",""),
 					'MAXAMOUNT' => number_format($get->totalamount,2,".",""),
-					'TRANSIDMERCHANT' => $get->id,
+					'TRANSIDMERCHANT' => $get->transidmerchant,
 					'WORDS' =>  sha1(env('DOKU_MALL_ID') . env('DOKU_SHARED_KEY') . $get->transidmerchant),
 					'REQUESTDATETIME' => date('YmdHis'),
 					'CURRENCY' => 360,
