@@ -21,84 +21,36 @@ class BillerController {
 
 	public function index()
 	{
-		$send = array(
-			"CHANNELCODE" => 6021,
-			"REQUESTDATETIME" => 20190315212347,
-			"LOGINNAME" => "agentkopastra",
-			"PASSWORD" => "126fa8e713620d964731eb242833aa91",
-			"WORDS" => "db5e98c8f25e15ceb1c4604c451707d4e8117ee2"
-		);
+		$channel_code = 6021;
+		$request_datetime = date('YmdHis');
+		$shared_key = 'shared123';
+		$login_name = 'agentkopastra';
 
-		$res = RestCurl::exec('POST','http://103.10.129.109/DepositSystem-api/AgentLoginMIP?',$send);
-		dd($res);
-
-
-
-		$msg = "simpel";
-		$key = "shared123";
-		// $iv_size = openssl_cipher_iv_length('AES-128-CBC');
+		$str = $channel_code;
+		$cipher = 'AES-128-CBC';
+		$key = $shared_key;
+		$opts = OPENSSL_RAW_DATA | OPENSSL_ZERO_PADDING;
+		$iv_len = 16;
 		$iv = "fedcba9876543210";
-		// if (!$iv) {
-		// 	$iv = openssl_random_pseudo_bytes($iv_size);
-		// }
-		$encryptedMessage = openssl_encrypt($msg, 'AES-128-CBC', $key, OPENSSL_RAW_DATA, $iv);
-		// return base64_encode($iv . $encryptedMessage);
-		return bin2hex($encryptedMessage);
-		die();
-		// echo date('YmdHis');
-		// echo "<br>";
-		// echo sha1('6021' . date('YmdHis') .'shared123' .'agentkopastra');
-		// die();
-		$plaintext = "simpel";
-		$cipher = "aes-128-ecb";
-		$key = "shared123";
-		$iv = "fedcba9876543210";
-		if (in_array($cipher, openssl_get_cipher_methods()))
-		{
-			// $ivlen = openssl_cipher_iv_length($cipher);
-			// $iv = openssl_random_pseudo_bytes($ivlen);
-			echo $ciphertext = openssl_encrypt($plaintext, $cipher, $key, $options=0, $iv, $tag);
-    //store $cipher, $iv, and $tag for decryption later
-			// $original_plaintext = openssl_decrypt($ciphertext, $cipher, $key, $options=0, $iv, $tag);
-			// $original_plaintext."\n";
-		}
-
-		die();
-
-		// $data = array(
-		// 	'CHANNELCODE' 		=> '6021',
-		// 	'REQUESTDATETIME' 	=> '20190221220600' ,
-		// 	'LOGINNAME' 		=> 'agentkopastra' ,
-		// 	'PASSWORD' 			=> 'simpel' ,
-		// 	'WORDS'				=> '252138911f613c503457c5f1097b4dcb56ecc65b' 
-		// );
-
-		// $res = RestCurl::exec('POST','http://103.10.129.109/DepositSystem-api/AgentLoginMIP?',$data);
-		// dd($this->encrypt('simpel','oke'));
-		// $send_otp_action = RestCurl::exec('POST',env('URL_NOTIF').'send-otp',$send_otp);
-	}
-
-	function encrypt($str,$key) 
-	{
 
 		$str = $this->AESKeyVerifier($str, null);
 		$key = $this->AESKeyVerifier($key,'0');
-		$iv = "fedcba9876543210";
 
-		$td = mcrypt_module_open('rijndael-128', '', 'cbc', $iv);
+		$encrypted = openssl_encrypt($str, $cipher, $key, $opts, $iv);
+		
+		$send = array(
+			"CHANNELCODE" 		=> $channel_code,
+			"REQUESTDATETIME" 	=> $request_datetime,
+			"LOGINNAME" 		=> $login_name,
+			"PASSWORD" 			=> bin2hex($encrypted),
+			"WORDS"				=> sha1($channel_code . $request_datetime . $shared_key . $login_name)
+		);
 
-		mcrypt_generic_init($td, $key, $iv);
-		$encrypted = mcrypt_generic($td, $str);
-
-		mcrypt_generic_deinit($td);
-		mcrypt_module_close($td);
-
-		return bin2hex($encrypted);
+		$res = RestCurl::exec('POST',env('LINK_DOKU_BILLER').'/DepositSystem-api/AgentLoginMIP?',$send);
+		dd($res);
 	}
 
-
-
-	private function AESKeyVerifier($key, $pad) 
+	function AESKeyVerifier($key, $pad) 
 	{
 		if($pad == null)
 		{
@@ -118,6 +70,6 @@ class BillerController {
 		}
 
 		return $key;
-	}
+	} 
 
 }
