@@ -22,11 +22,11 @@ class BillerController {
 	public function index()
 	{
 		$channel_code = 6021;
-		$request_datetime = date('YmdHis');
+		$request_datetime = date('Ymdhis');
 		$shared_key = 'shared123';
 		$login_name = 'agentkopastra';
 
-		$str = $channel_code;
+		$str = 'simpel';
 		$cipher = 'AES-128-CBC';
 		$key = $shared_key;
 		$opts = OPENSSL_RAW_DATA | OPENSSL_ZERO_PADDING;
@@ -37,6 +37,11 @@ class BillerController {
 		$key = $this->AESKeyVerifier($key,'0');
 
 		$encrypted = openssl_encrypt($str, $cipher, $key, $opts, $iv);
+
+		// echo env('LINK_DOKU_BILLER').'/DepositSystem-api/AgentLoginMIP?';
+
+		// echo bin2hex($encrypted);
+		// die();
 		
 		$send = array(
 			"CHANNELCODE" 		=> $channel_code,
@@ -45,6 +50,8 @@ class BillerController {
 			"PASSWORD" 			=> bin2hex($encrypted),
 			"WORDS"				=> sha1($channel_code . $request_datetime . $shared_key . $login_name)
 		);
+
+		// print_r($send); die();
 
 		$res = RestCurl::exec('POST',env('LINK_DOKU_BILLER').'/DepositSystem-api/AgentLoginMIP?',$send);
 		dd($res);
