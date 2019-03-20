@@ -19,7 +19,6 @@ class ComposerStaticInit447381d6730de6e3b7197115a771441d
         '37a3dc5111fe8f707ab4c132ef1dbc62' => __DIR__ . '/..' . '/guzzlehttp/guzzle/src/functions_include.php',
         'bee9632da3ca00a99623b9c35d0c4f8b' => __DIR__ . '/..' . '/laravel/lumen-framework/src/helpers.php',
         'bd9634f2d41831496de0d3dfe4c94881' => __DIR__ . '/..' . '/symfony/polyfill-php56/bootstrap.php',
-        '3a37ebac017bc098e9a86b35401e7a68' => __DIR__ . '/..' . '/mongodb/mongodb/src/functions.php',
         '6124b4c8570aa390c21fafd04a26c69f' => __DIR__ . '/..' . '/myclabs/deep-copy/src/DeepCopy/deep_copy.php',
         '0ccdf99b8f62f02c52cba55802e0c2e7' => __DIR__ . '/..' . '/zircote/swagger-php/src/functions.php',
         '3585c46f9622c6b622ab0011d4d72b3a' => __DIR__ . '/..' . '/darkaonline/swagger-lume/src/helpers.php',
@@ -72,7 +71,6 @@ class ComposerStaticInit447381d6730de6e3b7197115a771441d
         'M' => 
         array (
             'Monolog\\' => 8,
-            'MongoDB\\' => 8,
             'MicrosoftAzure\\Storage\\Common\\' => 30,
             'MicrosoftAzure\\Storage\\Blob\\' => 28,
         ),
@@ -241,10 +239,6 @@ class ComposerStaticInit447381d6730de6e3b7197115a771441d
         'Monolog\\' => 
         array (
             0 => __DIR__ . '/..' . '/monolog/monolog/src/Monolog',
-        ),
-        'MongoDB\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/mongodb/mongodb/src',
         ),
         'MicrosoftAzure\\Storage\\Common\\' => 
         array (
@@ -417,13 +411,6 @@ class ComposerStaticInit447381d6730de6e3b7197115a771441d
             'Mockery' => 
             array (
                 0 => __DIR__ . '/..' . '/mockery/mockery/library',
-            ),
-        ),
-        'J' => 
-        array (
-            'Jenssegers\\Mongodb' => 
-            array (
-                0 => __DIR__ . '/..' . '/jenssegers/mongodb/src',
             ),
         ),
         'D' => 
