@@ -39,4 +39,8 @@ $router->group(['prefix'=>'doku'], function() use($router){
 $router->group(['prefix'=>'biller'], function() use($router){
     // list all
     $router->get('/list','BillerController@listBiller');
+
+    // ubah biller
+    $router->put('/update','BillerController@updateBiller');
+    
 });

@@ -20,12 +20,56 @@
                 ],
                 "summary": "Biller List Information",
                 "description": "VA Notify From Doku",
-                "operationId": "doku_va_notify",
+                "operationId": "billerlist",
                 "consumes": [
                     "application/x-www-form-urlencoded"
                 ],
                 "produces": [
                     "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful"
+                    }
+                }
+            }
+        },
+        "/biller/update": {
+            "put": {
+                "tags": [
+                    "Biller"
+                ],
+                "summary": "Biller Update",
+                "description": "VA Notify From Doku",
+                "operationId": "billerupdate",
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "billers_id",
+                        "in": "formData",
+                        "description": "9950101",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "billers_name",
+                        "in": "formData",
+                        "description": "PLN Postpaid",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "status",
+                        "in": "formData",
+                        "description": "1",
+                        "required": false,
+                        "type": "string"
+                    }
                 ],
                 "responses": {
                     "200": {

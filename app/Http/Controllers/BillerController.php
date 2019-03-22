@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Http\Controllers\Validator;
 use Illuminate\Hashing\BcryptHasher AS Hash;
 use App\Helpers\Doku AS Doku;
 use App\Repositories\Finance\DokuRepo AS DokuRepo;
@@ -18,7 +19,7 @@ use App\Helpers\Template;
 use App\Helpers\BlobStorage;
 use App\Helpers\RestCurl;
 
-class BillerController {
+class BillerController extends Controller {
 
 	public function index()
 	{
@@ -85,7 +86,7 @@ class BillerController {
     *     path="/biller/list",
     *     consumes={"multipart/form-data"},
     *     description="VA Notify From Doku",
-    *     operationId="doku_va_notify",
+    *     operationId="billerlist",
     *     consumes={"application/x-www-form-urlencoded"},
     *     produces={"application/json"},
     *     @SWG\Response(
@@ -105,13 +106,96 @@ class BillerController {
 		try{
 			if(empty($request->json())) throw New \Exception('Params not found', 500);
 			
-			// $this->notifRepo->create($data);
-			$res = BillersMaster::where('status' , 1 )->orderBy('master_biller_id','ASC')->get();
+			$res = BillersMaster::where('status' , 1)->orderBy('master_biller_id','ASC')->get();
 
-            $status   = 1;
-            $httpcode = 200;
-            $errorMsg     = 'Sukses';  
-            $data = $res;
+			$status   = 1;
+			$httpcode = 200;
+			$errorMsg     = 'Sukses';  
+			$data = $res;
+
+		}catch(\Exception $e){
+			$status   = 0;
+			$httpcode = 400;
+			$data     = null;
+			$errorMsg = $e->getMessage();
+		}
+
+		return response()->json(Api::response($status,$errorMsg,$data),$httpcode);
+		
+	}
+
+	/**
+    * @SWG\Put(
+    *     path="/biller/update",
+    *     consumes={"multipart/form-data"},
+    *     description="VA Notify From Doku",
+    *     operationId="billerupdate",
+    *     consumes={"application/x-www-form-urlencoded"},
+    *     produces={"application/json"},
+    *     @SWG\Parameter(
+    *         description="9950101",
+    *         in="formData",
+    *         name="billers_id",
+    *         required=false,
+    *         type="string"
+    *     ),
+    *     @SWG\Parameter(
+    *         description="PLN Postpaid",
+    *         in="formData",
+    *         name="billers_name",
+    *         required=false,
+    *         type="string"
+    *     ),
+    *     @SWG\Parameter(
+    *         description="1",
+    *         in="formData",
+    *         name="status",
+    *         required=false,
+    *         type="string"
+    *     ),
+    *     @SWG\Response(
+    *         response="200",
+    *         description="successful"
+    *     ),
+    *     summary="Biller Update",
+    *     tags={
+    *         "Biller"
+    *     }
+    * )
+    * */
+
+	// get list billers
+	public function updateBiller(Request $request)
+	{
+		try{
+			if(empty($request->json())) throw New \Exception('Params not found', 500);
+
+			$this->validate($request, [
+				'billers_id'		=> 'required|integer',
+				'billers_name'		=> 'required',
+				'status'			=> 'required'
+			]);
+
+			$update = array(
+				'billers_name'	=> $request->billers_name,
+				'status'		=> $request->status
+			);
+
+			// check
+			$check = BillersMaster::where('billers_id',$request->billers_id);
+
+			if ($check->count() > 0) {
+				$httpcode 	= 200;
+				$errorMsg 	= 'Sukses';
+				$res = BillersMaster::where('billers_id',$request->billers_id)->update($update);
+			} else {
+				$httpcode 	= 400;
+				$errorMsg 	= 'Tidak ditemukan';
+			}
+
+			// response
+			$status   	= 1;
+			$data 		= '';
 
 		}catch(\Exception $e){
 			$status   = 0;
