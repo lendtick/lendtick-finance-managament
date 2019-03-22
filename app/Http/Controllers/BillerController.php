@@ -125,7 +125,7 @@ class BillerController extends Controller {
 	}
 
 	/**
-    * @SWG\Put(
+    * @SWG\Post(
     *     path="/biller/update",
     *     consumes={"multipart/form-data"},
     *     description="VA Notify From Doku",

@@ -41,6 +41,6 @@ $router->group(['prefix'=>'biller'], function() use($router){
     $router->get('/list','BillerController@listBiller');
 
     // ubah biller
-    $router->put('/update','BillerController@updateBiller');
+    $router->post('/update','BillerController@updateBiller');
     
 });

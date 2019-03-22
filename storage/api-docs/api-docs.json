@@ -35,7 +35,7 @@
             }
         },
         "/biller/update": {
-            "put": {
+            "post": {
                 "tags": [
                     "Biller"
                 ],
