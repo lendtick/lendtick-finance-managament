@@ -117,4 +117,44 @@ class BillerInquiryController extends Controller {
     return response()->json(Api::response($status,$errorMsg,$data),$httpcode);
 
     }
+
+     /**
+    * @SWG\Post(
+    *     path="/biller/inquiry-electricity-postpaid",
+    *     consumes={"multipart/form-data"},
+    *     description="Biller Inquiry Listrik Postpaid",
+    *     operationId="billerinquiry",
+    *     consumes={"application/x-www-form-urlencoded"},
+    *     produces={"application/json"},
+    *     @SWG\Parameter(
+    *         description="9900002",
+    *         in="formData",
+    *         name="billerid",
+    *         required=true,
+    *         type="string"
+    *     ),
+    *     @SWG\Parameter(
+    *         description="akusayanglutfi",
+    *         in="formData",
+    *         name="sessionid",
+    *         required=true,
+    *         type="string"
+    *     ),
+    *     @SWG\Parameter(
+    *         description="081311529594",
+    *         in="formData",
+    *         name="accountnumber",
+    *         required=true,
+    *         type="string"
+    *     ),
+    *     @SWG\Response(
+    *         response="200",
+    *         description="successful"
+    *     ),
+    *     summary="Biller Inquiry Listrik Postpaid",
+    *     tags={
+    *         "Biller"
+    *     }
+    * )
+    * */
 }

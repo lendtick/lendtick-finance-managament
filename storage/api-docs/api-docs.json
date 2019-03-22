@@ -152,6 +152,50 @@
                 }
             }
         },
+        "/biller/inquiry-electricity-postpaid": {
+            "post": {
+                "tags": [
+                    "Biller"
+                ],
+                "summary": "Biller Inquiry Listrik Postpaid",
+                "description": "Biller Inquiry Listrik Postpaid",
+                "operationId": "billerinquiry",
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "billerid",
+                        "in": "formData",
+                        "description": "9900002",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "sessionid",
+                        "in": "formData",
+                        "description": "akusayanglutfi",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "accountnumber",
+                        "in": "formData",
+                        "description": "081311529594",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful"
+                    }
+                }
+            }
+        },
         "/doku/va/request": {
             "post": {
                 "tags": [
