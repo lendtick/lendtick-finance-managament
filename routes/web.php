@@ -49,8 +49,12 @@ $router->group(['prefix'=>'biller'], function() use($router){
     // check biller inquiry
     $router->post('/inquiry','BillerInquiryController@store');
 
-    // check biller inquiry
+    // check biller inquiry electricity postpaid
     $router->post('/inquiry-electricity-postpaid','BillerInquiryController@store');
+
+    // check biller inquiry electricity electricity
+    $router->post('/inquiry-electricity-prepaid','BillerInquiryController@store');
+        
      
     
 });

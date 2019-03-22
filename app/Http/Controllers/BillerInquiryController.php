@@ -127,7 +127,7 @@ class BillerInquiryController extends Controller {
     *     consumes={"application/x-www-form-urlencoded"},
     *     produces={"application/json"},
     *     @SWG\Parameter(
-    *         description="9900002",
+    *         description="9950101",
     *         in="formData",
     *         name="billerid",
     *         required=true,
@@ -157,4 +157,46 @@ class BillerInquiryController extends Controller {
     *     }
     * )
     * */
+
+     /**
+    * @SWG\Post(
+    *     path="/biller/inquiry-electricity-prepaid",
+    *     consumes={"multipart/form-data"},
+    *     description="Biller Inquiry Listrik prepaid",
+    *     operationId="billerinquiryprepaid",
+    *     consumes={"application/x-www-form-urlencoded"},
+    *     produces={"application/json"},
+    *     @SWG\Parameter(
+    *         description="9950102",
+    *         in="formData",
+    *         name="billerid",
+    *         required=true,
+    *         type="string"
+    *     ),
+    *     @SWG\Parameter(
+    *         description="akusayanglutfi",
+    *         in="formData",
+    *         name="sessionid",
+    *         required=true,
+    *         type="string"
+    *     ),
+    *     @SWG\Parameter(
+    *         description="081311529594",
+    *         in="formData",
+    *         name="accountnumber",
+    *         required=true,
+    *         type="string"
+    *     ),
+    *     @SWG\Response(
+    *         response="200",
+    *         description="successful"
+    *     ),
+    *     summary="Biller Inquiry Listrik prepaid",
+    *     tags={
+    *         "Biller"
+    *     }
+    * )
+    * */
+
+     
 }
