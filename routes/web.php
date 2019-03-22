@@ -33,3 +33,10 @@ $router->group(['prefix'=>'doku'], function() use($router){
     // test
     $router->get('/test','BillerController@index');
 });
+
+// biller
+
+$router->group(['prefix'=>'biller'], function() use($router){
+    // list all
+    $router->get('/list','BillerController@listBiller');
+});

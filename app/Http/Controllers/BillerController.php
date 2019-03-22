@@ -11,6 +11,7 @@ use App\Models\User\UserManagement AS User;
 use App\Models\User\ProfileManagement AS Profile;
 use App\Models\Master\RegisterMemberFlowMaster AS MasterFlow;
 use App\Models\Master\WorkflowMaster AS MasterWorkflow;
+use App\Models\Order\BillersMaster AS BillersMaster;
 
 use App\Helpers\Api;
 use App\Helpers\Template;
@@ -78,5 +79,49 @@ class BillerController {
 
 		return $key;
 	} 
+
+	/**
+    * @SWG\Get(
+    *     path="/biller/list",
+    *     consumes={"multipart/form-data"},
+    *     description="VA Notify From Doku",
+    *     operationId="doku_va_notify",
+    *     consumes={"application/x-www-form-urlencoded"},
+    *     produces={"application/json"},
+    *     @SWG\Response(
+    *         response="200",
+    *         description="successful"
+    *     ),
+    *     summary="Biller List Information",
+    *     tags={
+    *         "Biller"
+    *     }
+    * )
+    * */
+
+	// get list billers
+	public function listBiller(Request $request)
+	{
+		try{
+			if(empty($request->json())) throw New \Exception('Params not found', 500);
+			
+			// $this->notifRepo->create($data);
+			$res = BillersMaster::where('status' , 1 )->orderBy('master_biller_id','ASC')->get();
+
+            $status   = 1;
+            $httpcode = 200;
+            $errorMsg     = 'Sukses';  
+            $data = $res;
+
+		}catch(\Exception $e){
+			$status   = 0;
+			$httpcode = 400;
+			$data     = null;
+			$errorMsg = $e->getMessage();
+		}
+
+		return response()->json(Api::response($status,$errorMsg,$data),$httpcode);
+		
+	}
 
 }
