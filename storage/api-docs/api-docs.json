@@ -32,7 +32,7 @@
                         "name": "sessionid",
                         "in": "formData",
                         "description": "akusayanglutfi",
-                        "required": false,
+                        "required": true,
                         "type": "string"
                     }
                 ],
@@ -98,6 +98,50 @@
                         "in": "formData",
                         "description": "1",
                         "required": false,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful"
+                    }
+                }
+            }
+        },
+        "/biller/inquiry": {
+            "post": {
+                "tags": [
+                    "Biller"
+                ],
+                "summary": "Biller Inquiry",
+                "description": "Biller Inquiry, Bisa Isi Pulsa, Data, Bayar Tagihan, dll",
+                "operationId": "billerinquiry",
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "billerid",
+                        "in": "formData",
+                        "description": "9900002",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "sessionid",
+                        "in": "formData",
+                        "description": "akusayanglutfi",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "accountnumber",
+                        "in": "formData",
+                        "description": "081311529594",
+                        "required": true,
                         "type": "string"
                     }
                 ],

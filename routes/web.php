@@ -45,5 +45,9 @@ $router->group(['prefix'=>'biller'], function() use($router){
 
     // check balance biller
     $router->post('/balance','BillerBalanceController@check');
+
+    // check biller inquiry
+    $router->post('/inquiry','BillerInquiryController@store');
+     
     
 });

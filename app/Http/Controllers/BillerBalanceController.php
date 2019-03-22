@@ -32,7 +32,7 @@ class BillerBalanceController extends Controller {
     *         description="akusayanglutfi",
     *         in="formData",
     *         name="sessionid",
-    *         required=false,
+    *         required=true,
     *         type="string"
     *     ),
     *     @SWG\Response(
