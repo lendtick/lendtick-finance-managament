@@ -8,5 +8,6 @@ $baseDir = dirname($vendorDir);
 return array(
     'Prophecy\\' => array($vendorDir . '/phpspec/prophecy/src'),
     'Mockery' => array($vendorDir . '/mockery/mockery/library'),
+    'Jenssegers\\Mongodb' => array($vendorDir . '/jenssegers/mongodb/src'),
     'Doctrine\\Common\\Lexer\\' => array($vendorDir . '/doctrine/lexer/lib'),
 );
