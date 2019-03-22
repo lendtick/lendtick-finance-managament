@@ -123,7 +123,7 @@ class BillerInquiryController extends Controller {
     *     path="/biller/inquiry-electricity-postpaid",
     *     consumes={"multipart/form-data"},
     *     description="Biller Inquiry Listrik Postpaid",
-    *     operationId="billerinquiry",
+    *     operationId="billerinquiryPostpaid",
     *     consumes={"application/x-www-form-urlencoded"},
     *     produces={"application/json"},
     *     @SWG\Parameter(

@@ -159,7 +159,7 @@
                 ],
                 "summary": "Biller Inquiry Listrik Postpaid",
                 "description": "Biller Inquiry Listrik Postpaid",
-                "operationId": "billerinquiry",
+                "operationId": "billerinquiryPostpaid",
                 "consumes": [
                     "application/x-www-form-urlencoded"
                 ],
