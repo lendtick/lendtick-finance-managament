@@ -240,6 +240,50 @@
                 }
             }
         },
+        "/biller/inquiry-pulsa-data": {
+            "post": {
+                "tags": [
+                    "Biller"
+                ],
+                "summary": "Biller Inquiry Listrik Pulsa Data ",
+                "description": "Biller Inquiry Listrik Pulsa Data : 9910016, 9910011, 9910007, 9910001, 9900016, 9900015, 9900014, 9900013, 9900012, 9900011, 9900010, 9900009, 9900008, 9900007, 9900004, 9900003, 9900002, 9900001",
+                "operationId": "billerinquirypulsa",
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "billerid",
+                        "in": "formData",
+                        "description": "9900007",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "sessionid",
+                        "in": "formData",
+                        "description": "akusayanglutfi",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "accountnumber",
+                        "in": "formData",
+                        "description": "081311529594",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful"
+                    }
+                }
+            }
+        },
         "/doku/va/request": {
             "post": {
                 "tags": [

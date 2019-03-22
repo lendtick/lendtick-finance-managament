@@ -158,7 +158,7 @@ class BillerInquiryController extends Controller {
     * )
     * */
 
-     /**
+    /**
     * @SWG\Post(
     *     path="/biller/inquiry-electricity-prepaid",
     *     consumes={"multipart/form-data"},
@@ -197,6 +197,47 @@ class BillerInquiryController extends Controller {
     *     }
     * )
     * */
+
+    /**
+    * @SWG\Post(
+    *     path="/biller/inquiry-pulsa-data",
+    *     consumes={"multipart/form-data"},
+    *     description="Biller Inquiry Listrik Pulsa Data : 9910016, 9910011, 9910007, 9910001, 9900016, 9900015, 9900014, 9900013, 9900012, 9900011, 9900010, 9900009, 9900008, 9900007, 9900004, 9900003, 9900002, 9900001",
+    *     operationId="billerinquirypulsa",
+    *     consumes={"application/x-www-form-urlencoded"},
+    *     produces={"application/json"},
+    *     @SWG\Parameter(
+    *         description="9900007",
+    *         in="formData",
+    *         name="billerid",
+    *         required=true,
+    *         type="string"
+    *     ),
+    *     @SWG\Parameter(
+    *         description="akusayanglutfi",
+    *         in="formData",
+    *         name="sessionid",
+    *         required=true,
+    *         type="string"
+    *     ),
+    *     @SWG\Parameter(
+    *         description="081311529594",
+    *         in="formData",
+    *         name="accountnumber",
+    *         required=true,
+    *         type="string"
+    *     ),
+    *     @SWG\Response(
+    *         response="200",
+    *         description="successful"
+    *     ),
+    *     summary="Biller Inquiry Listrik Pulsa Data ",
+    *     tags={
+    *         "Biller"
+    *     }
+    * )
+    * */
+     
 
      
 }
