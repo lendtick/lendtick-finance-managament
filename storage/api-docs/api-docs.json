@@ -13,6 +13,36 @@
         "https"
     ],
     "paths": {
+        "/biller/balance": {
+            "post": {
+                "tags": [
+                    "Biller"
+                ],
+                "summary": "Biller Balance",
+                "description": "Biller Balance Information",
+                "operationId": "billerbalance",
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "sessionid",
+                        "in": "formData",
+                        "description": "akusayanglutfi",
+                        "required": false,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful"
+                    }
+                }
+            }
+        },
         "/biller/list": {
             "get": {
                 "tags": [

@@ -23,9 +23,9 @@ class BillerController extends Controller {
 
 	public function index()
 	{
-		$channel_code = 6021;
+		$channel_code = env('CHANNELCODE_BILLER');
 		$request_datetime = date('Ymdhis');
-		$shared_key = 'shared123';
+		$shared_key = env('SHARED_KEY_BILLER');
 		$login_name = 'agentkopastra';
 
 		$str = 'simpel';
