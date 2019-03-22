@@ -39,12 +39,7 @@ class BillerController extends Controller {
 		$key = $this->AESKeyVerifier($key,'0');
 
 		$encrypted = openssl_encrypt($str, $cipher, $key, $opts, $iv);
-
-		// echo env('LINK_DOKU_BILLER').'/DepositSystem-api/AgentLoginMIP?';
-
-		// echo bin2hex($encrypted);
-		// die();
-		
+ 
 		$send = array(
 			"CHANNELCODE" 		=> $channel_code,
 			"REQUESTDATETIME" 	=> $request_datetime,

@@ -57,6 +57,11 @@ $router->group(['prefix'=>'biller'], function() use($router){
 
     // check biller inquiry electricity electricity
     $router->post('/inquiry-pulsa-data','BillerInquiryController@store');
+
+    // check biller payment
+    $router->post('/payment','BillerPaymentController@store');
+
+    
         
      
     
