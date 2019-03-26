@@ -428,8 +428,8 @@ class DokuController extends Controller
 
           // print_r($res_email);
 
-          // echo "Continue";
-          echo "berhasil kaka";
+          echo "Continue";
+          // echo "berhasil kaka";
 
         } else {
           if ( $words == $WORDS_GENERATED ) {
