@@ -52,7 +52,8 @@ class BillerController extends Controller {
 
 		// die();
 
-		$res = RestCurl::exec('POST',env('LINK_DOKU_BILLER').'/DepositSystem-api/AgentLoginMIP?',$send);
+		// $res = RestCurl::exec('POST',env('LINK_DOKU_BILLER').'/DepositSystem-api/AgentLoginMIP?',$send);
+		$res = RestCurl::hit(env('LINK_DOKU_BILLER').'/DepositSystem-api/AgentLoginMIP?',$send,'POST');
 		dd($res);
 	}
 
