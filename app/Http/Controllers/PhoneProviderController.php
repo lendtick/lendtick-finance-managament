@@ -18,8 +18,7 @@ class PhoneProviderController extends Controller {
     *     path="/order/check-phone",
     *     consumes={"multipart/form-data"},
     *     description="Check Phone Number for Information Provider, and Billerscode",
-    *     operationId="billerbalance",
-    *     consumes={"application/x-www-form-urlencoded"},
+    *     operationId="check-phone",
     *     produces={"application/json"},
     *     @SWG\Parameter(
     *         description="0812",
@@ -37,14 +36,14 @@ class PhoneProviderController extends Controller {
     *         "Order"
     *     }
     * )
-    * */
+    * */ 
 
 	public function check(Request $request)
 	{
 		try {
 
 			if(empty($request->json())) throw New \Exception('Params not found', 500);
-			
+
 			$this->validate($request, [
 				'phone_number'	=> 'required',
 			]);

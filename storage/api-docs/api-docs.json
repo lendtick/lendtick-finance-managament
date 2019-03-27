@@ -644,9 +644,9 @@
                 ],
                 "summary": "Check Phone Number",
                 "description": "Check Phone Number for Information Provider, and Billerscode",
-                "operationId": "billerbalance",
+                "operationId": "check-phone",
                 "consumes": [
-                    "application/x-www-form-urlencoded"
+                    "multipart/form-data"
                 ],
                 "produces": [
                     "application/json"
