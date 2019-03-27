@@ -64,8 +64,14 @@ $router->group(['prefix'=>'biller'], function() use($router){
 });
 
 $router->group(['prefix'=>'order'], function() use($router){
+
     // list all
     $router->get('/check-phone','PhoneProviderController@check'); 
+
+    $router->group(['middleware' => ['authorize'],'prefix' => '/'], function() use ($router){
+        // list all
+        $router->post('/biller','OrderBillerController@store'); 
+    });
 
 });
 
