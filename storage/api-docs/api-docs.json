@@ -636,6 +636,36 @@
                     }
                 }
             }
+        },
+        "/order/check-phone": {
+            "get": {
+                "tags": [
+                    "Order"
+                ],
+                "summary": "Check Phone Number",
+                "description": "Check Phone Number for Information Provider, and Billerscode",
+                "operationId": "billerbalance",
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "phone_number",
+                        "in": "formData",
+                        "description": "0812",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful"
+                    }
+                }
+            }
         }
     },
     "definitions": {},

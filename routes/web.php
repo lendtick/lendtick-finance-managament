@@ -61,8 +61,13 @@ $router->group(['prefix'=>'biller'], function() use($router){
     // check biller payment
     $router->post('/payment','BillerPaymentController@store');
 
-    
-        
-     
-    
 });
+
+$router->group(['prefix'=>'order'], function() use($router){
+    // list all
+    $router->get('/check-phone','PhoneProviderController@check'); 
+
+});
+
+
+
