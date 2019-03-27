@@ -16,7 +16,6 @@ class PhoneProviderController extends Controller {
 	/**
     * @SWG\Get(
     *     path="/order/check-phone",
-    *     consumes={"multipart/form-data"},
     *     description="Check Phone Number for Information Provider, and Billerscode",
     *     operationId="check-phone",
     *     produces={"application/json"},

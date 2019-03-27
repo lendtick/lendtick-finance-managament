@@ -645,9 +645,6 @@
                 "summary": "Check Phone Number",
                 "description": "Check Phone Number for Information Provider, and Billerscode",
                 "operationId": "check-phone",
-                "consumes": [
-                    "multipart/form-data"
-                ],
                 "produces": [
                     "application/json"
                 ],
