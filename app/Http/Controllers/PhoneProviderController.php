@@ -21,7 +21,7 @@ class PhoneProviderController extends Controller {
     *     produces={"application/json"},
     *     @SWG\Parameter(
     *         description="0812",
-    *         in="formData",
+    *         in="query",
     *         name="phone_number",
     *         required=true,
     *         type="string"

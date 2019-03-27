@@ -651,7 +651,7 @@
                 "parameters": [
                     {
                         "name": "phone_number",
-                        "in": "formData",
+                        "in": "query",
                         "description": "0812",
                         "required": true,
                         "type": "string"
