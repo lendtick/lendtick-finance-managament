@@ -93,20 +93,24 @@ class BillerInquiryController extends Controller {
         'ADDITIONALDATA2'   => '', // Additional information 
         'ADDITIONALDATA3'   => '', // Additional information, only BPJS Kesehatan fill this parameter with Phone number and month bill,o i.e "081319422963|2" 
         );
-       print_r($check);
-       $res = (object) RestCurl::exec('POST',env('LINK_DOKU_BILLER').'/DepositSystem-api/Inquiry?',$check);
+       // print_r($check);
+       // $res = (object) RestCurl::exec('POST',env('LINK_DOKU_BILLER').'/DepositSystem-api/Inquiry?',$check);
+       // $res = (object) RestCurl::hit(env('LINK_DOKU_BILLER').'/DepositSystem-api/CheckLastBalance?',$check_balance,'POST');
+       $res = (object) RestCurl::hit(env('LINK_DOKU_BILLER').'/DepositSystem-api/Inquiry?',$check,'POST');
 
-       if ($res->data->responsecode == '0000') {
-            $errorMsg   = 'Sukses';
-            $res = $res->data;
-        } else {
-            $errorMsg   = 'Gagal';
-            $res = $res->data;
-        }
+       dd($res);
 
-        $httpcode 	= 200;
-        $status   	= 1;
-        $data 		= $res;
+       // if ($res->data->responsecode == '0000') {
+       //      $errorMsg   = 'Sukses';
+       //      $res = $res->data;
+       //  } else {
+       //      $errorMsg   = 'Gagal';
+       //      $res = $res->data;
+       //  }
+
+       //  $httpcode 	= 200;
+       //  $status   	= 1;
+       //  $data 		= $res;
 
     } catch(\Exception $e) {
        $status   = 0;
