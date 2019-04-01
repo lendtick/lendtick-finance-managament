@@ -88,7 +88,7 @@ class BillerInquiryController extends Controller {
         // (CHANNELCODE + SESSIONID + REQUESTDATETIME + SHARED KEY + BILLERID + ACCOUNTNUMBER)
         'BILLERID'          => $request->billerid, // Please refer to BILLER ID LIST
         'ACCOUNT_NUMBER'    => $request->accountnumber,  //PLN POSTPAID Subscriber ID PLN NONTAGLIS Registration Number TELKOM PSTN Area code (4 digit) + Phone number (9 digit, zero left padding) PDAM Customer ID MULTIFINANCE Subscriber ID 
-        'SYSTRACE'          => '12345', // System trace number
+        'SYSTRACE'          => 12345, // System trace number
         'ADDITIONALDATA1'   => $channel_code,  //Additional information, please fill with channel code
         'ADDITIONALDATA2'   => '', // Additional information 
         'ADDITIONALDATA3'   => '', // Additional information, only BPJS Kesehatan fill this parameter with Phone number and month bill,o i.e "081319422963|2" 
