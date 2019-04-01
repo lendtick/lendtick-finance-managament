@@ -83,7 +83,7 @@ class BillerInquiryController extends Controller {
        $check = array(
         'CHANNELCODE'       => $channel_code, //Channel Identification Code
         'SESSIONID'         => $request->sessionid, // Session for each success login.
-        'REQUESTDATETIME'   => $request_date, //yyyyMMddHHmmss
+        'REQUESTDATETIME'   => '20190401074352', //$request_date, //yyyyMMddHHmmss
         'WORDS'             => sha1($channel_code . $request->sessionid . $request_date . env('SHARED_KEY_BILLER') . $request->billerid . $request->accountnumber),  // Hashed key combination encryption using SHA1 method. The hashed key generated from combining these parameters in order.
         // (CHANNELCODE + SESSIONID + REQUESTDATETIME + SHARED KEY + BILLERID + ACCOUNTNUMBER)
         'BILLERID'          => $request->billerid, // Please refer to BILLER ID LIST
