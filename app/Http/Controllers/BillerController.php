@@ -48,13 +48,12 @@ class BillerController extends Controller {
 			"WORDS"				=> sha1($channel_code . $request_datetime . $shared_key . $login_name)
 		);
 
-		print_r($send); 
+		// print_r($send); 
 
 		// die();
 
 		// $res = RestCurl::exec('POST',env('LINK_DOKU_BILLER').'/DepositSystem-api/AgentLoginMIP?',$send);
 		$res = RestCurl::hit(env('LINK_DOKU_BILLER').'/DepositSystem-api/AgentLoginMIP?',$send,'POST');
-		dd($res);
 	}
 
 	function AESKeyVerifier($key, $pad) 
