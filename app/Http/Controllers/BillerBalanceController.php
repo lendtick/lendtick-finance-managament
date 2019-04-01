@@ -69,6 +69,7 @@ class BillerBalanceController extends Controller {
         );
        // hit($url, $dataArray = array(), $method='GET' ){
        $res = (object) RestCurl::hit(env('LINK_DOKU_BILLER').'/DepositSystem-api/CheckLastBalance?',$check_balance,'POST');
+       dd($res);
        // $res = (object) RestCurl::exec('POST',env('LINK_DOKU_BILLER').'/DepositSystem-api/CheckLastBalance?',$check_balance);
 
        if ($res->data->responsecode == '0000') {
