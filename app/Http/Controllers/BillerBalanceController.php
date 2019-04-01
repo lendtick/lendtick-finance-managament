@@ -67,7 +67,9 @@ class BillerBalanceController extends Controller {
         'REQUESTDATETIME'   => $request_date, //yyyyMMddHHmmss
         'WORDS'             => sha1($channel_code . $request->sessionid . $request_date . env('SHARED_KEY_BILLER')),  // Hashed key combination encryption using SHA1 method. The hashed key generated from combining these parameters in order. (CHANNELCODE + SESSIONID + REQUESTDATETIME + SHARED KEY)
         );
-       $res = (object) RestCurl::exec('POST',env('LINK_DOKU_BILLER').'/DepositSystem-api/CheckLastBalance?',$check_balance);
+       // hit($url, $dataArray = array(), $method='GET' ){
+       $res = (object) RestCurl::hit(env('LINK_DOKU_BILLER').'/DepositSystem-api/CheckLastBalance?',$check_balance,'POST');
+       // $res = (object) RestCurl::exec('POST',env('LINK_DOKU_BILLER').'/DepositSystem-api/CheckLastBalance?',$check_balance);
 
        if ($res->data->responsecode == '0000') {
             $res = $res->data;
