@@ -83,8 +83,8 @@ class BillerInquiryController extends Controller {
        $check = array(
         'CHANNELCODE'       => $channel_code, //Channel Identification Code
         'SESSIONID'         => $request->sessionid, // Session for each success login.
-        'REQUESTDATETIME'   => '20190401074352', //$request_date, //yyyyMMddHHmmss
-        'WORDS'             => sha1($channel_code . $request->sessionid . '20190401074352' . env('SHARED_KEY_BILLER') . $request->billerid . $request->accountnumber),  // Hashed key combination encryption using SHA1 method. The hashed key generated from combining these parameters in order.
+        'REQUESTDATETIME'   => '20190402065223', //$request_date, //yyyyMMddHHmmss
+        'WORDS'             => sha1($channel_code . $request->sessionid . '20190402065223' . env('SHARED_KEY_BILLER') . $request->billerid . $request->accountnumber),  // Hashed key combination encryption using SHA1 method. The hashed key generated from combining these parameters in order.
         // (CHANNELCODE + SESSIONID + REQUESTDATETIME + SHARED KEY + BILLERID + ACCOUNTNUMBER)
         'BILLERID'          => $request->billerid, // Please refer to BILLER ID LIST
         'ACCOUNT_NUMBER'    => $request->accountnumber,  //PLN POSTPAID Subscriber ID PLN NONTAGLIS Registration Number TELKOM PSTN Area code (4 digit) + Phone number (9 digit, zero left padding) PDAM Customer ID MULTIFINANCE Subscriber ID 
