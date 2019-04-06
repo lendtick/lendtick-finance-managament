@@ -98,12 +98,12 @@ class BillerInquiryController extends Controller {
         'ADDITIONALDATA3'   => '', // Additional information, only BPJS Kesehatan fill this parameter with Phone number and month bill,o i.e "081319422963|2" 
         );
       //  print_r($check);
-       // $res = (object) RestCurl::exec('POST',env('LINK_DOKU_BILLER').'/DepositSystem-api/Inquiry?',$check);
+       $res = (object) RestCurl::exec('GET',env('LINK_DOKU_BILLER').'/DepositSystem-api/Inquiry?',$check);
        // $res = (object) RestCurl::hit(env('LINK_DOKU_BILLER').'/DepositSystem-api/CheckLastBalance?',$check_balance,'POST');
       $sh=sha1($channel_code . $request->sessionid . $request->date . env('SHARED_KEY_BILLER') . $request->billerid . $request->accountnumber);
       $testParam = "CHANNELCODE=".$channel_code."&SESSIONID=".$request->sessionid."&REQUESTDATETIME=".$request->date."&WORDS=".$sh."&BILLERID=".$request->billerid."&ACCOUNT_NUMBER=".$request->accountnumber."&SYSTRACE=1000004094&ADDITIONALDATA1=".$channel_code."&ADDITIONALDATA2=&ADDITIONALDATA3=";
       // $res = (object) RestCurl::hit(env('LINK_DOKU_BILLER').'/DepositSystem-api/Inquiry?'.$testParam,$testParam,'GET');
-      dd($testParam);
+      dd($res);
       dd(env('LINK_DOKU_BILLER').'/DepositSystem-api/Inquiry?',$check);die();
 
        // if ($res->data->responsecode == '0000') {
