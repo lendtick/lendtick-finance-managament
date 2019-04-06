@@ -74,8 +74,7 @@ class BillerInquiryController extends Controller {
        $this->validate($request, [
           'billerid'		      => 'required',
           'sessionid'         => 'required', // Please refer to BILLER ID LIST
-          'accountnumber'     => 'required', // PLN POSTPAID Subscriber ID PLN NONTAGLIS Registration Number TELKOM PSTN Area code (4 digit) + Phone number (9 digit, zero left padding) PDAM Customer ID MULTIFINANCE Subscriber ID 
-         //  'wordlogin'         => 'required',
+          'accountnumber'     => 'required', // PLN POSTPAID Subscriber ID PLN NONTAGLIS Registration Number TELKOM PSTN Area code (4 digit) + Phone number (9 digit, zero left padding) PDAM Customer ID MULTIFINANCE Subscriber ID
        ]);
 
        $channel_code = env('CHANNELCODE_BILLER');
