@@ -80,6 +80,10 @@ class BillerInquiryController extends Controller {
        $channel_code = env('CHANNELCODE_BILLER');
        $request_date = date('YmdHis');
 
+       echo ' sebelum di hash ' . $channel_code . $request->sessionid . $request->date . env('SHARED_KEY_BILLER') . $request->billerid . $request->accountnumber;
+       echo "<br>";
+       echo 'sesudah di hash '. sha1($channel_code . $request->sessionid .  $request->date . env('SHARED_KEY_BILLER') . $request->billerid . $request->accountnumber);
+       // die();
        $check = array(
         'CHANNELCODE'       => $channel_code, //Channel Identification Code
         'SESSIONID'         => $request->sessionid, // Session for each success login.
@@ -93,7 +97,7 @@ class BillerInquiryController extends Controller {
         'ADDITIONALDATA2'   => '', // Additional information 
         'ADDITIONALDATA3'   => '', // Additional information, only BPJS Kesehatan fill this parameter with Phone number and month bill,o i.e "081319422963|2" 
         );
-       // print_r($check);
+       print_r($check);
        // $res = (object) RestCurl::exec('POST',env('LINK_DOKU_BILLER').'/DepositSystem-api/Inquiry?',$check);
        // $res = (object) RestCurl::hit(env('LINK_DOKU_BILLER').'/DepositSystem-api/CheckLastBalance?',$check_balance,'POST');
        $res = (object) RestCurl::hit(env('LINK_DOKU_BILLER').'/DepositSystem-api/Inquiry?',$check,'POST');
