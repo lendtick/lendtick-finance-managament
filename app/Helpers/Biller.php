@@ -16,7 +16,7 @@ class Biller
 	{ 
 		if ($response_code == '0203' || $response_message == 'INVALID SESSIONID') {
 
-			if (BillerSession::count()>0) {
+			if (BillerSession::get()->count()>0) {
 				return 	'sudah ada sessionid';
 			}
 
