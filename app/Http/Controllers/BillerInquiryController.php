@@ -102,7 +102,7 @@ class BillerInquiryController extends Controller {
        // $res = (object) RestCurl::hit(env('LINK_DOKU_BILLER').'/DepositSystem-api/CheckLastBalance?',$check_balance,'POST');
       $sh=sha1($channel_code . $request->sessionid . $request->date . env('SHARED_KEY_BILLER') . $request->billerid . $request->accountnumber);
       $testParam = "CHANNELCODE=".$channel_code."&SESSIONID=".$request->sessionid."&REQUESTDATETIME=".$request->date."&WORDS=".$sh."&BILLERID=".$request->billerid."&ACCOUNT_NUMBER=".$request->accountnumber."&SYSTRACE=1000004094&ADDITIONALDATA1=".$channel_code."&ADDITIONALDATA2=&ADDITIONALDATA3=";
-      $res = (object) RestCurl::hit(env('LINK_DOKU_BILLER').'/DepositSystem-api/Inquiry?',$testParam,'GET');
+      $res = (object) RestCurl::hit(env('LINK_DOKU_BILLER').'/DepositSystem-api/Inquiry?',$check,'GET');
       dd($res);
       dd(env('LINK_DOKU_BILLER').'/DepositSystem-api/Inquiry?',$check);die();
 
