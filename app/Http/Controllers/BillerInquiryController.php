@@ -81,12 +81,13 @@ class BillerInquiryController extends Controller {
        $channel_code = env('CHANNELCODE_BILLER');
        $request_date = date('YmdHms');
 
+       $sessions = BillerHelper::SessionID();
 
 
        $check = array(
         'CHANNELCODE'       => $channel_code, //Channel Identification Code
-        'SESSIONID'         => $request->sessionid, // Session for each success login.
-        'REQUESTDATETIME'   => $request_date, // '20190402065223', //$request_date, //yyyyMMddHHmmss
+        'SESSIONID'         => $sesions['SessionID'], // Session for each success login.
+        'REQUESTDATETIME'   => $sesions['RequestDate'], // '20190402065223', //$request_date, //yyyyMMddHHmmss
         'WORDS'             => sha1($channel_code.$request->sessionid.$request_date.env('SHARED_KEY_BILLER').$request->billerid.$request->accountnumber),  // Hashed key combination encryption using SHA1 method. The hashed key generated from combining these parameters in order.
         'BILLERID'          => $request->billerid, // Please refer to BILLER ID LIST
         'ACCOUNT_NUMBER'    => $request->accountnumber,  //PLN POSTPAID Subscriber ID PLN NONTAGLIS Registration Number TELKOM PSTN Area code (4 digit) + Phone number (9 digit, zero left padding) PDAM Customer ID MULTIFINANCE Subscriber ID 
@@ -96,9 +97,9 @@ class BillerInquiryController extends Controller {
         'ADDITIONALDATA3'   => '', // Additional information, only BPJS Kesehatan fill this parameter with Phone number and month bill,o i.e "081319422963|2" 
       );
       $res = (object) RestCurl::hit(env('LINK_DOKU_BILLER').'/DepositSystem-api/Inquiry?',$check,'POST');
-      $response = json_decode($res['response']);
+      // $response = json_decode($res);
 
-      print_r($response); die;
+      print_r($res->response); die;
 
        // sessionid
        // BillerHelper::SessionID('0203' , 'INVALID SESSIONID')

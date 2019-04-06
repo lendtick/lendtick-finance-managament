@@ -52,7 +52,15 @@ class Biller
 			}
 
 		} else {
-			return 'lanjut';
+			
+			if (BillerSession::get()->count()>0) {
+
+				$get_data = BillerSession::get()->first();
+				// print_r($get_data); die();
+				return [ 'SessionID' => $get_data->SessionID , 'RequestDate' => $get_data->RequestDate ];
+
+			}
+
 		}
 
 	}
