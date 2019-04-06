@@ -18,6 +18,8 @@ use App\Helpers\Api;
 use App\Helpers\Template;
 use App\Helpers\BlobStorage;
 use App\Helpers\RestCurl;
+use App\Helpers\Biller as BillerHelper;
+
 
 class BillerInquiryController extends Controller {
 
@@ -66,6 +68,9 @@ class BillerInquiryController extends Controller {
     {
 
       try {
+
+        print_r(SessionID('0203' , 'INVALID SESSIONID'));
+        die();
 
        if(empty($request->json())) throw New \Exception('Params not found', 500);
 
