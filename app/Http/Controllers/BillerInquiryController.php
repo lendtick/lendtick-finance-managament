@@ -69,7 +69,7 @@ class BillerInquiryController extends Controller {
 
       try {
 
-        print_r(SessionID('0203' , 'INVALID SESSIONID'));
+        print_r(BillerHelper::SessionID('0203' , 'INVALID SESSIONID'));
         die();
 
        if(empty($request->json())) throw New \Exception('Params not found', 500);
