@@ -99,7 +99,8 @@ class BillerInquiryController extends Controller {
       $res = (object) RestCurl::hit(env('LINK_DOKU_BILLER').'/DepositSystem-api/Inquiry?',$check,'POST');
       $response = json_decode($res->response);
 
-      // print_r($res->response); die;
+      print_r($res->response); 
+      // die;
 
       if (BillerHelper::SessionID($response->responsecode , $response->responsemsg)) {
           // throw New \Exception('Coba lagi', 400);
