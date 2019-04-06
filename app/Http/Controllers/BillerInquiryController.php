@@ -80,9 +80,9 @@ class BillerInquiryController extends Controller {
        $channel_code = env('CHANNELCODE_BILLER');
        $request_date = date('YmdHis');
 
-       echo ' sebelum di hash ' . $channel_code . $request->sessionid . $request->date . env('SHARED_KEY_BILLER') . $request->billerid . $request->accountnumber;
-       echo "<br>";
-       echo 'sesudah di hash '. sha1($channel_code . $request->sessionid .  $request->date . env('SHARED_KEY_BILLER') . $request->billerid . $request->accountnumber);
+      //  echo ' sebelum di hash ' . $channel_code . $request->sessionid . $request->date . env('SHARED_KEY_BILLER') . $request->billerid . $request->accountnumber;
+      //  echo "<br>";
+      //  echo 'sesudah di hash '. sha1($channel_code . $request->sessionid .  $request->date . env('SHARED_KEY_BILLER') . $request->billerid . $request->accountnumber);
        // die();
        $check = array(
         'CHANNELCODE'       => $channel_code, //Channel Identification Code
@@ -92,16 +92,16 @@ class BillerInquiryController extends Controller {
         // (CHANNELCODE + SESSIONID + REQUESTDATETIME + SHARED KEY + BILLERID + ACCOUNTNUMBER)
         'BILLERID'          => $request->billerid, // Please refer to BILLER ID LIST
         'ACCOUNT_NUMBER'    => $request->accountnumber,  //PLN POSTPAID Subscriber ID PLN NONTAGLIS Registration Number TELKOM PSTN Area code (4 digit) + Phone number (9 digit, zero left padding) PDAM Customer ID MULTIFINANCE Subscriber ID 
-        'SYSTRACE'          => 12345, // System trace number
+        'SYSTRACE'          => 1000004094, // System trace number
         'ADDITIONALDATA1'   => $channel_code,  //Additional information, please fill with channel code
         'ADDITIONALDATA2'   => '', // Additional information 
         'ADDITIONALDATA3'   => '', // Additional information, only BPJS Kesehatan fill this parameter with Phone number and month bill,o i.e "081319422963|2" 
         );
-       print_r($check);
+      //  print_r($check);
        // $res = (object) RestCurl::exec('POST',env('LINK_DOKU_BILLER').'/DepositSystem-api/Inquiry?',$check);
        // $res = (object) RestCurl::hit(env('LINK_DOKU_BILLER').'/DepositSystem-api/CheckLastBalance?',$check_balance,'POST');
       //  $res = (object) RestCurl::hit(env('LINK_DOKU_BILLER').'/DepositSystem-api/Inquiry?',$check,'POST');
-
+       dd($res);
        dd(env('LINK_DOKU_BILLER').'/DepositSystem-api/Inquiry?',$check);die();
 
        // if ($res->data->responsecode == '0000') {
