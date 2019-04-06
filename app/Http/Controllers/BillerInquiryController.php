@@ -100,9 +100,9 @@ class BillerInquiryController extends Controller {
        print_r($check);
        // $res = (object) RestCurl::exec('POST',env('LINK_DOKU_BILLER').'/DepositSystem-api/Inquiry?',$check);
        // $res = (object) RestCurl::hit(env('LINK_DOKU_BILLER').'/DepositSystem-api/CheckLastBalance?',$check_balance,'POST');
-       $res = (object) RestCurl::hit(env('LINK_DOKU_BILLER').'/DepositSystem-api/Inquiry?',$check,'POST');
+      //  $res = (object) RestCurl::hit(env('LINK_DOKU_BILLER').'/DepositSystem-api/Inquiry?',$check,'POST');
 
-       dd([env('LINK_DOKU_BILLER').'/DepositSystem-api/Inquiry?'.$check]);
+       print_r(env('LINK_DOKU_BILLER').'/DepositSystem-api/Inquiry?'.$check);die();
 
        // if ($res->data->responsecode == '0000') {
        //      $errorMsg   = 'Sukses';
