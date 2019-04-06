@@ -75,10 +75,11 @@ class BillerInquiryController extends Controller {
           'billerid'		      => 'required',
           'sessionid'         => 'required', // Please refer to BILLER ID LIST
           'accountnumber'     => 'required', // PLN POSTPAID Subscriber ID PLN NONTAGLIS Registration Number TELKOM PSTN Area code (4 digit) + Phone number (9 digit, zero left padding) PDAM Customer ID MULTIFINANCE Subscriber ID 
+          'wordlogin'         => 'required',
        ]);
 
        $channel_code = env('CHANNELCODE_BILLER');
-       $request_date = date('YmdHis');
+       $request_date = date('YmdHms');
 
       //  echo ' sebelum di hash ' . $channel_code . $request->sessionid . $request->date . env('SHARED_KEY_BILLER') . $request->billerid . $request->accountnumber;
       //  echo "<br>";
@@ -87,9 +88,10 @@ class BillerInquiryController extends Controller {
        $check = array(
         'CHANNELCODE'       => $channel_code, //Channel Identification Code
         'SESSIONID'         => $request->sessionid, // Session for each success login.
-        'REQUESTDATETIME'   => $request->date, // '20190402065223', //$request_date, //yyyyMMddHHmmss
+        'REQUESTDATETIME'   => $request_date, // '20190402065223', //$request_date, //yyyyMMddHHmmss
       //   'WORDS'             => sha1($channel_code . $request->sessionid . $request->date . env('SHARED_KEY_BILLER') . $request->billerid . $request->accountnumber),  // Hashed key combination encryption using SHA1 method. The hashed key generated from combining these parameters in order.
         // (CHANNELCODE + SESSIONID + REQUESTDATETIME + SHARED KEY + BILLERID + ACCOUNTNUMBER)
+        'WORDS'            => $request->wordlogin,
         'BILLERID'          => $request->billerid, // Please refer to BILLER ID LIST
         'ACCOUNT_NUMBER'    => $request->accountnumber,  //PLN POSTPAID Subscriber ID PLN NONTAGLIS Registration Number TELKOM PSTN Area code (4 digit) + Phone number (9 digit, zero left padding) PDAM Customer ID MULTIFINANCE Subscriber ID 
         'SYSTRACE'          => 1000004094, // System trace number
