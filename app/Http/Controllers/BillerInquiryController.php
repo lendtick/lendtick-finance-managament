@@ -93,9 +93,9 @@ class BillerInquiryController extends Controller {
         'BILLERID'          => $request->billerid, // Please refer to BILLER ID LIST
         'ACCOUNT_NUMBER'    => $request->accountnumber,  //PLN POSTPAID Subscriber ID PLN NONTAGLIS Registration Number TELKOM PSTN Area code (4 digit) + Phone number (9 digit, zero left padding) PDAM Customer ID MULTIFINANCE Subscriber ID 
         'SYSTRACE'          => 1000004094, // System trace number
-        'ADDITIONALDATA1'   => $channel_code,  //Additional information, please fill with channel code
-        'ADDITIONALDATA2'   => '', // Additional information 
-        'ADDITIONALDATA3'   => '', // Additional information, only BPJS Kesehatan fill this parameter with Phone number and month bill,o i.e "081319422963|2" 
+        'ADDITIONALDATA1'   => $channel_code//,  //Additional information, please fill with channel code
+      //   'ADDITIONALDATA2'   => '', // Additional information 
+      //   'ADDITIONALDATA3'   => '', // Additional information, only BPJS Kesehatan fill this parameter with Phone number and month bill,o i.e "081319422963|2" 
         );
       //  print_r($check);
       //  $res = (object) RestCurl::exec('POST',env('LINK_DOKU_BILLER').'/DepositSystem-api/Inquiry?',$check);
