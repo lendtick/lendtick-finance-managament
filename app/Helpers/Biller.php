@@ -17,7 +17,10 @@ class Biller
 		if ($response_code == '0203' || $response_message == 'INVALID SESSIONID') {
 
 			if (BillerSession::get()->count()>0) {
-				return 	'sudah ada sessionid';
+
+				$get_data = BillerSession::get();
+				return [ $get_data->SessionID , $get_data->RequestDate ];
+
 			}
 
 		 	// return 'session id salah';
@@ -38,10 +41,13 @@ class Biller
 			$response = json_decode($res['response']);
 
 			if ($response->responsecode == '0000' || $response->responsemsg == 'AGENT LOGIN IS SUCCESS') {
+				// delete
+				BillerSession::delete();
 				// cek dulu ada gak ditable sessionid 
 				// maka insert ke dalam sessionid table 
 				BillerSession::create(['SessionID' =>  $response->sessionId , 'RequestDate' =>  $request_datetime]);
-				return 'berhasil ada sessionid';
+				// return 'berhasil ada sessionid';
+				return [ $response->sessionId , $request_datetime ];
 			}
 
 		} else {
