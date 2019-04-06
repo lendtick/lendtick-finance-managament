@@ -18,8 +18,9 @@ class Biller
 
 			if (BillerSession::get()->count()>0) {
 
-				$get_data = BillerSession::get();
-				return [ $get_data->SessionID , $get_data->RequestDate ];
+				$get_data = BillerSession::first();
+				// print_r($get_data); die();
+				return [ 'SessionID' => $get_data->SessionID , 'RequestDate' => $get_data->RequestDate ];
 
 			}
 
@@ -47,7 +48,7 @@ class Biller
 				// maka insert ke dalam sessionid table 
 				BillerSession::create(['SessionID' =>  $response->sessionId , 'RequestDate' =>  $request_datetime]);
 				// return 'berhasil ada sessionid';
-				return [ $response->sessionId , $request_datetime ];
+				return [ 'SessionID' => $response->sessionId , 'RequestDate' => $request_datetime ];
 			}
 
 		} else {
