@@ -97,9 +97,15 @@ class BillerInquiryController extends Controller {
         'ADDITIONALDATA3'   => '', // Additional information, only BPJS Kesehatan fill this parameter with Phone number and month bill,o i.e "081319422963|2" 
       );
       $res = (object) RestCurl::hit(env('LINK_DOKU_BILLER').'/DepositSystem-api/Inquiry?',$check,'POST');
-      // $response = json_decode($res);
+      $response = json_decode($res->response);
 
-      print_r($res->response); die;
+      // print_r($res->response); die;
+
+      if (BillerHelper::SessionID($response->responsecode , $response->responsemsg)) {
+          // throw New \Exception('Coba lagi', 400);
+        return BillerHelper::SessionID();
+      }
+
 
        // sessionid
        // BillerHelper::SessionID('0203' , 'INVALID SESSIONID')

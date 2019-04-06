@@ -16,13 +16,13 @@ class Biller
 	{ 
 		if ($response_code == '0203' || $response_message == 'INVALID SESSIONID') {
 
-			if (BillerSession::get()->count()>0) {
+			// if (BillerSession::get()->count()>0) {
 
-				$get_data = BillerSession::get()->first();
-				// print_r($get_data); die();
-				return [ 'SessionID' => $get_data->SessionID , 'RequestDate' => $get_data->RequestDate ];
+			// 	$get_data = BillerSession::get()->first();
+			// 	// print_r($get_data); die();
+			// 	return [ 'SessionID' => $get_data->SessionID , 'RequestDate' => $get_data->RequestDate ];
 
-			}
+			// }
 
 		 	// return 'session id salah';
 			$channel_code = env('CHANNELCODE_BILLER');
