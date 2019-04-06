@@ -43,7 +43,7 @@ class Biller
 
 			if ($response->responsecode == '0000' || $response->responsemsg == 'AGENT LOGIN IS SUCCESS') {
 				// delete
-				BillerSession::delete();
+				BillerSession::find(1)->delete();
 				// cek dulu ada gak ditable sessionid 
 				// maka insert ke dalam sessionid table 
 				BillerSession::create(['SessionID' =>  $response->sessionId , 'RequestDate' =>  $request_datetime]);
@@ -52,7 +52,7 @@ class Biller
 			}
 
 		} else {
-			
+
 			if (BillerSession::get()->count()>0) {
 
 				$get_data = BillerSession::get()->first();
