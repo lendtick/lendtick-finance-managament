@@ -15,6 +15,11 @@ class Biller
 	public static function SessionID($response_code = '' , $response_message = '')
 	{ 
 		if ($response_code == '0203' || $response_message == 'INVALID SESSIONID') {
+
+			if (BillerSession::count()>0) {
+				return 	'sudah ada sessionid';
+			}
+
 		 	// return 'session id salah';
 			$channel_code = env('CHANNELCODE_BILLER');
 			$request_datetime = date('YmdHis');
@@ -30,7 +35,14 @@ class Biller
 			);
 
 			$res = RestCurl::hit(env('LINK_DOKU_BILLER').'/DepositSystem-api/AgentLoginMIP?',$send,'POST');
-			print_r($res);
+			$response = json_decode($res['response']);
+
+			if ($response->responsecode == '0000' || $response->responsemsg == 'AGENT LOGIN IS SUCCESS') {
+				// cek dulu ada gak ditable sessionid 
+				// maka insert ke dalam sessionid table 
+				BillerSession::create(['SessionID' =>  $response->sessionId , 'RequestDate' =>  $request_datetime]);
+				return 'berhasil ada sessionid';
+			}
 
 		} else {
 			return 'lanjut';
