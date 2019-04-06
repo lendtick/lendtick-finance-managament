@@ -3,11 +3,14 @@
 namespace App\Helpers;
 
 Class RestCurl {
-  public static function exec($method, $url, $obj = array(), $token = '') {
+  public static function exec($method, $url, $obj = array(), $token = '', $additional = '') {
     $header = ['Accept: application/json','Content-Type: application/json'];
     if(!empty($token)){
       $authorization = 'Authorization: '.$token;
       array_push($header, $authorization);
+    }
+    if(!empty($additional)){
+      array_push($header, $additional);
     }
     $curl = curl_init();
      
