@@ -6,24 +6,20 @@ use Illuminate\Database\Eloquent\Model;
 
 class Order extends Model {
 
-    protected $table = 'order.order_billers';
+    protected $table = 'order.order';
     
-    protected $primaryKey = 'order_billers_id';
+    // protected $primaryKey = 'id_order';
 
     protected $fillable = [
-        'billers_id',
-        'account_number',
-        'session_id',
-        'additional_data_1',
-        'additional_data_2',
-        'additional_data_3',
-        'status_order',
-        'create_date_order',
-        'type_payment',
+        'id_order',
         'id_user',
-        'bill_id',
-        'latitude',
-        'longitude'
+        'billing_number',
+        'billing_date',
+        'total_billing',
+        'total_payment',
+        'id_workflow_status',
+        'repayment_date',
+        'id_user_company'
     ];
 
     public $timestamps = false;
