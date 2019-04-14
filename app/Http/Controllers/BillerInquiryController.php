@@ -102,9 +102,7 @@ class BillerInquiryController extends Controller {
       // print_r($response); 
       // die;
 
-      // if (BillerHelper::SessionID($response->responsecode , $response->responsemsg)) {
-      if (BillerHelper::SessionID('0203' , 'SUKSES')) {
-          // throw New \Exception('Coba lagi', 400);
+      if (BillerHelper::SessionID($response->responsecode , $response->responsemsg)) {
         return BillerHelper::SessionID();
       } 
       //else {
