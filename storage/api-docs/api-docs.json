@@ -131,13 +131,6 @@
                         "type": "string"
                     },
                     {
-                        "name": "sessionid",
-                        "in": "formData",
-                        "description": "akusayanglutfi",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
                         "name": "accountnumber",
                         "in": "formData",
                         "description": "081311529594",
@@ -219,13 +212,6 @@
                         "type": "string"
                     },
                     {
-                        "name": "sessionid",
-                        "in": "formData",
-                        "description": "akusayanglutfi",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
                         "name": "accountnumber",
                         "in": "formData",
                         "description": "081311529594",
@@ -259,13 +245,6 @@
                         "name": "billerid",
                         "in": "formData",
                         "description": "9900007",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "name": "sessionid",
-                        "in": "formData",
-                        "description": "akusayanglutfi",
                         "required": true,
                         "type": "string"
                     },
@@ -628,6 +607,33 @@
                         "required": true,
                         "type": "number",
                         "default": "e48b892015a850fb7090a899a76b18783c5d40d9"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful"
+                    }
+                }
+            }
+        },
+        "/order/biller": {
+            "get": {
+                "tags": [
+                    "Order"
+                ],
+                "summary": "Check Phone Number",
+                "description": "Check Phone Number for Information Provider, and Billerscode",
+                "operationId": "check-phone",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "phone_number",
+                        "in": "query",
+                        "description": "0812",
+                        "required": true,
+                        "type": "string"
                     }
                 ],
                 "responses": {
