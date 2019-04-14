@@ -37,14 +37,7 @@ class BillerInquiryController extends Controller {
     *         name="billerid",
     *         required=true,
     *         type="string"
-    *     ),
-    *     @SWG\Parameter(
-    *         description="akusayanglutfi",
-    *         in="formData",
-    *         name="sessionid",
-    *         required=true,
-    *         type="string"
-    *     ),
+    *     ),     
     *     @SWG\Parameter(
     *         description="081311529594",
     *         in="formData",
@@ -99,18 +92,7 @@ class BillerInquiryController extends Controller {
       $res = (object) RestCurl::hit(env('LINK_DOKU_BILLER').'/DepositSystem-api/Inquiry?',$check,'POST');
       $response = json_decode($res->response);
 
-      // print_r($response); 
-      // die;
-
       if (BillerHelper::SessionID($response->responsecode , $response->responsemsg)) { BillerHelper::SessionID(); } 
-      //else {
-
-
-
-       // sessionid
-       // BillerHelper::SessionID('0203' , 'INVALID SESSIONID')
-       // dd($res);
-       // dd(env('LINK_DOKU_BILLER').'/DepositSystem-api/Inquiry?',$check);die();
 
        if ($response->responsecode == '0000') {
             $httpcode   = 200;
@@ -200,14 +182,7 @@ class BillerInquiryController extends Controller {
     *         name="billerid",
     *         required=true,
     *         type="string"
-    *     ),
-    *     @SWG\Parameter(
-    *         description="akusayanglutfi",
-    *         in="formData",
-    *         name="sessionid",
-    *         required=true,
-    *         type="string"
-    *     ),
+    *     ),     
     *     @SWG\Parameter(
     *         description="081311529594",
     *         in="formData",
@@ -240,14 +215,7 @@ class BillerInquiryController extends Controller {
     *         name="billerid",
     *         required=true,
     *         type="string"
-    *     ),
-    *     @SWG\Parameter(
-    *         description="akusayanglutfi",
-    *         in="formData",
-    *         name="sessionid",
-    *         required=true,
-    *         type="string"
-    *     ),
+    *     ), 
     *     @SWG\Parameter(
     *         description="081311529594",
     *         in="formData",
