@@ -121,16 +121,16 @@ class BillerInquiryController extends Controller {
             $status     = 1;
             $errorMsg   = 'Sukses';
             $data       = array(
-              'system_message' => @$response->responsemsg ? @$response->responsemsg : '' , 
-              'response'  => @$response->data ? @$response->data : '' , 
+              'system_message'  => @$response->responsemsg ? @$response->responsemsg : '' , 
+              'response'        => @$response ? @$response : '' , 
             );
         } else {
             $httpcode   = 400;
             $status     = 0;
             $errorMsg   = 'Gagal';
             $data       = array(
-              'system_message' => @$response->responsemsg ? @$response->responsemsg : '' , 
-              'response'  => @$response->data ? @$response->data : '' , 
+              'system_message'  => @$response->responsemsg ? @$response->responsemsg : '' , 
+              'response'        => @$response ? @$response : '' , 
             );
         }
 
