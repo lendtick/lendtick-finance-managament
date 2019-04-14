@@ -102,9 +102,7 @@ class BillerInquiryController extends Controller {
       // print_r($response); 
       // die;
 
-      if (BillerHelper::SessionID($response->responsecode , $response->responsemsg)) {
-        return BillerHelper::SessionID();
-      } 
+      if (BillerHelper::SessionID($response->responsecode , $response->responsemsg)) { BillerHelper::SessionID(); } 
       //else {
 
 
