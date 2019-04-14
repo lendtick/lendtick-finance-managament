@@ -99,31 +99,45 @@ class BillerInquiryController extends Controller {
       $res = (object) RestCurl::hit(env('LINK_DOKU_BILLER').'/DepositSystem-api/Inquiry?',$check,'POST');
       $response = json_decode($res->response);
 
-      print_r($res->response); 
+      // print_r($response); 
       // die;
 
-      if (BillerHelper::SessionID($response->responsecode , $response->responsemsg)) {
+      // if (BillerHelper::SessionID($response->responsecode , $response->responsemsg)) {
+      if (BillerHelper::SessionID('0203' , 'SUKSES')) {
           // throw New \Exception('Coba lagi', 400);
         return BillerHelper::SessionID();
-      }
+      } 
+      //else {
+
 
 
        // sessionid
        // BillerHelper::SessionID('0203' , 'INVALID SESSIONID')
-       dd($res);
-       dd(env('LINK_DOKU_BILLER').'/DepositSystem-api/Inquiry?',$check);die();
+       // dd($res);
+       // dd(env('LINK_DOKU_BILLER').'/DepositSystem-api/Inquiry?',$check);die();
 
-       // if ($res->data->responsecode == '0000') {
-       //      $errorMsg   = 'Sukses';
-       //      $res = $res->data;
-       //  } else {
-       //      $errorMsg   = 'Gagal';
-       //      $res = $res->data;
-       //  }
+       if ($response->responsecode == '0000') {
+            $httpcode   = 200;
+            $status     = 1;
+            $errorMsg   = 'Sukses';
+            $data       = array(
+              'system_message' => @$response->responsemsg ? @$response->responsemsg : '' , 
+              'response'  => @$response->data ? @$response->data : '' , 
+            );
+        } else {
+            $httpcode   = 400;
+            $status     = 0;
+            $errorMsg   = 'Gagal';
+            $data       = array(
+              'system_message' => @$response->responsemsg ? @$response->responsemsg : '' , 
+              'response'  => @$response->data ? @$response->data : '' , 
+            );
+        }
 
-       //  $httpcode 	= 200;
+        $httpcode 	= 200;
        //  $status   	= 1;
        //  $data 		= $res;
+      //}
 
      } catch(\Exception $e) {
        $status   = 0;
