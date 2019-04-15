@@ -720,15 +720,6 @@
             "items": {
                 "$ref": "#/definitions/Cart"
             }
-        },
-        "status": {
-            "type": "string",
-            "description": "pet status in the store",
-            "enum": [
-                "available",
-                "pending",
-                "sold"
-            ]
         }
     },
     "xml": {
