@@ -43,6 +43,7 @@
                 }
             }
         },
+       
         "/biller/list": {
             "get": {
                 "tags": [
@@ -546,145 +547,297 @@
                         "default": "0"
                     }
                 ],
-                "responses": {
-                    "200": {
-                        "description": "successful"
-                    }
-                }
+"responses": {
+    "200": {
+        "description": "successful"
+    }
+}
+}
+},
+"/doku/va/inquiry": {
+    "post": {
+        "tags": [
+            "Doku VA Permata"
+        ],
+        "summary": "VA Request",
+        "description": "VA Inquiry",
+        "operationId": "doku_va",
+        "consumes": [
+            "application/x-www-form-urlencoded"
+        ],
+        "produces": [
+            "application/json"
+        ],
+        "parameters": [
+            {
+                "name": "MALLID",
+                "in": "formData",
+                "description": "MALLID",
+                "required": true,
+                "type": "number",
+                "default": "1111"
+            },
+            {
+                "name": "CHAINMERCHANT",
+                "in": "formData",
+                "description": "Chain Merchant",
+                "required": true,
+                "type": "string",
+                "default": "NA"
+            },
+            {
+                "name": "PAYMENTCHANNEL",
+                "in": "formData",
+                "description": "PAYMENT CHANNEL",
+                "required": true,
+                "type": "string",
+                "default": "36"
+            },
+            {
+                "name": "PAYMENTCODE",
+                "in": "formData",
+                "description": "PAYMENT CODE",
+                "required": true,
+                "type": "number",
+                "default": "8856095100000013"
+            },
+            {
+                "name": "WORDS",
+                "in": "formData",
+                "description": "WORDS",
+                "required": true,
+                "type": "number",
+                "default": "e48b892015a850fb7090a899a76b18783c5d40d9"
             }
-        },
-        "/doku/va/inquiry": {
-            "post": {
-                "tags": [
-                    "Doku VA Permata"
-                ],
-                "summary": "VA Request",
-                "description": "VA Inquiry",
-                "operationId": "doku_va",
-                "consumes": [
-                    "application/x-www-form-urlencoded"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "name": "MALLID",
-                        "in": "formData",
-                        "description": "MALLID",
-                        "required": true,
-                        "type": "number",
-                        "default": "1111"
-                    },
-                    {
-                        "name": "CHAINMERCHANT",
-                        "in": "formData",
-                        "description": "Chain Merchant",
-                        "required": true,
-                        "type": "string",
-                        "default": "NA"
-                    },
-                    {
-                        "name": "PAYMENTCHANNEL",
-                        "in": "formData",
-                        "description": "PAYMENT CHANNEL",
-                        "required": true,
-                        "type": "string",
-                        "default": "36"
-                    },
-                    {
-                        "name": "PAYMENTCODE",
-                        "in": "formData",
-                        "description": "PAYMENT CODE",
-                        "required": true,
-                        "type": "number",
-                        "default": "8856095100000013"
-                    },
-                    {
-                        "name": "WORDS",
-                        "in": "formData",
-                        "description": "WORDS",
-                        "required": true,
-                        "type": "number",
-                        "default": "e48b892015a850fb7090a899a76b18783c5d40d9"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful"
-                    }
-                }
+        ],
+        "responses": {
+            "200": {
+                "description": "successful"
             }
-        },
-        "/order/biller": {
-            "get": {
-                "tags": [
-                    "Order"
-                ],
-                "summary": "Check Phone Number",
-                "description": "Check Phone Number for Information Provider, and Billerscode",
-                "operationId": "check-phone",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "name": "phone_number",
-                        "in": "query",
-                        "description": "0812",
-                        "required": true,
-                        "type": "string"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful"
-                    }
-                }
-            }
-        },
-        "/order/check-phone": {
-            "get": {
-                "tags": [
-                    "Order"
-                ],
-                "summary": "Check Phone Number",
-                "description": "Check Phone Number for Information Provider, and Billerscode",
-                "operationId": "check-phone",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "name": "phone_number",
-                        "in": "query",
-                        "description": "0812",
-                        "required": true,
-                        "type": "string"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful"
-                    }
-                }
-            }
-        }
-    },
-    "definitions": {},
-    "parameters": {
-        "Authorization": {
-            "name": "Authorization",
-            "in": "header",
-            "required": true,
-            "type": "string"
-        }
-    },
-    "securityDefinitions": {
-        "Bearer": {
-            "type": "apiKey",
-            "name": "Authorization",
-            "in": "header"
         }
     }
+}, 
+"/order/check-phone": {
+    "get": {
+        "tags": [
+            "Order"
+        ],
+        "summary": "Check Phone Number",
+        "description": "Check Phone Number for Information Provider, and Billerscode",
+        "operationId": "check-phone",
+        "produces": [
+            "application/json"
+        ],
+        "parameters": [
+            {
+                "name": "phone_number",
+                "in": "query",
+                "description": "0812",
+                "required": true,
+                "type": "string"
+            }
+        ],
+        "responses": {
+            "200": {
+                "description": "successful"
+            }
+        }
+    }
+},
+ "/order/biller": {
+            "post": {
+                "tags": [
+                    "Order"
+                ],
+                "summary": "Order",
+                "description": "Order",
+                "operationId": "Order_",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "",
+                        "required": true,
+                        "schema": {
+
+                            "$ref": "#/definitions/Order"
+
+                        },
+                    }],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "security": [{"Bearer": [ ]}]
+            },
+
+        },
+},
+
+"definitions": {"Order": {
+
+    "type": "object",
+    "required": [
+        "name",
+        "photoUrls"
+    ],
+    "properties": {
+        "total_billing": {
+            "type": "integer",
+            "format": "int64",
+            "example": 50000
+        },
+        "id_workflow_status": {
+            "type": "string",
+            "example": "ODSTS01"
+        },
+        "id_user_company": {
+            "type": "integer",
+            "format": "int64",
+            "example": 71
+        }, 
+        "id_delivery_type": {
+            "type": "string",
+            "example": "DLV001"
+        }, 
+        "name_delivery_type": {
+            "type": "string",
+            "example": "Direct"
+        }, 
+        "cart": {
+            "type": "array",
+            "xml": {
+                "name": "tag",
+                "wrapped": true
+            },
+            "items": {
+                "$ref": "#/definitions/Cart"
+            }
+        },
+        "status": {
+            "type": "string",
+            "description": "pet status in the store",
+            "enum": [
+                "available",
+                "pending",
+                "sold"
+            ]
+        }
+    },
+    "xml": {
+        "name": "Pet"
+    }
+
+},
+"Cart": {
+
+    "type": "object",
+    "properties": {
+        "category_id": {
+            "type": "integer",
+            "format": "int64",
+            "example": 11,
+        },
+        "id_channel": {
+            "type": "string",
+            "example": "CHN0001",
+        },
+        "product_id": {
+            "type": "integer",
+            "format": "int64",
+            "example": 11,
+        },
+        "product_name": {
+            "type": "string",
+            "example": "biller pulsa",
+        },
+        "product_image_path": {
+            "type": "string",
+            "example": "biller pulsa",
+        },
+        "biller_id": {
+            "type": "integer",
+            "example": 1222,
+        },
+        "bill_id": {
+            "type": "integer",
+            "example": 1,
+        },
+        "biller_name": {
+            "type": "string",
+            "example": "pulsa tsel",
+        },
+        "bill_details": {
+            "type": "string",
+            "example": "keterangan",
+        },
+        "quantity": {
+            "type": "integer",
+            "example": 1,
+        },
+        "sell_price": {
+            "type": "integer",
+            "example": 1,
+        },
+        "base_price": {
+            "type": "integer",
+            "example": 1,
+        },
+        "product_details": {
+            "type": "integer",
+            "example": 1,
+        },
+        "additional_data_1": {
+            "type": "string",
+            "example": "Oke",
+        },
+        "additional_data_2": {
+            "type": "string",
+            "example": "Oke",
+        },
+        "additional_data_3": {
+            "type": "string",
+            "example": "Oke",
+        },
+          // "product_image_path": "biller pulsa",
+          //   "biller_id": 1222,
+          //   "bill_id": 1222,
+          //   "biller_name": 1222,
+          //   "bill_details": 1222,
+          //   "quantity": 1,
+          //   "sell_price": 1,
+          //   "base_price": 1,
+          //   "product_details": 1,
+          //   "additional_data_1": "Oke",
+          //   "additional_data_2": "Oke",
+          //   "additional_data_3": "Oke"
+    },
+    "xml": {
+        "name": "Tag"
+    }
+
+},
+},
+"parameters": {
+    "Authorization": {
+        "name": "Authorization",
+        "in": "header",
+        "required": true,
+        "type": "string"
+    }
+},
+"securityDefinitions": {
+    "Bearer": {
+        "type": "apiKey",
+        "name": "Authorization",
+        "in": "header"
+    }
+}
 }

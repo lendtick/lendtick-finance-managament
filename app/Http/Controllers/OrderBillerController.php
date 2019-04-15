@@ -16,32 +16,8 @@ use App\Helpers\Api;
 use App\Helpers\Template;
 use App\Helpers\RestCurl;
 
-class OrderBillerController extends Controller {
-
-    /**
-    * @SWG\Get(
-    *     path="/order/biller",
-    *     description="Check Phone Number for Information Provider, and Billerscode",
-    *     operationId="check-phone",
-    *     produces={"application/json"},
-    *     @SWG\Parameter(
-    *         description="0812",
-    *         in="query",
-    *         name="phone_number",
-    *         required=true,
-    *         type="string"
-    *     ),
-    *     @SWG\Response(
-    *         response="200",
-    *         description="successful"
-    *     ),
-    *     summary="Check Phone Number",
-    *     tags={
-    *         "Order"
-    *     }
-    * )
-    * */ 
-
+class OrderBillerController extends Controller { 
+    
     public function store(Request $request)
     {
         try {
