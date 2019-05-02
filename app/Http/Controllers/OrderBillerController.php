@@ -11,17 +11,19 @@ use DB;
 use App\Models\Order\Order as OrderHeader;
 use App\Models\Order\OrderDetail as OrderDetail;
 use App\Models\Order\OrderDelivery as OrderDelivery;
+use App\Models\Order\OrderPayment as OrderPayment;
 
 use App\Helpers\Api;
 use App\Helpers\Template;
 use App\Helpers\RestCurl;
 
+// use App\Http\Controllers\DokuController as DC;
+
 class OrderBillerController extends Controller { 
-    
+
     public function store(Request $request)
     {
-        try {
-
+        try { 
 
             if(empty($request->json())) throw New \Exception('Params not found', 500);
 
@@ -32,9 +34,12 @@ class OrderBillerController extends Controller {
                 'cart'                  => 'required',
                 'id_delivery_type'      => 'required',
                 'name_delivery_type'    => 'required',
+                'payment'               => 'required',
             ]);
 
             $params = (json_decode($request->getContent(), true));
+
+            // print_r(DC::request()); die();
 
             $order_header = array(
                 'id_user'              => $request->id_user,
@@ -45,7 +50,6 @@ class OrderBillerController extends Controller {
                 'id_user_company'      => $request->id_user_company ? $request->id_user_company : '',
                 'systrace'             => time(),
             );
-
 
             DB::beginTransaction();
 
@@ -81,13 +85,54 @@ class OrderBillerController extends Controller {
             $insert_detail = OrderDetail::insert($order_detail);
 
             $order_delivery = array(
-                'id_order'           => $id_order->id_order,
+                'id_order'              => $id_order->id_order,
                 'id_delivery_type'      => $request->id_delivery_type ?  $request->id_delivery_type : '',
-                'delivery_details'    => $request->name_delivery_type ? $request->name_delivery_type : '' 
+                'delivery_details'      => $request->name_delivery_type ? $request->name_delivery_type : '' 
             );
 
             $insert_delivery = OrderDelivery::insert($order_delivery);
 
+
+            // insert payment order
+             foreach ($request->payment as $payment) {
+
+                if ($payment['id_payment_type'] === 'PAY003') {
+                    // die('bayar pake va');
+                    // echo 'insert ke doku finance';
+
+                    $order_payment[] = array(
+                        'id_order'              => $id_order->id_order,
+                        'id_payment_type'       => $payment['id_payment_type'],
+                        'total_payment'         => $payment['total_payment'],
+                        'identifier_number'     => $payment['identifier_number']
+                    );
+
+                    $amount = $payment['total_payment'];
+
+                    $insert_to_doku = array(
+                        'chain_merchant'    => 'NA',
+                        'amount'            => number_format((is_string($amount)?(float)$amount:$amount),2,'.',''),
+                        'invoice'           => 123131231231231,
+                        'email'             => 'lutfi@google.com',
+                        'name'              => 'lutfi',
+                        'phone'             => '081818818181811212',
+                        'id_user'           => $request->id_user
+                    );
+
+                    $res_insert_to_doku = RestCurl::hit(env('LINK_FINANCE').'/doku/va/request' , $insert_to_doku, 'POST');
+
+                } else {
+                    $order_payment[] = array(
+                        'id_order'              => $id_order->id_order,
+                        'id_payment_type'       => $payment['id_payment_type'],
+                        'total_payment'         => $payment['total_payment'],
+                        'identifier_number'     => $payment['identifier_number']
+                    );
+
+                }
+
+            }
+            OrderPayment::insert($order_payment); 
 
             // echo $id_order->id_order; 
             // print_r($insert_header);

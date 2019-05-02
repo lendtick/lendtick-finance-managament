@@ -101,14 +101,17 @@ class DokuController extends Controller
     * )
     * */
 	public function request(Request $r, Doku $doku){
-		if($this->__check_post()){
-      $post = (array) $r->post();
+		// if($this->__check_post()){
+        $post = (array) $r->post();
 
-			if($this->__check_var($post)){
+        // print_r($post); 
+        // die();
+
+			// if($this->__check_var($post)){
 				// set method to doku api
 				$doku::setMethod('generateCodeUrl');
 				// for staging/live method
-        $doku::staging(true);
+                $doku::staging(true);
 
 
 				// collect all data to push it
@@ -126,6 +129,8 @@ class DokuController extends Controller
 					'req_name' => $post['name'],
 					'req_currency' => '360'
 				);
+
+                // print_r($data); die();
 				$doku::data($data);
         $config = $doku::getConfig();
 
@@ -140,10 +145,12 @@ class DokuController extends Controller
 				// ...::response() / ...::getResponse()
         $resp = $doku::response();
 
-				if(isset($resp->data->res_pay_code)){
-					$resp->data->{'va_mandiri'} = $this->config->item('prefix')['mandiri'].$resp->data->res_pay_code;
-					$resp->data->{'va_bca'} = $this->config->item('prefix')['bca'].$resp->data->res_pay_code;
-				}
+        // print_r($resp->data->res_pay_code); die();
+
+				// if(isset($resp->data->res_pay_code)){
+				// 	$resp->data->{'va_mandiri'} = $this->config->item('prefix')['mandiri'].$resp->data->res_pay_code;
+				// 	$resp->data->{'va_bca'} = $this->config->item('prefix')['bca'].$resp->data->res_pay_code;
+				// }
 
 				if(isset($resp->data->res_pay_code)){
 					// save to database
@@ -166,13 +173,15 @@ class DokuController extends Controller
 						'verifystatus' 		=> '',
 						'id_user' 		=> $post['id_user']
 					));
-				}
-
-				response()->json(Api::response(false,Template::lang('success')),201);
-			}
-      return response()->json(Api::response(false,Template::lang('Please check your POST data(chain_merchant, amount, invoice, email, name)')),400);
-		}
+				return response()->json(Api::response(true,Template::lang('success')),201);
+				} else {
+                    
     return response()->json(Api::response(false,Template::lang('Please POST method')),400);
+                }
+
+			// }
+      // return response()->json(Api::response(false,Template::lang('Please check your POST data(chain_merchant, amount, invoice, email, name)')),400);
+		// }
 	}
 
 
