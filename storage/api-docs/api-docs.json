@@ -720,7 +720,18 @@
             "items": {
                 "$ref": "#/definitions/Cart"
             }
+        },
+        "payment": {
+            "type": "array",
+            "xml": {
+                "name": "tag",
+                "wrapped": true
+            },
+            "items": {
+                "$ref": "#/definitions/Payment"
+            }
         }
+
     },
     "xml": {
         "name": "Pet"
@@ -796,19 +807,31 @@
         "additional_data_3": {
             "type": "string",
             "example": "Oke",
+        }, 
+    },
+    "xml": {
+        "name": "Tag"
+    }
+
+},
+
+"Payment": {
+
+    "type": "object",
+    "properties": {
+        "id_payment_type": {
+            "type": "string",
+            "format": "int64",
+            "example": "PAY003",
         },
-          // "product_image_path": "biller pulsa",
-          //   "biller_id": 1222,
-          //   "bill_id": 1222,
-          //   "biller_name": 1222,
-          //   "bill_details": 1222,
-          //   "quantity": 1,
-          //   "sell_price": 1,
-          //   "base_price": 1,
-          //   "product_details": 1,
-          //   "additional_data_1": "Oke",
-          //   "additional_data_2": "Oke",
-          //   "additional_data_3": "Oke"
+        "total_payment": {
+            "type": "integer",
+            "example": 52000,
+        },
+        "identifier_number": {
+            "type": "integer",
+            "example": 11,
+        }
     },
     "xml": {
         "name": "Tag"
