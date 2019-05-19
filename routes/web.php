@@ -34,6 +34,11 @@ $router->group(['prefix'=>'doku'], function() use($router){
     $router->get('/test','BillerController@index');
 });
 
+$router->group(['prefix'=>'master'], function() use($router){
+    // request for doku
+    $router->get('/paymenttype', 'PaymentTypeController@get'); 
+});
+
 // biller
 
 $router->group(['prefix'=>'biller'], function() use($router){
@@ -73,6 +78,12 @@ $router->group(['prefix'=>'order'], function() use($router){
         $router->post('/biller','OrderBillerController@store'); 
     });
 
+    $router->group(['middleware' => ['biller_session_validate'],'prefix' => '/'], function() use ($router){
+        // list all
+        $router->get('/test','TestMiddlewareBiller@store'); 
+    });
+
+    
 });
 
 
