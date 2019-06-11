@@ -4,7 +4,7 @@ namespace App\Helpers;
 
 Class RestCurl {
   public static function exec($method, $url, $obj = array(), $token = '', $additional = '') {
-    $header = ['Content-Type: application/x-www-form-urlencoded'];
+    $header = ['Accept: application/json','Content-Type: application/json'];
     if(!empty($token)){
       $authorization = 'Authorization: '.$token;
       array_push($header, $authorization);
