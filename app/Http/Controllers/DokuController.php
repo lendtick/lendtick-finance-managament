@@ -172,7 +172,8 @@ class DokuController extends Controller
 						'verifyid' 			=> '',
 						'verifyscore' 		=> '',
 						'verifystatus' 		=> '',
-						'id_user' 		=> $post['id_user']
+						'id_user' 		    => $post['id_user'],
+                        'billertrx'         => $post['billertrx']
 					));
 				return response()->json(Api::response(true,Template::lang('success')),201);
 				} else {
