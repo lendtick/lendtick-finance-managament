@@ -399,6 +399,12 @@ class DokuController extends Controller
           $doku_data = DokuRepo::getByParam("transidmerchant", $order_number)->first();
 
           if ($doku_data->billertrx) {
+            $number_payment = array(
+                'number_payment' => $order_number
+            );
+            $res_email = RestCurl::exec('POST',env('LINK_FINANCE','https://lentick-api-finance-dev.azurewebsites.net')."/order/payment-to-biller", $number_payment);
+
+                // print_r([$res_email, $number_payment]);
                 // echo "diproses ke proses biller order, yang menggunakan transaksi va";
                 // echo 
                 echo "Continue"; 

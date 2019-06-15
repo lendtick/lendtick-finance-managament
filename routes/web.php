@@ -74,8 +74,11 @@ $router->group(['prefix'=>'order'], function() use($router){
     $router->get('/check-phone','PhoneProviderController@check'); 
 
     $router->group(['middleware' => ['authorize'],'prefix' => '/'], function() use ($router){
-        // list all
+        // order biller
         $router->post('/biller','OrderBillerController@store'); 
+
+        // list all
+        $router->post('/customer/list','OrderHistoryController@list');
     });
 
     $router->group(['middleware' => ['biller_session_validate'],'prefix' => '/'], function() use ($router){
@@ -84,7 +87,7 @@ $router->group(['prefix'=>'order'], function() use($router){
     });
 
     // pencarian
-    $router->post('/search-number-payment','OrderBillerController@searchPaymentNumber');    
+    $router->post('/payment-to-biller','OrderBillerController@paymentBillerFromOrder');    
     
 });
 

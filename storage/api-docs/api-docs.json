@@ -617,6 +617,71 @@
         }
     }
 }, 
+
+"/order/payment-to-biller": {
+    "post": {
+        "tags": [
+            "Order"
+        ],
+        "summary": "Order Payment to Biller",
+        "description": "Order Payment to Biller",
+        "operationId": "order22",
+        "produces": [
+            "application/json"
+        ],
+        "parameters": [
+            {
+                "name": "number_payment",
+                "in": "formData",
+                "description": "8856108315182146",
+                "required": true,
+                "type": "number",
+                "default": "8856108315182146"
+            },
+        ], 
+        "responses": {
+            "200": {
+                "description": "successful"
+            }
+        }
+    }
+},
+"/order/customer/list": {
+    "post": {
+        "tags": [
+            "Order Customer"
+        ],
+        "summary": "List Order Customer",
+        "description": "List Order Customer",
+        "operationId": "check-phone1",
+        "produces": [
+            "application/json"
+        ],
+        "parameters": [
+            {
+                "name": "offset",
+                "in": "formData",
+                "description": "0",
+                "required": true,
+                "type": "integer"
+            },
+            {
+                "name": "limit",
+                "in": "formData",
+                "description": "10",
+                "required": true,
+                "type": "integer"
+            },
+        ],
+        "responses": {
+            "200": {
+                "description": "successful"
+            }
+        },
+        "security": [{"Bearer": [ ]}]
+    }
+},
+
 "/order/check-phone": {
     "get": {
         "tags": [
@@ -641,7 +706,8 @@
             "200": {
                 "description": "successful"
             }
-        }
+        },
+
     }
 },
  "/order/biller": {

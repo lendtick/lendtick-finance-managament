@@ -23,4 +23,10 @@ class Order extends Model {
     ];
 
     public $timestamps = false;
+
+    public function payment()
+    {
+        // return $this->hasMany('App\Models\Order\OrderPayment');
+        return $this->belongsTo('App\Models\Order\OrderPayment', 'id_order', 'id_order');
+    }
 }

@@ -179,33 +179,60 @@ class OrderBillerController extends Controller {
 
     //cari trans
 
-    public function searchPaymentNumber(Request $request)
+    public function paymentBillerFromOrder(Request $request)
     {
         try {
+
+            if(empty($request->json())) throw New \Exception('Params not found', 500);
+
+            $this->validate($request, [
+                'number_payment'         => 'required'
+            ]);
             
-            
+            $number_payment = $request->number_payment ? $request->number_payment : 0;
+            if ($number_payment) {
 
-            $insert_delivery = 1;
-            if ($insert_delivery) {
-                $httpcode   = 200;
-                $status     = 1;
-                $data       = OrderPayment::where('number_payment','8856108315164052')->join('order.order_detail', 'order_payment.id_order', '=', 'order_detail.id_order')->get();
-                $errorMsg   = 'Sukses';
-            } else {
-                throw New \Exception('Order gagal, silahkan coba kembali', 500);
-            }
+               $param_payment_biller = array(
+                'billerid' => $order_payment->biller_id, 
+                'accountnumber' => $order_payment->account_number,
+                'inquiryid' => $order_payment->inquiry_id,
+                'amount' => $order_payment->sell_price,
+                'billid' => $order_payment->bill_id,
+                'sessionid' => 'lorem',
+                );
 
-        } catch(\Exception $e) {
-            DB::rollback();
-            $status   = 0;
-            $httpcode = 400;
-            $data     = ['message_system' => $e->getMessage()];
-            $errorMsg = 'Terjadi Kesalahan Order, silahkan coba sekali lagi';
+               $payment = (object) RestCurl::exec('POST',env('LINK_FINANCE','https://lentick-api-finance-dev.azurewebsites.net')."/biller/payment", $param_payment_biller);
 
+                // proses pembayaran ke biller 
+               $order_payment = OrderPayment::where('number_payment',$number_payment)->join('order.order_detail', 'order_payment.id_order', '=', 'order_detail.id_order')->first();
+
+               $update_status = OrderHeader::where('id_order', $order_payment->id_order)
+               ->update([
+                    'total_payment'         => $order_payment->sell_price,
+                    'id_workflow_status'    => 'ODSTS05'
+                ]);
+
+               
+
+               $httpcode   = 200;
+               $status     = 1;
+               $data       = $payment->data->data;
+               $errorMsg   = 'Sukses';
+           } else {
+            throw New \Exception('Order gagal, silahkan coba kembali', 500);
         }
 
-        return response()->json(Api::response($status,$errorMsg,$data),$httpcode);
+    } catch(\Exception $e) {
+        DB::rollback();
+        $status   = 0;
+        $httpcode = 400;
+        $data     = $e->getMessage();
+        $errorMsg = 'Gagal';
+
     }
+
+    return response()->json(Api::response($status,$errorMsg,$data),$httpcode);
+}
 
 
 }
