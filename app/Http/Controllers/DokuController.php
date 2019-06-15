@@ -121,7 +121,8 @@ class DokuController extends Controller
 					'req_purchase_amount' => number_format((is_string($post['amount'])?(float)$post['amount']:$post['amount']),2,'.',''),
 					'req_trans_id_merchant' => $post['invoice'],
 					'req_request_date_time' => $this->now,
-					'req_expiry_time' => (24*60),
+					// 'req_expiry_time' => (24*60),
+                    'req_expiry_time' => 150,
 					'req_open_amount_status' => '',
 					'req_mobile_phone' => $post['phone'],
 					'req_session_id' => sha1($this->now),
@@ -132,7 +133,7 @@ class DokuController extends Controller
 
                 // print_r($data); die();
 				$doku::data($data);
-        $config = $doku::getConfig();
+                $config = $doku::getConfig();
 
 				// processing send data
 				$doku::send();
@@ -143,7 +144,7 @@ class DokuController extends Controller
 				// getting response from doku
 				// notes (2 Method):
 				// ...::response() / ...::getResponse()
-        $resp = $doku::response();
+                $resp = $doku::response();
 
         // print_r($resp->data->res_pay_code); die();
 
@@ -400,18 +401,12 @@ class DokuController extends Controller
           $master_flow = MasterWorkflow::where('workflow_status_name', "like", "Active%")->where('workflow_status_desc', "like", "%user status%")->get()->first();
           // $member = User::where('id_user',$doku_data->id_user)->get();
           ($member = User::where('id_user',$doku_data->id_user))->update(array('id_workflow_status' => $master_flow->id_workflow_status));
-          $member = $member->get()->first();
-          // print_r(@$member);
-          // die();
+          $member = $member->get()->first(); 
 
           // get generate id_koperasi
           $nik = RestCurl::get(env('LINK_USER','https://lentick-api-user-dev.azurewebsites.net')."/profile/generate-nik",[]);
           $member->username = $nik["data"]->data->nomor_NIK;
-          $member->save();
-
-          // echo "masuk sini";
-          // die();/
-
+          $member->save(); 
 
           $profile = Profile::where('id_user',$member->id_user)->get()->first();
           $profile->id_koperasi = $nik["data"]->data->nomor_NIK;
@@ -421,24 +416,18 @@ class DokuController extends Controller
           // save password to user
           $user = User::where('id_user', $profile->id_user)->get()->first();
           $user->password = $h->make($pass);
-          $user->save();
-
-
-          // print_r($profile); die();
+          $user->save(); 
           // notify to user to get a credential
           $email = [
             "phone_number" => $profile->phone_number,
             "anggota_id" => $member->username,
             "password" => $pass
-          ];
+          ]; 
+          $res_email = RestCurl::exec('POST',env('LINK_NOTIF','https://lentick-api-notification-dev.azurewebsites.net')."/send-sms-after-payment", $email);
+          print_r($res_email);
 
-          // print_r($nik); die();
-          $res_email = RestCurl::post(env('LINK_NOTIF','https://lentick-api-notification-dev.azurewebsites.net')."/send-sms-after-payment", $email);
+          echo "Continue"; 
 
-          // print_r($res_email);
-
-          echo "Continue";
-          // echo "berhasil kaka";
 
         } else {
           if ( $words == $WORDS_GENERATED ) {
@@ -451,7 +440,7 @@ class DokuController extends Controller
               if (!$hasil) {
                 echo 'Stop1';
                 // $this->response(array('error' => 'No transidmerchant'));
-              } else{
+              } else {
                 if ($status=="SUCCESS") {
                   $doku_update = DokuRepo::update($order_number, array(
                     "words" => $words, 
@@ -471,7 +460,7 @@ class DokuController extends Controller
                   ));
                   if(!$doku_update)
                      die ("Stop2");
-                  else{
+                  else {
                     $doku_data = DokuRepo::getByParam("transidmerchant", $order_number)->first();
 
                     // update flag from not paid to paid
