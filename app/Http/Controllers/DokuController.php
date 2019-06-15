@@ -104,9 +104,6 @@ class DokuController extends Controller
 		// if($this->__check_post()){
         $post = (array) $r->post();
 
-        // print_r($post); 
-        // die();
-
 			// if($this->__check_var($post)){
 				// set method to doku api
 				$doku::setMethod('generateCodeUrl');
@@ -378,6 +375,10 @@ class DokuController extends Controller
         // die();
 
         if(env("BYPASS_DOKU", 0) == 1){
+            // dd($order_number);
+            // $doku_data = DokuRepo::getByParam("transidmerchant", $order_number)->first();
+            // print_r($doku_data);
+            // die();
             // die(22222);
           $doku_update = DokuRepo::update($order_number, array(
             "words" => $words, 
@@ -396,6 +397,18 @@ class DokuController extends Controller
             "verifystatus" => $verifystatus
           ));
           $doku_data = DokuRepo::getByParam("transidmerchant", $order_number)->first();
+
+          if ($doku_data->billertrx) {
+                // echo "diproses ke proses biller order, yang menggunakan transaksi va";
+                // echo 
+                echo "Continue"; 
+                die();
+          } else {
+                echo "proses pembayaran pendaftaran pengguna";
+                die();
+
+          }
+
 
 
           // update flag from not paid to paid
@@ -425,7 +438,6 @@ class DokuController extends Controller
             "password" => $pass
           ]; 
           $res_email = RestCurl::exec('POST',env('LINK_NOTIF','https://lentick-api-notification-dev.azurewebsites.net')."/send-sms-after-payment", $email);
-          print_r($res_email);
 
           echo "Continue"; 
 

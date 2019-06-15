@@ -743,9 +743,8 @@
     "type": "object",
     "properties": {
         "category_id": {
-            "type": "integer",
-            "format": "int64",
-            "example": 11,
+            "type": "string",
+            "example": "CATBILLER",
         },
         "id_channel": {
             "type": "string",
@@ -808,6 +807,14 @@
             "type": "string",
             "example": "Oke",
         }, 
+        "inquiry_id": {
+            "type": "integer",
+            "example": 1,
+        }, 
+        "account_number": {
+            "type": "string",
+            "example": "081311529594",
+        }, 
     },
     "xml": {
         "name": "Tag"
@@ -831,7 +838,13 @@
         "identifier_number": {
             "type": "integer",
             "example": 11,
-        }
+        },
+        "number_payment": {
+            "type": "string",
+            "example": "1211212412412421",
+        },
+        
+
     },
     "xml": {
         "name": "Tag"

@@ -26,7 +26,8 @@ class Doku extends Model {
         'verifyid',
         'verifyscore',
         'verifystatus',
-        'id_user'
+        'id_user',
+        'billertrx'
     ];
 
     public $timestamps = false;

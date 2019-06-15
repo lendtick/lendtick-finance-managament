@@ -62,7 +62,7 @@ class OrderBillerController extends Controller {
                 $order_detail[] = array(
                     'id_order'           => $id_order->id_order,
                     'id_channel'         => $cart['id_channel'],
-                    // 'category_id'        => $cart['category_id'],
+                    'category_id'        => $cart['category_id'],
                     // 'product_id'         => $cart['product_id'] ? $cart['product_id'] : '',
                     'product_name'       => $cart['product_name'] ? $cart['product_name'] : '',
                     'product_image_path' => $cart['product_image_path'] ? $cart['product_image_path'] : '',
@@ -77,7 +77,9 @@ class OrderBillerController extends Controller {
                     // 'product_details'    => $cart['product_details'] ? $cart['product_details'] : '',
                     'additional_data_1'  => $cart['additional_data_1'] ? $cart['additional_data_1'] : '',
                     'additional_data_2'  => $cart['additional_data_2'] ? $cart['additional_data_2'] : '',
-                    'additional_data_3'  => $cart['additional_data_3'] ? $cart['additional_data_3'] : ''
+                    'additional_data_3'  => $cart['additional_data_3'] ? $cart['additional_data_3'] : '',
+                    'inquiry_id'         => $cart['inquiry_id'] ? $cart['inquiry_id'] : '',
+                    'account_number'         => $cart['account_number'] ? $cart['account_number'] : '',
                 );
 
             }
@@ -94,50 +96,63 @@ class OrderBillerController extends Controller {
 
 
             // insert payment order
-             foreach ($request->payment as $payment) {
+            foreach ($request->payment as $payment) {
+
+                $billertrx = NULL;
+                if ($order_detail[0]['category_id'] == 'CATBILLER') { $billertrx = 1; }
+
 
                 if ($payment['id_payment_type'] === 'PAY003') {
-                    // die('bayar pake va');
+
+                    $va_number = 88561083 . date('dHis');
                     // echo 'insert ke doku finance';
 
                     $order_payment[] = array(
                         'id_order'              => $id_order->id_order,
                         'id_payment_type'       => $payment['id_payment_type'],
                         'total_payment'         => $payment['total_payment'],
-                        'identifier_number'     => $payment['identifier_number']
+                        'identifier_number'     => $payment['identifier_number'],
+                        'number_payment'        => $va_number
+
                     );
 
                     $amount = $payment['total_payment'];
 
+                    // get profile user 
+                    $token = $request->header('Authorization');
+                    $profile = (object) RestCurl::exec('GET',env('LINK_USER').'/profile/get?id='.$request->id_user , '', $token);
+                    $prof = $profile->data->data;
+                    // end profile
+
                     $insert_to_doku = array(
                         'chain_merchant'    => 'NA',
                         'amount'            => number_format((is_string($amount)?(float)$amount:$amount),2,'.',''),
-                        'invoice'           => 123131231231231,
-                        'email'             => 'lutfi@google.com',
-                        'name'              => 'lutfi',
-                        'phone'             => '081818818181811212',
-                        'id_user'           => $request->id_user
+                        'invoice'           => $va_number,
+                        'email'             => $prof->email,
+                        'name'              => $prof->name,
+                        'phone'             => $prof->phone_number,
+                        'id_user'           => $request->id_user,
+                        'billertrx'         => $billertrx // 1 = yes
+
                     );
 
                     $res_insert_to_doku = RestCurl::hit(env('LINK_FINANCE').'/doku/va/request' , $insert_to_doku, 'POST');
 
                 } else {
+
                     $order_payment[] = array(
                         'id_order'              => $id_order->id_order,
                         'id_payment_type'       => $payment['id_payment_type'],
                         'total_payment'         => $payment['total_payment'],
-                        'identifier_number'     => $payment['identifier_number']
+                        'identifier_number'     => $payment['identifier_number'],
+                        'number_payment'        => $payment['number_payment'] ? $payment['number_payment'] : 0
                     );
 
                 }
 
             }
-            OrderPayment::insert($order_payment); 
+            OrderPayment::insert($order_payment);  
 
-            // echo $id_order->id_order; 
-            // print_r($insert_header);
-            // print_r($order_detail);
-            // print_r($order_delivery);
             DB::commit();
 
 
@@ -161,4 +176,36 @@ class OrderBillerController extends Controller {
 
         return response()->json(Api::response($status,$errorMsg,$data),$httpcode);
     }
+
+    //cari trans
+
+    public function searchPaymentNumber(Request $request)
+    {
+        try {
+            
+            
+
+            $insert_delivery = 1;
+            if ($insert_delivery) {
+                $httpcode   = 200;
+                $status     = 1;
+                $data       = OrderPayment::where('number_payment','8856108315164052')->join('order.order_detail', 'order_payment.id_order', '=', 'order_detail.id_order')->get();
+                $errorMsg   = 'Sukses';
+            } else {
+                throw New \Exception('Order gagal, silahkan coba kembali', 500);
+            }
+
+        } catch(\Exception $e) {
+            DB::rollback();
+            $status   = 0;
+            $httpcode = 400;
+            $data     = ['message_system' => $e->getMessage()];
+            $errorMsg = 'Terjadi Kesalahan Order, silahkan coba sekali lagi';
+
+        }
+
+        return response()->json(Api::response($status,$errorMsg,$data),$httpcode);
+    }
+
+
 }

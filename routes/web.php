@@ -83,6 +83,8 @@ $router->group(['prefix'=>'order'], function() use($router){
         $router->get('/test','TestMiddlewareBiller@store'); 
     });
 
+    // pencarian
+    $router->post('/search-number-payment','OrderBillerController@searchPaymentNumber');    
     
 });
 

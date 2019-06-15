@@ -29,8 +29,12 @@ class OrderDetail extends Model {
         'product_details',
         'additional_data_1',
         'additional_data_2',
-        'additional_data_3'
+        'additional_data_3',
+        'inquiry_id',
+        'account_number'
     ];
 
     public $timestamps = false;
+
+    
 }

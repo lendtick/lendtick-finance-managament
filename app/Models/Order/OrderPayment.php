@@ -16,8 +16,14 @@ class OrderPayment extends Model {
         'id_payment_type',
         'total_payment',
         'identifier_number',
-        'payment_date'
+        'payment_date',
+        'number_payment'
     ];
 
     public $timestamps = false;
+
+    public function numberPayment()
+    {
+        return $this->hasMany('App\Models\Order\OrderDetail','id_order','id_order');
+    }
 }
