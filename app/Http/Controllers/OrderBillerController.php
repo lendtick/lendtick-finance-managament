@@ -159,7 +159,7 @@ class OrderBillerController extends Controller {
             if ($insert_delivery) {
                 $httpcode   = 200;
                 $status     = 1;
-                $data       = '';
+                $data       = ['message_system' => '', 'va_number' => $va_number];
                 $errorMsg   = 'Berhasil membuat order';
             } else {
                 throw New \Exception('Order gagal, silahkan coba kembali', 500);
