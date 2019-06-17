@@ -410,8 +410,8 @@ class DokuController extends Controller
                 echo "Continue"; 
                 die();
           } else {
-                echo "proses pembayaran pendaftaran pengguna";
-                die();
+                //echo "proses pembayaran pendaftaran pengguna";
+                //die();
 
           }
 
