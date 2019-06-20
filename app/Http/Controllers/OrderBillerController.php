@@ -136,7 +136,14 @@ class OrderBillerController extends Controller {
 
                     );
 
-                    $res_insert_to_doku = RestCurl::hit(env('LINK_FINANCE').'/doku/va/request' , $insert_to_doku, 'POST');
+                    $res_insert_to_doku = (object) RestCurl::hit(env('LINK_FINANCE').'/doku/va/request' , $insert_to_doku, 'POST');
+                    $res_doku = json_decode($res_insert_to_doku->response);
+
+                    if ($res_doku->status == true || $res_doku->status == 1) {
+                        
+                    } else {
+                        throw New \Exception('Order gagal, silahkan coba kembali', 500);
+                    }
 
                 } else {
 
