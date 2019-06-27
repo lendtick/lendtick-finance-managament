@@ -54,30 +54,30 @@ class BillerInquiryController extends Controller {
     *         "Biller"
     *     }
     * )
-    * */
-
-	// get list billers
+    * */ 
     public function store(Request $request)
     {
 
-      try {
+      try { 
 
-       if(empty($request->json())) throw New \Exception('Params not found', 500);
+
+
+          if(empty($request->json())) throw New \Exception('Params not found', 500);
 
        // bisa semua selain bayar BPJS Kesehatan
-       $this->validate($request, [
-          'billerid'		      => 'required',
+          $this->validate($request, [
+              'billerid'		      => 'required',
           // 'sessionid'         => 'required', // Please refer to BILLER ID LIST
           'accountnumber'     => 'required', // PLN POSTPAID Subscriber ID PLN NONTAGLIS Registration Number TELKOM PSTN Area code (4 digit) + Phone number (9 digit, zero left padding) PDAM Customer ID MULTIFINANCE Subscriber ID
-        ]);
+      ]);
 
-       $channel_code = env('CHANNELCODE_BILLER');
-       $request_date = date('YmdHms');
+          $channel_code = env('CHANNELCODE_BILLER');
+          $request_date = date('YmdHms');
 
-       $sessions = BillerHelper::SessionID();
+          $sessions = BillerHelper::SessionID();
 
 
-       $check = array(
+          $check = array(
         'CHANNELCODE'       => $channel_code, //Channel Identification Code
         'SESSIONID'         => $sessions['SessionID'], // Session for each success login.
         'REQUESTDATETIME'   => $sessions['RequestDate'], // '20190402065223', //$request_date, //yyyyMMddHHmmss
@@ -88,20 +88,33 @@ class BillerInquiryController extends Controller {
         'ADDITIONALDATA1'   => $channel_code,  //Additional information, please fill with channel code
         'ADDITIONALDATA2'   => '', // Additional information 
         'ADDITIONALDATA3'   => '', // Additional information, only BPJS Kesehatan fill this parameter with Phone number and month bill,o i.e "081319422963|2" 
-      );
-      $res = (object) RestCurl::hit(env('LINK_DOKU_BILLER').'/DepositSystem-api/Inquiry?',$check,'POST');
-      $response = json_decode($res->response);
+    );
+          $res = (object) RestCurl::hit(env('LINK_DOKU_BILLER').'/DepositSystem-api/Inquiry?',$check,'POST');
+          $response = json_decode($res->response);
 
-      if (BillerHelper::SessionID($response->responsecode , $response->responsemsg)) { BillerHelper::SessionID(); } 
+          if (BillerHelper::SessionID($response->responsecode , $response->responsemsg)) { BillerHelper::SessionID(); } 
 
-       if ($response->responsecode == '0000') {
+          if ($response->responsecode == '0000') {
             $httpcode   = 200;
             $status     = 1;
             $errorMsg   = 'Sukses';
+            /*
+            * $new = array_filter($array2, function ($var) {
+                            return ($var->totalamount >= '50000.00');
+                        });
+            *
+            */
+
+            $billdetails = $response->billdetails;
+            $new_billdetails = array_filter($billdetails, function ($var) {
+                            return ($var->totalamount >= '50000.00');
+                        });
+            $additionaldata = $response->additionaldata;
+
             $data       = array(
               'system_message'  => @$response->responsemsg ? @$response->responsemsg : '' , 
-              'response'        => @$response ? @$response : '' , 
-            );
+              'response'        => @$response ? [@$additionaldata, @$new_billdetails] : '' 
+          );
         } else {
             $httpcode   = 400;
             $status     = 0;
@@ -109,24 +122,21 @@ class BillerInquiryController extends Controller {
             $data       = array(
               'system_message'  => @$response->responsemsg ? @$response->responsemsg : '' , 
               'response'        => @$response ? @$response : '' , 
-            );
+          );
         }
 
-        $httpcode 	= 200;
-       //  $status   	= 1;
-       //  $data 		= $res;
-      //}
+        $httpcode 	= 200; 
 
-     } catch(\Exception $e) {
+    } catch(\Exception $e) {
        $status   = 0;
        $httpcode = 400;
        $data     = null;
        $errorMsg = $e->getMessage();
-     }
-
-     return response()->json(Api::response($status,$errorMsg,$data),$httpcode);
-
    }
+
+   return response()->json(Api::response($status,$errorMsg,$data),$httpcode);
+
+}
 
      /**
     * @SWG\Post(
@@ -236,4 +246,4 @@ class BillerInquiryController extends Controller {
 
 
 
-  }
+}
