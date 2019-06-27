@@ -106,14 +106,15 @@ class BillerInquiryController extends Controller {
             */
 
             $billdetails = $response->billdetails;
-            $new_billdetails = array_filter($billdetails, function ($var) {
+            $new_billdetails['billdetails'] = array_filter($billdetails, function ($var) {
                             return ($var->totalamount >= '50000.00');
                         });
             $additionaldata = $response->additionaldata;
 
+
             $data       = array(
               'system_message'  => @$response->responsemsg ? @$response->responsemsg : '' , 
-              'response'        => @$response ? [@$additionaldata, @$new_billdetails] : '' 
+              'response'        => @$response ? [@$response, @$new_billdetails['billdetails']] : '' 
           );
         } else {
             $httpcode   = 400;
