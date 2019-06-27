@@ -124,7 +124,7 @@ class BillerInquiryController extends Controller {
 
             $data       = array(
               'system_message'  => @$response->responsemsg ? @$response->responsemsg : '' , 
-              'response'        => @$response ? array_merge($response,$billdetails) : '' 
+              'response'        => @$response ? array_merge((array)$response,$billdetails) : '' 
           );
         } else {
             $httpcode   = 400;
