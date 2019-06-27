@@ -58,9 +58,7 @@ class BillerInquiryController extends Controller {
     public function store(Request $request)
     {
 
-      try { 
-
-
+      try {
 
           if(empty($request->json())) throw New \Exception('Params not found', 500);
 
@@ -105,16 +103,28 @@ class BillerInquiryController extends Controller {
             *
             */
 
+
+            // $tt = json_decode($test);
+            // // print_r($tt); die();
+
+            // $new_billdetails = array_filter($tt, function ($var) {
+            //                     return ($var->totalamount >= '50000.00');
+            //                 });
+
+            // $data = array_values($new_billdetails);
+            // return response()->json(Api::response(200,'ww',[ 'billdetails' => $data]),200);
+
             $billdetails = $response->billdetails;
-            $new_billdetails['billdetails'] = array_filter($billdetails, function ($var) {
+            $new_billdetails = array_filter($billdetails, function ($var) {
                             return ($var->totalamount >= '50000.00');
                         });
-            $additionaldata = $response->additionaldata;
+            $billdetails = ['billdetails' => @array_values($new_billdetails)];
+            // $additionaldata = $response->additionaldata;
 
 
             $data       = array(
               'system_message'  => @$response->responsemsg ? @$response->responsemsg : '' , 
-              'response'        => @$response ? [@$response, @$new_billdetails] : '' 
+              'response'        => @$response ? [@$response, @$billdetails] : '' 
           );
         } else {
             $httpcode   = 400;
