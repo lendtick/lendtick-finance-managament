@@ -122,7 +122,7 @@ class BillerInquiryController extends Controller {
             // $additionaldata = $response->additionaldata;
 
 
-            $data       = array(
+            $data       = array( 
               'system_message'  => @$response->responsemsg ? @$response->responsemsg : '' , 
               'response'        => @$response ? array_merge((array)$response,$billdetails) : '' 
           );
