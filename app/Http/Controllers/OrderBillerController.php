@@ -107,7 +107,7 @@ class OrderBillerController extends Controller {
 
 
                     // $va_number = 88561083 . date('dHis');
-                    $va_number = 88560951 . date('dHis');
+                    $va_number = env('DOKU_VA_PERMATA') . date('dHis');
                     
                     // echo 'insert ke doku finance';
 
@@ -220,9 +220,14 @@ class OrderBillerController extends Controller {
                $update_status = OrderHeader::where('id_order', $order_payment->id_order)
                ->update([
                     'total_payment'         => $order_payment->sell_price,
-                    'id_workflow_status'    => 'ODSTS05'
+                    'id_workflow_status'    => 'ODSTS05',
+                    'repayment_date'        => date('Y-m-d H:i:s'),
                 ]);
 
+               $update_status = OrderPayment::where('id_order', $order_payment->id_order)
+               ->update([
+                    'payment_date'         => date('Y-m-d H:i:s')
+                ]);
                
 
                $httpcode   = 200;
