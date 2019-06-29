@@ -16,6 +16,7 @@ use App\Helpers\Api;
 use App\Helpers\Template;
 use App\Helpers\BlobStorage;
 use App\Helpers\RestCurl;
+use App\Models\Finance\LogModel;
 use App\Helpers\XMLHelper;
 
 class InquiryDokuController {
@@ -122,16 +123,17 @@ class InquiryDokuController {
 	public function request(Request $r)
 	{
 
-		if($this->__check_post()){
+		// if($this->__check_post()){
 			$post = (array) $r->post();
 
 
-			if($this->__check_var($post)){
+		// 	if($this->__check_var($post)){
 
 				$header = '<INQUIRY_RESPONSE/>';
 				$content = array();
 
 				$check_paid = DokuRepo::getByParam('transidmerchant', $post['PAYMENTCODE'])->first();
+				// dd($check_paid);
 				if ($check_paid->trxstatus == 'SUCCESS') {
 					return $this->__bill_already_paid($header);
 				}
@@ -182,15 +184,19 @@ class InquiryDokuController {
 					'ADDITIONALDATA' => $get_user->name,
 					'RESPONSECODE' => '0000',
 				); 
+
+				// insert log
+				$insert = array('value' => json_encode($r->all()));
+				LogModel::create($insert);
 				return XMLHelper::response($content, new \SimpleXMLElement($header))->asXML();
 
-			}
-			return response()->json(
-				Api::response(
-					false,Template::lang('Please check your POST data()')
-				),400);
-		}
-		return response()->json(Api::response(false,Template::lang('Please POST method')),400);
+		// 	}
+		// 	return response()->json(
+		// 		Api::response(
+		// 			false,Template::lang('Please check your POST data()')
+		// 		),400);
+		// }
+		// return response()->json(Api::response(false,Template::lang('Please POST method')),400);
 
 	}
 
