@@ -635,7 +635,7 @@
                 "in": "formData",
                 "description": "8856108315182146",
                 "required": true,
-                "type": "number",
+                "type": "string",
                 "default": "8856108315182146"
             },
         ], 

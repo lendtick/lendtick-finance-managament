@@ -52,14 +52,18 @@ class OrderBillerController extends Controller {
             );
 
             foreach ($request->payment as $payment) {
-                if ($payment['id_payment_type'] != 'PAY003') {
-                    $order_header_addons = array('repayment_date' => date('Y-m-d H:i:s'));
+                if ($payment['id_payment_type'] == 'PAY001') {
+                    $order_header_addons = array(
+                        'repayment_date' => date('Y-m-d H:i:s'),
+                        'total_payment' => $payment['total_payment']
+                    );
+                } else {
+                    $order_header_addons = array('repayment_date' => '');
                 }
-
             }
             DB::beginTransaction();
 
-            $insert_header = OrderHeader::insert(array_merge($order_header , $order_header_addons)); 
+            $insert_header = OrderHeader::insert(array_merge($order_header,$order_header_addons)); 
             $id_order = OrderHeader::where($order_header)->first(); 
 
 
@@ -102,9 +106,16 @@ class OrderBillerController extends Controller {
 
 
             // insert payment order
+            $payment_type = 'PAY003';
+            $payment_number = NULL;
+            $category_id = NULL;
             foreach ($request->payment as $payment) {
+                $payment_type = $payment['id_payment_type'];
+                $payment_number = $payment['number_payment'];
 
                 $billertrx = NULL;
+
+                $category_id = $order_detail[0]['category_id'];
                 if ($order_detail[0]['category_id'] == 'CATBILLER') { $billertrx = 1; }
 
 
@@ -150,7 +161,7 @@ class OrderBillerController extends Controller {
                     $res_doku = json_decode($res_insert_to_doku->response);
 
                     if ($res_doku->status == true || $res_doku->status == 1) {
-                        
+
                     } else {
                         throw New \Exception('Order gagal, silahkan coba kembali', 500);
                     }
@@ -175,6 +186,14 @@ class OrderBillerController extends Controller {
 
 
             if ($insert_delivery) {
+
+                if ($payment_type == 'PAY001') {
+                    if ($category_id== 'CATBILLER') {
+                    // call direct biller
+                    $this->paymentBillerFromMicroloan($payment_number);
+                    }
+                }
+
                 $httpcode   = 200;
                 $status     = 1;
                 $data       = ['message_system' => '', 'va_number' => @$va_number ];
@@ -196,52 +215,45 @@ class OrderBillerController extends Controller {
     }
 
     //cari trans
-
-    public function paymentBillerFromOrder(Request $request)
+    public function paymentBillerFromMicroloan($request = null)
     {
-        try {
+        try {             
 
-            if(empty($request->json())) throw New \Exception('Params not found', 500);
-
-            $this->validate($request, [
-                'number_payment'         => 'required'
-            ]);
-            
-            $number_payment = $request->number_payment ? $request->number_payment : 0;
+            $number_payment = $request ? $request : 0;
             if ($number_payment) {
                 // proses pembayaran ke biller 
-               $order_payment = OrderPayment::where('number_payment',$number_payment)->join('order.order_detail', 'order_payment.id_order', '=', 'order_detail.id_order')->first();
+             $order_payment = OrderPayment::where('number_payment',$number_payment)->join('order.order_detail', 'order_payment.id_order', '=', 'order_detail.id_order')->first();
 
-               $param_payment_biller = array(
+             $param_payment_biller = array(
                 'billerid' => $order_payment->biller_id, 
                 'accountnumber' => $order_payment->account_number,
                 'inquiryid' => $order_payment->inquiry_id,
                 'amount' => $order_payment->sell_price,
                 'billid' => $order_payment->bill_id,
                 'sessionid' => 'lorem',
-                );
+            );
 
-               $payment = (object) RestCurl::exec('POST',env('LINK_FINANCE','https://lentick-api-finance-dev.azurewebsites.net')."/biller/payment", $param_payment_biller);
+             $payment = (object) RestCurl::exec('POST',env('LINK_FINANCE','https://lentick-api-finance-dev.azurewebsites.net')."/biller/payment", $param_payment_biller);
 
 
-               $update_status = OrderHeader::where('id_order', $order_payment->id_order)
-               ->update([
-                    'total_payment'         => $order_payment->sell_price,
-                    'id_workflow_status'    => 'ODSTS05',
-                    'repayment_date'        => date('Y-m-d H:i:s'),
-                ]);
+             $update_status = OrderHeader::where('id_order', $order_payment->id_order)
+             ->update([
+                'total_payment'         => $order_payment->sell_price,
+                'id_workflow_status'    => 'ODSTS05',
+                'repayment_date'        => date('Y-m-d H:i:s'),
+            ]);
 
-               $update_status = OrderPayment::where('id_order', $order_payment->id_order)
-               ->update([
-                    'payment_date'         => date('Y-m-d H:i:s')
-                ]);
-               
+             $update_status = OrderPayment::where('id_order', $order_payment->id_order)
+             ->update([
+                'payment_date'         => date('Y-m-d H:i:s')
+            ]);
 
-               $httpcode   = 200;
-               $status     = 1;
-               $data       = $payment->data->data;
-               $errorMsg   = 'Sukses';
-           } else {
+
+             $httpcode   = 200;
+             $status     = 1;
+             $data       = $payment->data->data;
+             $errorMsg   = 'Sukses';
+         } else {
             throw New \Exception('Order gagal, silahkan coba kembali', 500);
         }
 
@@ -255,6 +267,67 @@ class OrderBillerController extends Controller {
     }
 
     return response()->json(Api::response($status,$errorMsg,$data),$httpcode);
+}
+
+
+public function paymentBillerFromOrder(Request $request)
+{
+    try {
+
+        if(empty($request->json())) throw New \Exception('Params not found', 500);
+
+        $this->validate($request, [
+            'number_payment'         => 'required'
+        ]);
+
+        $number_payment = $request->number_payment ? $request->number_payment : 0;
+        if ($number_payment) {
+                // proses pembayaran ke biller 
+         $order_payment = OrderPayment::where('number_payment',$number_payment)->join('order.order_detail', 'order_payment.id_order', '=', 'order_detail.id_order')->first();
+
+         $param_payment_biller = array(
+            'billerid' => $order_payment->biller_id, 
+            'accountnumber' => $order_payment->account_number,
+            'inquiryid' => $order_payment->inquiry_id,
+            'amount' => $order_payment->sell_price,
+            'billid' => $order_payment->bill_id,
+            'sessionid' => 'lorem',
+        );
+
+         $payment = (object) RestCurl::exec('POST',env('LINK_FINANCE','https://lentick-api-finance-dev.azurewebsites.net')."/biller/payment", $param_payment_biller);
+
+
+         $update_status = OrderHeader::where('id_order', $order_payment->id_order)
+         ->update([
+            'total_payment'         => $order_payment->sell_price,
+            'id_workflow_status'    => 'ODSTS05',
+            'repayment_date'        => date('Y-m-d H:i:s'),
+        ]);
+
+         $update_status = OrderPayment::where('id_order', $order_payment->id_order)
+         ->update([
+            'payment_date'         => date('Y-m-d H:i:s')
+        ]);
+
+
+         $httpcode   = 200;
+         $status     = 1;
+         $data       = $payment->data->data;
+         $errorMsg   = 'Sukses';
+     } else {
+        throw New \Exception('Order gagal, silahkan coba kembali', 500);
+    }
+
+} catch(\Exception $e) {
+    DB::rollback();
+    $status   = 0;
+    $httpcode = 400;
+    $data     = $e->getMessage();
+    $errorMsg = 'Gagal';
+
+}
+
+return response()->json(Api::response($status,$errorMsg,$data),$httpcode);
 }
 
 
