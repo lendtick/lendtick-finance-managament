@@ -104,7 +104,11 @@ class OrderBillerController extends Controller {
 
                 if ($payment['id_payment_type'] === 'PAY003') {
 
-                    $va_number = 88561083 . date('dHis');
+
+
+                    // $va_number = 88561083 . date('dHis');
+                    $va_number = 88560951 . date('dHis');
+                    
                     // echo 'insert ke doku finance';
 
                     $order_payment[] = array(

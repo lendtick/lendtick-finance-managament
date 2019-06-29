@@ -161,7 +161,7 @@ class DokuController extends Controller
 						'approvalcode' 		=> '',
 						'trxstatus' 		=> 'Requested',
 						'payment_channel' 	=> '',
-						'paymentcode' 		=> '',
+						'paymentcode' 		=> $config['req_trans_id_merchant'],
 						'session_id' 		=> $config['req_session_id'],
 						'bank_issuer' 		=> '',
 						'creditcard' 		=> '',

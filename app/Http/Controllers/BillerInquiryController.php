@@ -114,18 +114,24 @@ class BillerInquiryController extends Controller {
             // $data = array_values($new_billdetails);
             // return response()->json(Api::response(200,'ww',[ 'billdetails' => $data]),200);
 
-            $billdetails = $response->billdetails;
+            
+            /*$billdetails = $response->billdetails;
             $new_billdetails = array_filter($billdetails, function ($var) {
                             return ($var->totalamount >= '50000.00');
                         });
             $billdetails = ['billdetails' => @array_values($new_billdetails)];
-            // $additionaldata = $response->additionaldata;
-
 
             $data       = array( 
               'system_message'  => @$response->responsemsg ? @$response->responsemsg : '' , 
               'response'        => @$response ? array_merge((array)$response,$billdetails) : '' 
-          );
+            ); */
+
+            $data       = array( 
+              'system_message'  => @$response->responsemsg ? @$response->responsemsg : '' , 
+              'response'        => @$response ? @$response : '' 
+            );
+
+
         } else {
             $httpcode   = 400;
             $status     = 0;
