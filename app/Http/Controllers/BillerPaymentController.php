@@ -135,55 +135,9 @@ class BillerPaymentController extends Controller {
 
         $res = (object) RestCurl::exec('POST',env('LINK_DOKU_BILLER').'/DepositSystem-api/Payment?',$check);
 
-        if ($res->data->responsecode == '0000') {
-            // jika dia biller token listrik / prepaid
-            $subject_pembelian = '';
-            if ($request->billerid == '9950102') {
-                // 
-                $subject_pembelian = 'TOKEN LISTRIK';
-                $ress = $res->data;
-                $token_ex = $ress->receipt->body[11];
-                $token = explode(':', $token_ex);
+        // dd($res);
 
-                // kirim email 
-                
-                $send_email = array(
-                    'to' => $request->email,   
-                    'cc' => '',   
-                    'subject' => 'Pembelian '.$subject_pembelian.' Berhasil',   
-                    'body' => 'Berikut adalah Token Listrik anda '.$token,   
-                    'type' => 'email',   
-                    'attachment' => ''
-                );
-                $res_send_email = (object) RestCurl::exec('POST',env('LINK_NOTIF').'/send',$send_email);
-
-                // kirim sms 
-
-                $user_awo = env('AWO_USER');
-                $pass_awo = env('AWO_PASSWORD');
-                $sender_awo = env('AWO_SENDER');
-                $phone = $request->phone_number;
-                $message = 'Terimakasih sudah melakukan transaksi berikut nomor token listrik anda '.$token;
-                $date_send = Carbon::parse(Carbon::now())->addMinutes(-1)->format('d/m/Y H:i');
-                $url = env('AWO_URL_SEND_OTP')."?user=$user_awo&pwd=$pass_awo&sender=$sender_awo&msisdn=$phone&message=".urlencode($message)."&description=Sms_blast&campaign=bigbike&schedule=".urlencode($date_send);
-                $this->_curl($url);
-
-
-
-                // update token ke filed bill_details
-                $update = array('bill_details' => @$token[1]);
-                OrderDetail::where('biller_id', $request->billerid)->where('account_number',$request->accountnumber)->where('inquiry_id',$request->inquiryid)->where('sell_price',$request->amount)->where('bill_id',$request->billid)->update($update);
-                
-            }
-
-            $errorMsg   = 'Sukses';
-            $res = $res->data;
-
-
-        } else {
-            $errorMsg   = 'Gagal';
-            $res = $res->data;
-        }
+       
 
         $httpcode 	= 200;
         $status   	= 1;
