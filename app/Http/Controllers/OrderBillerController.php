@@ -202,6 +202,8 @@ class OrderBillerController extends Controller {
             
             $number_payment = $request->number_payment ? $request->number_payment : 0;
             if ($number_payment) {
+                // proses pembayaran ke biller 
+               $order_payment = OrderPayment::where('number_payment',$number_payment)->join('order.order_detail', 'order_payment.id_order', '=', 'order_detail.id_order')->first();
 
                $param_payment_biller = array(
                 'billerid' => $order_payment->biller_id, 
@@ -214,8 +216,6 @@ class OrderBillerController extends Controller {
 
                $payment = (object) RestCurl::exec('POST',env('LINK_FINANCE','https://lentick-api-finance-dev.azurewebsites.net')."/biller/payment", $param_payment_biller);
 
-                // proses pembayaran ke biller 
-               $order_payment = OrderPayment::where('number_payment',$number_payment)->join('order.order_detail', 'order_payment.id_order', '=', 'order_detail.id_order')->first();
 
                $update_status = OrderHeader::where('id_order', $order_payment->id_order)
                ->update([
