@@ -11,6 +11,7 @@ use App\Models\User\UserManagement AS User;
 use App\Models\User\ProfileManagement AS Profile;
 use App\Models\Master\RegisterMemberFlowMaster AS MasterFlow;
 use App\Models\Master\WorkflowMaster AS MasterWorkflow;
+use App\Models\Finance\LogModel AS LogModel;
 
 use App\Helpers\Api;
 use App\Helpers\Template;
@@ -445,7 +446,11 @@ class DokuController extends Controller
             "password" => $pass
           ]; 
           $res_email = RestCurl::exec('POST',env('LINK_NOTIF','https://lentick-api-notification-dev.azurewebsites.net')."/send-sms-after-payment", $email);
-
+ 
+          // log 
+          $insert = array('value' => json_encode($r->all()));
+          LogModel::create($insert);
+          // end log 
           echo "Continue"; 
 
 
@@ -511,7 +516,7 @@ class DokuController extends Controller
                         ];
                         $res_email = RestCurl::post(env('LINK_NOTIF','https://lentick-api-notification-dev.azurewebsites.net')."/send-sms-after-payment", $email);
                     }
-                    
+
                     echo "Continue";
           
                     // notify to user to get a credential

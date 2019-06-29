@@ -51,9 +51,15 @@ class OrderBillerController extends Controller {
                 'systrace'             => time(),
             );
 
+            foreach ($request->payment as $payment) {
+                if ($payment['id_payment_type'] != 'PAY003') {
+                    $order_header_addons = array('repayment_date' => date('Y-m-d H:i:s'));
+                }
+
+            }
             DB::beginTransaction();
 
-            $insert_header = OrderHeader::insert($order_header); 
+            $insert_header = OrderHeader::insert(array_merge($order_header , $order_header_addons)); 
             $id_order = OrderHeader::where($order_header)->first(); 
 
 
@@ -155,6 +161,7 @@ class OrderBillerController extends Controller {
                         'id_order'              => $id_order->id_order,
                         'id_payment_type'       => $payment['id_payment_type'],
                         'total_payment'         => $payment['total_payment'],
+                        'payment_date'          => date('Y-m-d H:i:s'),
                         'identifier_number'     => $payment['identifier_number'],
                         'number_payment'        => $payment['number_payment'] ? $payment['number_payment'] : 0
                     );
