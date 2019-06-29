@@ -111,7 +111,7 @@ class OrderBillerController extends Controller {
             $category_id = NULL;
             foreach ($request->payment as $payment) {
                 $payment_type = $payment['id_payment_type'];
-                $payment_number = $payment['number_payment'];
+                $payment_number = !empty($payment['number_payment']) ? $payment['number_payment'] : NULL ;
 
                 $billertrx = NULL;
 
@@ -120,7 +120,6 @@ class OrderBillerController extends Controller {
 
 
                 if ($payment['id_payment_type'] === 'PAY003') {
-
 
 
                     // $va_number = 88561083 . date('dHis');
@@ -188,9 +187,9 @@ class OrderBillerController extends Controller {
             if ($insert_delivery) {
 
                 if ($payment_type == 'PAY001') {
-                    if ($category_id== 'CATBILLER') {
+                    if ($category_id == 'CATBILLER') {
                     // call direct biller
-                    $this->paymentBillerFromMicroloan($payment_number);
+                        $this->paymentBillerFromMicroloan($payment_number);
                     }
                 }
 
