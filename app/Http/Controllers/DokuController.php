@@ -398,17 +398,18 @@ class DokuController extends Controller
           ));
           $doku_data = DokuRepo::getByParam("transidmerchant", $order_number)->first();
 
+          // jika transaksi menggunakan layanan biler maka meneruskan ke bawah ini
           if ($doku_data->billertrx) {
-            $number_payment = array(
-                'number_payment' => $order_number
-            );
-            $res_email = RestCurl::exec('POST',env('LINK_FINANCE','https://lentick-api-finance-dev.azurewebsites.net')."/order/payment-to-biller", $number_payment);
 
-                // print_r([$res_email, $number_payment]);
-                // echo "diproses ke proses biller order, yang menggunakan transaksi va";
-                // echo 
-                echo "Continue"; 
-                die();
+            if ($status == '0000' && $response_code == 'SUCCESS') {
+                
+                $number_payment = array(
+                    'number_payment' => $order_number
+                );
+                $res_email = RestCurl::exec('POST',env('LINK_FINANCE','https://lentick-api-finance-dev.azurewebsites.net')."/order/payment-to-biller", $number_payment);
+                    echo "Continue"; 
+                    die();
+            }
           } else {
                 //echo "proses pembayaran pendaftaran pengguna";
                 //die();
@@ -500,16 +501,21 @@ class DokuController extends Controller
                     $user = User::where('id_user', $profile->id_user)->get()->first();
                     $user->password = $h->make($pass);
                     $user->save();
-          
+                    
+                    if ($status == '0000' && $response_code == 'SUCCESS') {
+                
+                        $email = [
+                          "phone_number" => $profile->phone_number,
+                            "anggota_id" => $profile->username,
+                            "password" => $pass
+                        ];
+                        $res_email = RestCurl::post(env('LINK_NOTIF','https://lentick-api-notification-dev.azurewebsites.net')."/send-sms-after-payment", $email);
+                    }
+                    
                     echo "Continue";
           
                     // notify to user to get a credential
-                    $email = [
-                      "phone_number" => $profile->phone_number,
-                        "anggota_id" => $profile->username,
-                        "password" => $pass
-                    ];
-                    $res_email = RestCurl::post(env('LINK_NOTIF','https://lentick-api-notification-dev.azurewebsites.net')."/send-sms-after-payment", $email);
+                    
 
                   }
                   // // 	$this->response(array('error' => 'Can\'t update success data'));
