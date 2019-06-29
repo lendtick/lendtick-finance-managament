@@ -11,8 +11,7 @@ class LogModel extends Model {
 
     protected $fillable = [
         'idlog',
-        'value',
-        'created_at',
+        'value'
     ];
 
     public $timestamps = true;
