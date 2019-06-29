@@ -13,6 +13,7 @@ use App\Models\User\ProfileManagement AS Profile;
 use App\Models\Master\RegisterMemberFlowMaster AS MasterFlow;
 use App\Models\Master\WorkflowMaster AS MasterWorkflow;
 use App\Models\Order\BillersMaster AS BillersMaster;
+use App\Models\Finance\LogModel;
 
 use App\Helpers\Api;
 use App\Helpers\Template;
@@ -89,6 +90,10 @@ class BillerInquiryController extends Controller {
     );
           $res = (object) RestCurl::hit(env('LINK_DOKU_BILLER').'/DepositSystem-api/Inquiry?',$check,'POST');
           $response = json_decode($res->response);
+
+          // insert to log 
+          $insert = array('value' => json_encode($check));
+          LogModel::create($insert);
 
           if (BillerHelper::SessionID($response->responsecode , $response->responsemsg)) { BillerHelper::SessionID(); } 
 
