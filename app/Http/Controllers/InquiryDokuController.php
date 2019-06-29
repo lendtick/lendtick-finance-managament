@@ -11,12 +11,12 @@ use App\Models\User\UserManagement AS User;
 use App\Models\User\ProfileManagement AS Profile;
 use App\Models\Master\RegisterMemberFlowMaster AS MasterFlow;
 use App\Models\Master\WorkflowMaster AS MasterWorkflow;
+use App\Models\Finance\LogModel;
 
 use App\Helpers\Api;
 use App\Helpers\Template;
 use App\Helpers\BlobStorage;
 use App\Helpers\RestCurl;
-use App\Models\Finance\LogModel;
 use App\Helpers\XMLHelper;
 
 class InquiryDokuController {

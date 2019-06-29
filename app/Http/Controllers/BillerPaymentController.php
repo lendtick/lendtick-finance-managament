@@ -13,8 +13,11 @@ use App\Models\User\ProfileManagement AS Profile;
 use App\Models\Master\RegisterMemberFlowMaster AS MasterFlow;
 use App\Models\Master\WorkflowMaster AS MasterWorkflow;
 use App\Models\Order\BillersMaster AS BillersMaster;
+use App\Models\Order\OrderDetail as OrderDetail;
+use Carbon\Carbon;
 
 use App\Helpers\Api;
+use App\Helpers\SMS;
 use App\Helpers\RestCurl;
 use App\Helpers\SandiBiller AS Sandi;
 
@@ -85,25 +88,28 @@ class BillerPaymentController extends Controller {
     public function store(Request $request)
     {
 
-      try {
+      try { 
 
-       if(empty($request->json())) throw New \Exception('Params not found', 500);
+
+        if(empty($request->json())) throw New \Exception('Params not found', 500);
 
        // bisa semua selain bayar BPJS Kesehatan
 
-       $this->validate($request, [
+        $this->validate($request, [
           'billerid'		  => 'required',
           'sessionid'         => 'required', // Please refer to BILLER ID LIST
           'accountnumber'     => 'required', // Meter Serial Number / Subscriber ID
           'inquiryid'         => 'required', // Inquiry ID from inquiry process
           'amount'            => 'required', // Total transaction amount
           'billid'            => 'required', // Diambil dari inquiry, Chosen bill ID or leave it empty for PLN Prepaid
-       ]);
+      ]);
 
-       $channel_code = env('CHANNELCODE_BILLER');
-       $request_date = date('YmdHis');
+        // return $request->all();
 
-       $check = array(
+        $channel_code = env('CHANNELCODE_BILLER');
+        $request_date = date('YmdHis');
+
+        $check = array(
         'CHANNELCODE'       => $channel_code, //Channel Identification Code
         'SESSIONID'         => $request->sessionid, // Session for each success login.
         'REQUESTDATETIME'   => $request_date, //yyyyMMddHHmmss
@@ -124,14 +130,56 @@ class BillerPaymentController extends Controller {
         'LATITUDE'          => '',
         'LONGITUDE'         => '',
         'PASSWORD'          => Sandi::get()
-        );
+    );
 
 
-       $res = (object) RestCurl::exec('POST',env('LINK_DOKU_BILLER').'/DepositSystem-api/Payment?',$check);
+        $res = (object) RestCurl::exec('POST',env('LINK_DOKU_BILLER').'/DepositSystem-api/Payment?',$check);
 
-       if ($res->data->responsecode == '0000') {
+        if ($res->data->responsecode == '0000') {
+            // jika dia biller token listrik / prepaid
+            $subject_pembelian = '';
+            if ($request->billerid == '9950102') {
+                // 
+                $subject_pembelian = 'TOKEN LISTRIK';
+                $ress = $res->data;
+                $token_ex = $ress->receipt->body[11];
+                $token = explode(':', $token_ex);
+
+                // kirim email 
+                
+                $send_email = array(
+                    'to' => $request->email,   
+                    'cc' => '',   
+                    'subject' => 'Pembelian '.$subject_pembelian.' Berhasil',   
+                    'body' => 'Berikut adalah Token Listrik anda '.$token,   
+                    'type' => 'email',   
+                    'attachment' => ''
+                );
+                $res_send_email = (object) RestCurl::exec('POST',env('LINK_NOTIF').'/send',$send_email);
+
+                // kirim sms 
+
+                $user_awo = env('AWO_USER');
+                $pass_awo = env('AWO_PASSWORD');
+                $sender_awo = env('AWO_SENDER');
+                $phone = $request->phone_number;
+                $message = 'Terimakasih sudah melakukan transaksi berikut nomor token listrik anda '.$token;
+                $date_send = Carbon::parse(Carbon::now())->addMinutes(-1)->format('d/m/Y H:i');
+                $url = env('AWO_URL_SEND_OTP')."?user=$user_awo&pwd=$pass_awo&sender=$sender_awo&msisdn=$phone&message=".urlencode($message)."&description=Sms_blast&campaign=bigbike&schedule=".urlencode($date_send);
+                $this->_curl($url);
+
+
+
+                // update token ke filed bill_details
+                $update = array('bill_details' => @$token[1]);
+                OrderDetail::where('biller_id', $request->billerid)->where('account_number',$request->accountnumber)->where('inquiry_id',$request->inquiryid)->where('sell_price',$request->amount)->where('bill_id',$request->billid)->update($update);
+                
+            }
+
             $errorMsg   = 'Sukses';
             $res = $res->data;
+
+
         } else {
             $errorMsg   = 'Gagal';
             $res = $res->data;
@@ -142,14 +190,30 @@ class BillerPaymentController extends Controller {
         $data 		= $res;
 
     } catch(\Exception $e) {
-       $status   = 0;
-       $httpcode = 400;
-       $data     = null;
-       $errorMsg = $e->getMessage();
+     $status   = 0;
+     $httpcode = 400;
+     $data     = null;
+     $errorMsg = $e->getMessage();
+ }
+
+ return response()->json(Api::response($status,$errorMsg,$data),$httpcode);
+
+}
+
+
+// get 
+    private function _curl($url='')
+    {
+        $ch = curl_init();
+            // set url
+        curl_setopt($ch, CURLOPT_URL, $url);
+            //return the transfer as a string
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+            // $output contains the output string
+        $output = curl_exec($ch);
+        // close curl resource to free up system resources
+        curl_close($ch);
+
+        return $output;
     }
-
-    return response()->json(Api::response($status,$errorMsg,$data),$httpcode);
-
-    }
-
 }

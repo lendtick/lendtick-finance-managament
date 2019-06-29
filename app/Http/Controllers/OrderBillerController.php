@@ -188,8 +188,8 @@ class OrderBillerController extends Controller {
 
                 if ($payment_type == 'PAY001') {
                     if ($category_id == 'CATBILLER') {
-                    // call direct biller
-                        $this->paymentBillerFromMicroloan($payment_number);
+                        // call direct biller
+                        $this->paymentBillerFromMicroloan($payment_number , $request->header('Authorization') , $request->id_user);
                     }
                 }
 
@@ -214,15 +214,19 @@ class OrderBillerController extends Controller {
     }
 
     //cari trans
-    public function paymentBillerFromMicroloan($request = null)
+    public function paymentBillerFromMicroloan($request = null , $token = null, $id_user = null)
     {
-        try {             
+
+        try {
+            // return $token;
+            // die;
 
             $number_payment = $request ? $request : 0;
             if ($number_payment) {
                 // proses pembayaran ke biller 
              $order_payment = OrderPayment::where('number_payment',$number_payment)->join('order.order_detail', 'order_payment.id_order', '=', 'order_detail.id_order')->first();
 
+             $get_profile = (object) RestCurl::exec('GET',env('LINK_USER').'/profile/get?id='.$id_user,[],$token);
              $param_payment_biller = array(
                 'billerid' => $order_payment->biller_id, 
                 'accountnumber' => $order_payment->account_number,
@@ -230,10 +234,11 @@ class OrderBillerController extends Controller {
                 'amount' => $order_payment->sell_price,
                 'billid' => $order_payment->bill_id,
                 'sessionid' => 'lorem',
+                'email' => !empty($get_profile->data->data->email) ? $get_profile->data->data->email: null,
+                'phone_number' => !empty($get_profile->data->data->phone_number) ? $get_profile->data->data->phone_number: null
             );
 
-             $payment = (object) RestCurl::exec('POST',env('LINK_FINANCE','https://lentick-api-finance-dev.azurewebsites.net')."/biller/payment", $param_payment_biller);
-
+            $payment = RestCurl::exec('POST',env('LINK_FINANCE')."/biller/payment", $param_payment_biller); 
 
              $update_status = OrderHeader::where('id_order', $order_payment->id_order)
              ->update([
