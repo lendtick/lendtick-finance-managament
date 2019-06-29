@@ -137,37 +137,39 @@ class BillerPaymentController extends Controller {
 
         // dd($res);
 
-       
+        print_r([$check , $res]);
+        die();
+
 
         $httpcode 	= 200;
         $status   	= 1;
         $data 		= $res;
 
     } catch(\Exception $e) {
-     $status   = 0;
-     $httpcode = 400;
-     $data     = null;
-     $errorMsg = $e->getMessage();
- }
+       $status   = 0;
+       $httpcode = 400;
+       $data     = null;
+       $errorMsg = $e->getMessage();
+   }
 
- return response()->json(Api::response($status,$errorMsg,$data),$httpcode);
+   return response()->json(Api::response($status,$errorMsg,$data),$httpcode);
 
 }
 
 
 // get 
-    private function _curl($url='')
-    {
-        $ch = curl_init();
+private function _curl($url='')
+{
+    $ch = curl_init();
             // set url
-        curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_URL, $url);
             //return the transfer as a string
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
             // $output contains the output string
-        $output = curl_exec($ch);
+    $output = curl_exec($ch);
         // close curl resource to free up system resources
-        curl_close($ch);
+    curl_close($ch);
 
-        return $output;
-    }
+    return $output;
+}
 }
