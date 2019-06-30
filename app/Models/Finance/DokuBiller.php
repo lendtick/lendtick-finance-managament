@@ -17,9 +17,7 @@ class DokuBiller extends Model {
         'biller_id',
         'account_number',
         'systrace',
-        'inquiry_id',
-        'created_at',
-        'updated_at'
+        'inquiry_id'
     ];
 
     public $timestamps = true;

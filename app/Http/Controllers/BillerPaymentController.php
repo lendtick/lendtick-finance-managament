@@ -73,6 +73,13 @@ class BillerPaymentController extends Controller {
     *         required=true,
     *         type="string"
     *     ),
+     *     @SWG\Parameter(
+    *         description="2",
+    *         in="formData",
+    *         name="request_date",
+    *         required=true,
+    *         type="string"
+    *     ),
     *     @SWG\Response(
     *         response="200",
     *         description="successful"
@@ -101,7 +108,8 @@ class BillerPaymentController extends Controller {
           'accountnumber'     => 'required', // Meter Serial Number / Subscriber ID
           'inquiryid'         => 'required', // Inquiry ID from inquiry process
           'amount'            => 'required', // Total transaction amount
-          'billid'            => 'required', // Diambil dari inquiry, Chosen bill ID or leave it empty for PLN Prepaid
+          'billid'            => 'required',
+          'request_date'            => 'required' // Diambil dari inquiry, Chosen bill ID or leave it empty for PLN Prepaid
       ]);
 
         // return $request->all();
@@ -112,7 +120,7 @@ class BillerPaymentController extends Controller {
         $check = array(
         'CHANNELCODE'       => $channel_code, //Channel Identification Code
         'SESSIONID'         => $request->sessionid, // Session for each success login.
-        'REQUESTDATETIME'   => $request_date, //yyyyMMddHHmmss
+        'REQUESTDATETIME'   => $request->request_date, //yyyyMMddHHmmss
         'WORDS'             => sha1($channel_code . $request->sessionid . $request_date . env('SHARED_KEY_BILLER') . $request->billerid . $request->accountnumber),  // Hashed key combination encryption using SHA1 method. The hashed key generated from combining these parameters in order.
         // (CHANNELCODE + SESSIONID + REQUESTDATETIME + SHARED KEY + BILLERID + ACCOUNTNUMBER)
         'BILLERID'          => $request->billerid, // Please refer to BILLER ID LIST
@@ -133,13 +141,10 @@ class BillerPaymentController extends Controller {
     );
 
 
-        $res = (object) RestCurl::exec('POST',env('LINK_DOKU_BILLER').'/DepositSystem-api/Payment?',$check);
-
-        // dd($res);
+        $res = (object) RestCurl::exec('POST',env('LINK_DOKU_BILLER').'/DepositSystem-api/Payment?',$check); 
 
         print_r([$check , $res]);
         die();
-
 
         $httpcode 	= 200;
         $status   	= 1;
