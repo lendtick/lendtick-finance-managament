@@ -327,7 +327,14 @@
                         "description": "2",
                         "required": true,
                         "type": "string"
-                    }
+                    },
+                    {
+                        "name": "systrace",
+                        "in": "formData",
+                        "description": "2",
+                        "required": true,
+                        "type": "string"
+                    },
                 ],
                 "responses": {
                     "200": {

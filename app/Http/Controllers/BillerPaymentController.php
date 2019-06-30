@@ -108,6 +108,7 @@ class BillerPaymentController extends Controller {
           'accountnumber'     => 'required', // Meter Serial Number / Subscriber ID
           'inquiryid'         => 'required', // Inquiry ID from inquiry process
           'amount'            => 'required', // Total transaction amount
+          'systrace'        => 'required',
           'billid'            => 'required',
           'request_date'            => 'required' // Diambil dari inquiry, Chosen bill ID or leave it empty for PLN Prepaid
       ]);
@@ -131,10 +132,10 @@ class BillerPaymentController extends Controller {
 
 
 
-        'SYSTRACE'          => 'NA', // System trace number
+        'SYSTRACE'          => $request->systrace, // System trace number
         'ADDITIONALDATA1'   => $channel_code,  //Additional information, please fill with channel code
-        'ADDITIONALDATA2'   => '', // Additional information 
-        'ADDITIONALDATA3'   => '', // Additional information, only BPJS Kesehatan fill this parameter with Phone number and month bill,o i.e "081319422963|2" 
+        'ADDITIONALDATA2'   => 'biller', // Additional information 
+        'ADDITIONALDATA3'   => 'biller', // Additional information, only BPJS Kesehatan fill this parameter with Phone number and month bill,o i.e "081319422963|2" 
         'LATITUDE'          => '',
         'LONGITUDE'         => '',
         'PASSWORD'          => Sandi::get()
