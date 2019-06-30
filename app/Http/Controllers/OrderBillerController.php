@@ -84,7 +84,7 @@ class OrderBillerController extends Controller {
                     'id_channel'         => $cart['id_channel'] ? $cart['id_channel'] : '',
                     'sell_price'         => $cart['sell_price'] ? $cart['sell_price'] : '',
                     'base_price'         => $cart['base_price'] ? $cart['base_price'] : '',
-                    'product_details'    => $cart['product_details'] ? $cart['product_details'] : '',
+                    // 'product_details'    => $cart['product_details'] ? $cart['product_details'] : '',
                     'additional_data_1'  => $cart['additional_data_1'] ? $cart['additional_data_1'] : '',
                     'additional_data_2'  => $cart['additional_data_2'] ? $cart['additional_data_2'] : '',
                     'additional_data_3'  => $cart['additional_data_3'] ? $cart['additional_data_3'] : '',
@@ -123,7 +123,7 @@ class OrderBillerController extends Controller {
 
 
                     // $va_number = 88561083 . date('dHis');
-                    $va_number = env('DOKU_VA_PERMATA') . date('dHis');
+                    // $va_number = env('DOKU_VA_PERMATA') . date('dHis');
                     
                     // echo 'insert ke doku finance';
 
@@ -131,7 +131,7 @@ class OrderBillerController extends Controller {
                         'id_order'              => $id_order->id_order,
                         'id_payment_type'       => $payment['id_payment_type'],
                         'total_payment'         => $payment['total_payment'],
-                        'identifier_number'     => $payment['identifier_number'],
+                        // 'identifier_number'     => $payment['identifier_number'],
                         'number_payment'        => $va_number
 
                     );
