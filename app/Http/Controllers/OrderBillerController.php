@@ -73,18 +73,18 @@ class OrderBillerController extends Controller {
                     'id_order'           => $id_order->id_order,
                     'id_channel'         => $cart['id_channel'],
                     'category_id'        => $cart['category_id'],
-                    // 'product_id'         => $cart['product_id'] ? $cart['product_id'] : '',
+                    'product_id'         => $cart['product_id'] ? $cart['product_id'] : '',
                     'product_name'       => $cart['product_name'] ? $cart['product_name'] : '',
                     'product_image_path' => $cart['product_image_path'] ? $cart['product_image_path'] : '',
                     'biller_id'          => $cart['biller_id'] ? $cart['biller_id'] : '',
-                    // 'biller_name'        => $cart['biller_name'] ? $cart['biller_name'] : '',
+                    'biller_name'        => $cart['biller_name'] ? $cart['biller_name'] : '',
                     'bill_id'            => $cart['bill_id'] ? $cart['bill_id'] : '',   
                     // 'bill_details'       => $cart['bill_details'] ? $cart['bill_details'] : '',
                     'quantity'           => $cart['quantity'] ? $cart['quantity'] : '',
-                    // 'id_channel'         => $cart['id_channel'] ? $cart['id_channel'] : '',
+                    'id_channel'         => $cart['id_channel'] ? $cart['id_channel'] : '',
                     'sell_price'         => $cart['sell_price'] ? $cart['sell_price'] : '',
                     'base_price'         => $cart['base_price'] ? $cart['base_price'] : '',
-                    // 'product_details'    => $cart['product_details'] ? $cart['product_details'] : '',
+                    'product_details'    => $cart['product_details'] ? $cart['product_details'] : '',
                     'additional_data_1'  => $cart['additional_data_1'] ? $cart['additional_data_1'] : '',
                     'additional_data_2'  => $cart['additional_data_2'] ? $cart['additional_data_2'] : '',
                     'additional_data_3'  => $cart['additional_data_3'] ? $cart['additional_data_3'] : '',
@@ -127,7 +127,7 @@ class OrderBillerController extends Controller {
                     
                     // echo 'insert ke doku finance';
 
-                    $order_payment[] = array(
+                    // $order_payment[] = array(
                         'id_order'              => $id_order->id_order,
                         'id_payment_type'       => $payment['id_payment_type'],
                         'total_payment'         => $payment['total_payment'],
