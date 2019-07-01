@@ -320,7 +320,21 @@
                         "description": "2",
                         "required": true,
                         "type": "string"
-                    }
+                    },
+                    {
+                        "name": "request_date",
+                        "in": "formData",
+                        "description": "2",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "systrace",
+                        "in": "formData",
+                        "description": "2",
+                        "required": true,
+                        "type": "string"
+                    },
                 ],
                 "responses": {
                     "200": {
@@ -635,7 +649,7 @@
                 "in": "formData",
                 "description": "8856108315182146",
                 "required": true,
-                "type": "number",
+                "type": "string",
                 "default": "8856108315182146"
             },
         ], 

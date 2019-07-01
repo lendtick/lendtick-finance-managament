@@ -13,8 +13,11 @@ use App\Models\User\ProfileManagement AS Profile;
 use App\Models\Master\RegisterMemberFlowMaster AS MasterFlow;
 use App\Models\Master\WorkflowMaster AS MasterWorkflow;
 use App\Models\Order\BillersMaster AS BillersMaster;
+use App\Models\Order\OrderDetail as OrderDetail;
+use Carbon\Carbon;
 
 use App\Helpers\Api;
+use App\Helpers\SMS;
 use App\Helpers\RestCurl;
 use App\Helpers\SandiBiller AS Sandi;
 
@@ -70,6 +73,13 @@ class BillerPaymentController extends Controller {
     *         required=true,
     *         type="string"
     *     ),
+     *     @SWG\Parameter(
+    *         description="2",
+    *         in="formData",
+    *         name="request_date",
+    *         required=true,
+    *         type="string"
+    *     ),
     *     @SWG\Response(
     *         response="200",
     *         description="successful"
@@ -85,28 +95,33 @@ class BillerPaymentController extends Controller {
     public function store(Request $request)
     {
 
-      try {
+      try { 
 
-       if(empty($request->json())) throw New \Exception('Params not found', 500);
+
+        if(empty($request->json())) throw New \Exception('Params not found', 500);
 
        // bisa semua selain bayar BPJS Kesehatan
 
-       $this->validate($request, [
+        $this->validate($request, [
           'billerid'		  => 'required',
           'sessionid'         => 'required', // Please refer to BILLER ID LIST
           'accountnumber'     => 'required', // Meter Serial Number / Subscriber ID
           'inquiryid'         => 'required', // Inquiry ID from inquiry process
           'amount'            => 'required', // Total transaction amount
-          'billid'            => 'required', // Diambil dari inquiry, Chosen bill ID or leave it empty for PLN Prepaid
-       ]);
+          'systrace'        => 'required',
+          'billid'            => 'required',
+          'request_date'            => 'required' // Diambil dari inquiry, Chosen bill ID or leave it empty for PLN Prepaid
+      ]);
 
-       $channel_code = env('CHANNELCODE_BILLER');
-       $request_date = date('YmdHis');
+        // return $request->all();
 
-       $check = array(
+        $channel_code = env('CHANNELCODE_BILLER');
+        $request_date = date('YmdHis');
+
+        $check = array(
         'CHANNELCODE'       => $channel_code, //Channel Identification Code
         'SESSIONID'         => $request->sessionid, // Session for each success login.
-        'REQUESTDATETIME'   => $request_date, //yyyyMMddHHmmss
+        'REQUESTDATETIME'   => $request->request_date, //yyyyMMddHHmmss
         'WORDS'             => sha1($channel_code . $request->sessionid . $request_date . env('SHARED_KEY_BILLER') . $request->billerid . $request->accountnumber),  // Hashed key combination encryption using SHA1 method. The hashed key generated from combining these parameters in order.
         // (CHANNELCODE + SESSIONID + REQUESTDATETIME + SHARED KEY + BILLERID + ACCOUNTNUMBER)
         'BILLERID'          => $request->billerid, // Please refer to BILLER ID LIST
@@ -117,25 +132,20 @@ class BillerPaymentController extends Controller {
 
 
 
-        'SYSTRACE'          => 'NA', // System trace number
+        'SYSTRACE'          => $request->systrace, // System trace number
         'ADDITIONALDATA1'   => $channel_code,  //Additional information, please fill with channel code
-        'ADDITIONALDATA2'   => '', // Additional information 
-        'ADDITIONALDATA3'   => '', // Additional information, only BPJS Kesehatan fill this parameter with Phone number and month bill,o i.e "081319422963|2" 
+        'ADDITIONALDATA2'   => 'biller', // Additional information 
+        'ADDITIONALDATA3'   => 'biller', // Additional information, only BPJS Kesehatan fill this parameter with Phone number and month bill,o i.e "081319422963|2" 
         'LATITUDE'          => '',
         'LONGITUDE'         => '',
         'PASSWORD'          => Sandi::get()
-        );
+    );
 
 
-       $res = (object) RestCurl::exec('POST',env('LINK_DOKU_BILLER').'/DepositSystem-api/Payment?',$check);
+        $res = (object) RestCurl::exec('POST',env('LINK_DOKU_BILLER').'/DepositSystem-api/Payment?',$check); 
 
-       if ($res->data->responsecode == '0000') {
-            $errorMsg   = 'Sukses';
-            $res = $res->data;
-        } else {
-            $errorMsg   = 'Gagal';
-            $res = $res->data;
-        }
+        print_r([$check , $res]);
+        die();
 
         $httpcode 	= 200;
         $status   	= 1;
@@ -146,10 +156,26 @@ class BillerPaymentController extends Controller {
        $httpcode = 400;
        $data     = null;
        $errorMsg = $e->getMessage();
-    }
+   }
 
-    return response()->json(Api::response($status,$errorMsg,$data),$httpcode);
+   return response()->json(Api::response($status,$errorMsg,$data),$httpcode);
 
-    }
+}
 
+
+// get 
+private function _curl($url='')
+{
+    $ch = curl_init();
+            // set url
+    curl_setopt($ch, CURLOPT_URL, $url);
+            //return the transfer as a string
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+            // $output contains the output string
+    $output = curl_exec($ch);
+        // close curl resource to free up system resources
+    curl_close($ch);
+
+    return $output;
+}
 }

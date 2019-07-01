@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class LogModel extends Model {
 
-    protected $table = 'finance.logdokuinquiry';
+    protected $table = 'finance.logdokuva';
     protected $primaryKey = 'idlog';
 
     protected $fillable = [
@@ -14,7 +14,7 @@ class LogModel extends Model {
         'value'
     ];
 
-    public $timestamps = false;
+    public $timestamps = true;
 }
 
 
