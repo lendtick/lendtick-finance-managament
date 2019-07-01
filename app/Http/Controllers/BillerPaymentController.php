@@ -122,7 +122,7 @@ class BillerPaymentController extends Controller {
         'CHANNELCODE'       => $channel_code, //Channel Identification Code
         'SESSIONID'         => $request->sessionid, // Session for each success login.
         'REQUESTDATETIME'   => $request->request_date, //yyyyMMddHHmmss
-        'WORDS'             => sha1($channel_code . $request->sessionid . $request_date . env('SHARED_KEY_BILLER') . $request->billerid . $request->accountnumber),  // Hashed key combination encryption using SHA1 method. The hashed key generated from combining these parameters in order.
+        'WORDS'             => sha1($channel_code . $request->sessionid . $request->request_date . env('SHARED_KEY_BILLER') . $request->billerid . $request->accountnumber),  // Hashed key combination encryption using SHA1 method. The hashed key generated from combining these parameters in order.
         // (CHANNELCODE + SESSIONID + REQUESTDATETIME + SHARED KEY + BILLERID + ACCOUNTNUMBER)
         'BILLERID'          => $request->billerid, // Please refer to BILLER ID LIST
         'ACCOUNT_NUMBER'    => $request->accountnumber,  // Meter Serial Number / Subscriber ID
@@ -141,8 +141,9 @@ class BillerPaymentController extends Controller {
         'PASSWORD'          => Sandi::get()
     );
 
+        // $res = (object) RestCurl::hit(env('LINK_DOKU_BILLER').'/DepositSystem-api/Inquiry?',$check,'POST');
 
-        $res = (object) RestCurl::exec('POST',env('LINK_DOKU_BILLER').'/DepositSystem-api/Payment?',$check); 
+        $res = (object) RestCurl::exec(env('LINK_DOKU_BILLER').'/DepositSystem-api/Payment?',$check,'POST'); 
 
         print_r([$check , $res]);
         die();
