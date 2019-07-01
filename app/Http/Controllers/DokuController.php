@@ -103,13 +103,13 @@ class DokuController extends Controller
     * */
 	public function request(Request $r, Doku $doku){
 		// if($this->__check_post()){
-        $post = (array) $r->post();
+                $post = (array) $r->post();
 
-			// if($this->__check_var($post)){
+			 // if($this->__check_var($post)){
 				// set method to doku api
 				$doku::setMethod('generateCodeUrl');
 				// for staging/live method
-                $doku::staging(true);
+                $doku::staging(0);
 
 
 				// collect all data to push it
@@ -176,7 +176,7 @@ class DokuController extends Controller
 				return response()->json(Api::response(true,Template::lang('success')),201);
 				} else {
                     
-    return response()->json(Api::response(false,Template::lang('Please POST method')),400);
+                return response()->json(Api::response(false,Template::lang('Please POST method')),400);
                 }
 
 			// }
