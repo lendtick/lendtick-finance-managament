@@ -153,7 +153,7 @@ class BillerPaymentController extends Controller {
 
         $errorMsg   = '';
 
-        print_r($res->data);
+        print_r($res);
         die();
         // if ($res->data->responsecode == '0000') {
         //     // jika dia biller token listrik / prepaid
