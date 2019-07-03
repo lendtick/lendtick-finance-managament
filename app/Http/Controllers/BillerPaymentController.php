@@ -96,8 +96,7 @@ class BillerPaymentController extends Controller {
     public function store(Request $request)
     {
 
-      try { 
-
+      try {  
 
         if(empty($request->json())) throw New \Exception('Params not found', 500);
 
@@ -153,7 +152,7 @@ class BillerPaymentController extends Controller {
 
         $errorMsg   = '';
 
-        print_r($res);
+        print_r($res['response']);
         die();
         // if ($res->data->responsecode == '0000') {
         //     // jika dia biller token listrik / prepaid
