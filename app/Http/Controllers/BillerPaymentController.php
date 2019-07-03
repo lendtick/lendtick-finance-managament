@@ -189,9 +189,9 @@ class BillerPaymentController extends Controller {
         //insert log
         $insert = array(
             'log_biller_param' => json_encode($check),
-            'log_biller_response' => json_encode($res->data)
+            'log_biller_response' => json_encode($res)
         );
-        Billerlog::insert($insert);
+        Billerlog::create($insert);
         // die
 
         $httpcode 	= 200;
