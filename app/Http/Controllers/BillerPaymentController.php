@@ -143,10 +143,7 @@ class BillerPaymentController extends Controller {
 
         // $res = (object) RestCurl::hit(env('LINK_DOKU_BILLER').'/DepositSystem-api/Inquiry?',$check,'POST');
 
-        $res = (object) RestCurl::hit(env('LINK_DOKU_BILLER').'/DepositSystem-api/Payment?',$check,'POST'); 
-
-        print_r([$check , $res]);
-        die();
+        $res = (object) RestCurl::hit(env('LINK_DOKU_BILLER').'/DepositSystem-api/Payment?',$check,'POST');
 
         $httpcode 	= 200;
         $status   	= 1;

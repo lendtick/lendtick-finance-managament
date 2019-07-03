@@ -26,9 +26,9 @@ class BillerController extends Controller {
 		$channel_code = env('CHANNELCODE_BILLER');
 		$request_datetime = date('YmdHms');
 		$shared_key = env('SHARED_KEY_BILLER');
-		$login_name = 'agentkopastra';
+		$login_name = env('LOGIN_NAME_BILLER');
 
-		$str = 'simpel';
+		$str = env('STRING_BILLER');
 		$cipher = 'AES-128-CBC';
 		$key = $shared_key;
 		$opts = OPENSSL_RAW_DATA | OPENSSL_ZERO_PADDING;
