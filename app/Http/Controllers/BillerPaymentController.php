@@ -141,7 +141,7 @@ class BillerPaymentController extends Controller {
         'PASSWORD'          => Sandi::get()
     );
 
-        // $res = (object) RestCurl::hit(env('LINK_DOKU_BILLER').'/DepositSystem-api/Inquiry?',$check,'POST');
+       
 
         $res = (object) RestCurl::hit(env('LINK_DOKU_BILLER').'/DepositSystem-api/Payment?',$check,'POST');
 
