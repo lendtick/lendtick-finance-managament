@@ -66,7 +66,7 @@ class BillerBalanceController extends Controller {
        ]);
 
        $channel_code = env('CHANNELCODE_BILLER');
-       $request_date = date('YmdHis');
+       $request_date = $request->request_date;//date('YmdHis');
 
        $check_balance = array(
         'CHANNELCODE'       => $channel_code, //Channel Identification Code
