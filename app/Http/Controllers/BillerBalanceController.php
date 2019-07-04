@@ -35,6 +35,13 @@ class BillerBalanceController extends Controller {
     *         required=true,
     *         type="string"
     *     ),
+     *     @SWG\Parameter(
+    *         description="akusayanglutfi",
+    *         in="formData",
+    *         name="request_date",
+    *         required=true,
+    *         type="string"
+    *     ),
     *     @SWG\Response(
     *         response="200",
     *         description="successful"
@@ -64,7 +71,7 @@ class BillerBalanceController extends Controller {
        $check_balance = array(
         'CHANNELCODE'       => $channel_code, //Channel Identification Code
         'SESSIONID'         => $request->sessionid, // Session for each success login.
-        'REQUESTDATETIME'   => $request_date, //yyyyMMddHHmmss
+        'REQUESTDATETIME'   => $request->request_date, //yyyyMMddHHmmss
         'WORDS'             => sha1($channel_code . $request->sessionid . $request_date . env('SHARED_KEY_BILLER')),  // Hashed key combination encryption using SHA1 method. The hashed key generated from combining these parameters in order. (CHANNELCODE + SESSIONID + REQUESTDATETIME + SHARED KEY)
         );
        // hit($url, $dataArray = array(), $method='GET' ){
