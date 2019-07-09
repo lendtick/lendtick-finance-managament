@@ -127,7 +127,7 @@ class BillerPaymentController extends Controller {
         'BILLERID'          => $request->billerid, // Please refer to BILLER ID LIST
         'ACCOUNT_NUMBER'    => $request->accountnumber,  // Meter Serial Number / Subscriber ID
         'INQUIRYID'         => $request->inquiryid, // Inquiry ID from inquiry process
-        'AMOUNT'            => $request->amount, // Inquiry ID from inquiry process
+        'AMOUNT'            => strval($request->amount), // Inquiry ID from inquiry process
         'BILL_ID'           => $request->billid, // Chosen bill ID or leave it empty for PLN Prepaid
 
 
@@ -193,10 +193,7 @@ class BillerPaymentController extends Controller {
             $status   	= 0;
             $errorMsg   = 'Gagal';
             $res = @$responsable->data;
-        }
-
-
-
+        } 
         
         // die
 
