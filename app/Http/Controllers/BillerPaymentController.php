@@ -190,7 +190,7 @@ class BillerPaymentController extends Controller {
             $errorMsg   = 'Sukses';
             $res = @$responsable->data;
         } else {
-
+            $status   	= 0;
             $errorMsg   = 'Gagal';
             $res = @$responsable->data;
         }
@@ -201,7 +201,7 @@ class BillerPaymentController extends Controller {
         // die
 
         $httpcode 	= 200;
-        $status   	= 1;
+        // $status   	= 1;
         $data 		= $res;
 
     } catch(\Exception $e) {
