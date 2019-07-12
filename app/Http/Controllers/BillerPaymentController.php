@@ -145,7 +145,7 @@ class BillerPaymentController extends Controller {
         
         $responsable = (object) json_decode($res->response);
 
-        dd($responsable);
+        dd($responsable->receipt);
 
         $errorMsg   = '';
         //insert log
