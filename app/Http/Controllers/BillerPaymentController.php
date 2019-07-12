@@ -145,7 +145,7 @@ class BillerPaymentController extends Controller {
         
         $responsable = (object) json_decode($res->response);
 
-        dd($responsable->receipt->body);
+        $body = json_encode($responsable->receipt->body);
 
         $errorMsg   = '';
         //insert log
@@ -164,12 +164,14 @@ class BillerPaymentController extends Controller {
             // update bill_details 
 
             $update_bill_details = array(
-                'bill_details'    => json_encode($responsable->receipt->body)
+                'bill_details'    => $body
             );
-            OrderDetail::where('account_number',$request->accoutnumber)
+            $resOrderDetail = OrderDetail::where('account_number',$request->accoutnumber)
             ->where('inquiry_id',$request->inquiryid
             )->where('biller_id',$request->billerid)->update(
                 $update_bill_details);
+
+            dd($resOrderDetail);
             // jika dia biller token listrik / prepaid
             $subject_pembelian = '';
             // if ($request->billerid == '9950102') {
