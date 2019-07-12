@@ -150,7 +150,7 @@ class BillerInquiryController extends Controller {
           $data       = array(
               'system_message'  => @$response->responsemsg ? @$response->responsemsg : '' ,
               'response'        => @$response ? @$response : '',
-    	      'trace' => @$insert_doku_biller
+    	      'trace'           => $insert_doku_biller
           );
 
 

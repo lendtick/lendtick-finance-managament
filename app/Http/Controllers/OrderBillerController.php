@@ -200,6 +200,7 @@ class OrderBillerController extends Controller {
                             Billerlog::create($insert);
                             //$responseMicro = json_decode($responseMicro,true);
                             if($responseMicro->status == 0){
+                                DB::rollback();
                                 throw New \Exception('Order gagal pada waktu payment dari microloan, silahkan coba kembali', 500);
                             }
 
@@ -213,6 +214,8 @@ class OrderBillerController extends Controller {
                 } else {
                     throw New \Exception('Order gagal, silahkan coba kembali', 500);
                 }
+                // baru diinsert after lolos semua validasi
+                DB::commit();
                 
             } catch(\Exception $e) {
                 DB::rollback();
@@ -266,7 +269,8 @@ class OrderBillerController extends Controller {
                     Billerlog::create($insert);
 
                     $status = 0;
-                    if($payment->data->responsecode == '0000' || $payment->data->responsemsg == 'SUCCESS'){
+                    // if($payment->data->responsecode == '0000' || $payment->data->responsemsg == 'SUCCESS'){
+                    if($payment->status == 200 && $payment->data->status == 1){
                         $status = 1;
                     } else {
                         throw New \Exception('Payment Biller Gagal, silahkan coba kembali', 500);
