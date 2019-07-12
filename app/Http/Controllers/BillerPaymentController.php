@@ -158,6 +158,8 @@ class BillerPaymentController extends Controller {
         // SELECT * from [order].[order_detail]
         // where account_number = '' and inquiry_id = '' and biller_id = ''
 
+        dd($responsable->responsecode);
+
         
         if ($responsable->responsecode == '0000') {
 
