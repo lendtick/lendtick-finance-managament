@@ -142,7 +142,7 @@ class BillerPaymentController extends Controller {
     ); 
 
         $res = (object) RestCurl::hit(env('LINK_DOKU_BILLER').'/DepositSystem-api/Payment?',$check,'POST');
-
+        dd($res);
         $responsable = (object) json_decode($res->response);
 
         $errorMsg   = '';
