@@ -158,7 +158,7 @@ class BillerPaymentController extends Controller {
         // SELECT * from [order].[order_detail]
         // where account_number = '' and inquiry_id = '' and biller_id = ''
 
-        dd($responsable->responsecode);
+        // dd($responsable->responsecode);
 
         
         if ($responsable->responsecode == '0000') {
@@ -168,10 +168,7 @@ class BillerPaymentController extends Controller {
             $update_bill_details = array(
                 'bill_details'    => $body
             );
-            $resOrderDetail = OrderDetail::where('account_number',$request->accoutnumber)
-            ->where('inquiry_id',$request->inquiryid
-            )->where('biller_id',$request->billerid)->update(
-                $update_bill_details);
+            $resOrderDetail = OrderDetail::where('account_number',$request->accountnumber)->where('inquiry_id',$request->inquiryid)->where('biller_id',$request->billerid)->update($update_bill_details);
 
             dd($resOrderDetail);
             // jika dia biller token listrik / prepaid
