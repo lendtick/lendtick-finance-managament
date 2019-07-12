@@ -51,7 +51,7 @@ class OrderBillerController extends Controller {
                     'total_billing'        => $request->total_billing ? $request->total_billing : '',
                     'id_workflow_status'   => $request->id_workflow_status ? $request->id_workflow_status : '',
                     'id_user_company'      => $request->id_user_company ? $request->id_user_company : '',
-                    'systrace'             => time(),
+                    'systrace'             => !empty($request->cart[0]['systrace']) ? $request->cart[0]['systrace'] : 0,
                 );
                 
                 foreach ($request->payment as $payment) {
@@ -200,6 +200,7 @@ class OrderBillerController extends Controller {
                             Billerlog::create($insert);
                             //$responseMicro = json_decode($responseMicro,true);
                             if($responseMicro->status == 0){
+                                DB::rollback();
                                 throw New \Exception('Order gagal pada waktu payment dari microloan, silahkan coba kembali', 500);
                             }
 
@@ -213,6 +214,8 @@ class OrderBillerController extends Controller {
                 } else {
                     throw New \Exception('Order gagal, silahkan coba kembali', 500);
                 }
+                // baru diinsert after lolos semua validasi
+                DB::commit();
                 
             } catch(\Exception $e) {
                 DB::rollback();
@@ -258,15 +261,21 @@ class OrderBillerController extends Controller {
                     );
                     
                     $payment = (object)  RestCurl::exec('POST',env('LINK_FINANCE')."/biller/payment", $param_payment_biller);
+
+                    $insert = array(
+                        'log_biller_param' => 'response-data-pay',
+                        'log_biller_response' => json_encode($payment)
+                    );
+                    Billerlog::create($insert);
+
                     $status = 0;
-                    if($payment->data->responsecode == '0000' ||$payment->data->responsemsg == 'SUCCESS'){
+                    // if($payment->data->responsecode == '0000' || $payment->data->responsemsg == 'SUCCESS'){
+                    if($payment->status == 200 && $payment->data->status == 1){
                         $status = 1;
                     } else {
                         throw New \Exception('Payment Biller Gagal, silahkan coba kembali', 500);
                     }
-                    
-                    
-                    throw New \Exception('Payment Biller Gagal, silahkan coba kembali', 500);
+
                     
                     $update_status = OrderHeader::where('id_order', $order_payment->id_order)
                     ->update([

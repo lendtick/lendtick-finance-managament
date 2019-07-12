@@ -39,7 +39,7 @@ class BillerInquiryController extends Controller {
     *         name="billerid",
     *         required=true,
     *         type="string"
-    *     ),     
+    *     ),
     *     @SWG\Parameter(
     *         description="081311529594",
     *         in="formData",
@@ -56,7 +56,7 @@ class BillerInquiryController extends Controller {
     *         "Biller"
     *     }
     * )
-    * */ 
+    * */
     public function store(Request $request)
     {
 
@@ -73,6 +73,7 @@ class BillerInquiryController extends Controller {
 
           $channel_code = env('CHANNELCODE_BILLER');
           $request_date = date('YmdHms');
+          $systraceNow = time();
 
           $sessions = BillerHelper::SessionID();
 
@@ -83,34 +84,34 @@ class BillerInquiryController extends Controller {
             'REQUESTDATETIME'   => $sessions['RequestDate'], // '20190402065223', //$request_date, //yyyyMMddHHmmss
             'WORDS'             => sha1($channel_code.$sessions['SessionID'].$sessions['RequestDate'].env('SHARED_KEY_BILLER').$request->billerid.$request->accountnumber),  // Hashed key combination encryption using SHA1 method. The hashed key generated from combining these parameters in order.
             'BILLERID'          => $request->billerid, // Please refer to BILLER ID LIST
-            'ACCOUNT_NUMBER'    => $request->accountnumber,  //PLN POSTPAID Subscriber ID PLN NONTAGLIS Registration Number TELKOM PSTN Area code (4 digit) + Phone number (9 digit, zero left padding) PDAM Customer ID MULTIFINANCE Subscriber ID 
-            'SYSTRACE'          => time(), // System trace number
+            'ACCOUNT_NUMBER'    => $request->accountnumber,  //PLN POSTPAID Subscriber ID PLN NONTAGLIS Registration Number TELKOM PSTN Area code (4 digit) + Phone number (9 digit, zero left padding) PDAM Customer ID MULTIFINANCE Subscriber ID
+            'SYSTRACE'          => $systraceNow, // System trace number
             'ADDITIONALDATA1'   => $channel_code,  //Additional information, please fill with channel code
-            'ADDITIONALDATA2'   => '', // Additional information 
-            'ADDITIONALDATA3'   => '', // Additional information, only BPJS Kesehatan fill this parameter with Phone number and month bill,o i.e "081319422963|2" 
+            'ADDITIONALDATA2'   => '', // Additional information
+            'ADDITIONALDATA3'   => '', // Additional information, only BPJS Kesehatan fill this parameter with Phone number and month bill,o i.e "081319422963|2"
         );
           $res = (object) RestCurl::hit(env('LINK_DOKU_BILLER').'/DepositSystem-api/Inquiry?',$check,'POST');
           $response = json_decode($res->response);
 
-          // insert to log 
+          // insert to log
           $insert = array('value' => json_encode($check));
           LogModel::create($insert);
 
-          if (BillerHelper::SessionID($response->responsecode , $response->responsemsg)) { BillerHelper::SessionID(); } 
+          if (BillerHelper::SessionID($response->responsecode , $response->responsemsg)) { BillerHelper::SessionID(); }
 
           if ($response->responsecode == '0000') {
             $httpcode   = 200;
             $status     = 1;
             $errorMsg   = 'Sukses';
 
-            // insert to doku biller              
+            // insert to doku biller
             $insert_doku_biller = array(
-                'session_id' => $sessions['SessionID'], 
+                'session_id' => $sessions['SessionID'],
                 'request_date_time' => $sessions['RequestDate'],
                 'words' =>  sha1($channel_code.$sessions['SessionID'].$sessions['RequestDate'].env('SHARED_KEY_BILLER').$request->billerid.$request->accountnumber),
                 'biller_id' =>  $request->billerid,
                 'account_number'    =>  !empty($request->accountnumber) ? $request->accountnumber : 0,
-                'systrace'  =>  time(),
+                'systrace'  =>  $systraceNow,
                 'inquiry_id'    =>  !empty($response->inquiryid) ? $response->inquiryid : 0
             );
             DokuBiller::insert($insert_doku_biller);
@@ -141,14 +142,15 @@ class BillerInquiryController extends Controller {
                         });
             $billdetails = ['billdetails' => @array_values($new_billdetails)];
 
-            $data       = array( 
-              'system_message'  => @$response->responsemsg ? @$response->responsemsg : '' , 
-              'response'        => @$response ? array_merge((array)$response,$billdetails) : '' 
+            $data       = array(
+              'system_message'  => @$response->responsemsg ? @$response->responsemsg : '' ,
+              'response'        => @$response ? array_merge((array)$response,$billdetails) : ''
           ); */
 
-          $data       = array( 
-              'system_message'  => @$response->responsemsg ? @$response->responsemsg : '' , 
-              'response'        => @$response ? @$response : '' 
+          $data       = array(
+              'system_message'  => @$response->responsemsg ? @$response->responsemsg : '' ,
+              'response'        => @$response ? @$response : '',
+    	      'trace'           => $insert_doku_biller
           );
 
 
@@ -157,13 +159,13 @@ class BillerInquiryController extends Controller {
         $status     = 0;
         $errorMsg   = 'Gagal';
         $data       = array(
-          'system_message'  => @$response->responsemsg ? @$response->responsemsg : '' , 
-          'response'        => @$response ? @$response : '' , 
+          'system_message'  => @$response->responsemsg ? @$response->responsemsg : '' ,
+          'response'        => @$response ? @$response : '' ,
           'trace'           => @$insert_doku_biller
       );
     }
 
-    $httpcode 	= 200; 
+    $httpcode 	= 200;
 
 } catch(\Exception $e) {
  $status   = 0;
@@ -230,7 +232,7 @@ return response()->json(Api::response($status,$errorMsg,$data),$httpcode);
     *         name="billerid",
     *         required=true,
     *         type="string"
-    *     ),     
+    *     ),
     *     @SWG\Parameter(
     *         description="081311529594",
     *         in="formData",
@@ -263,7 +265,7 @@ return response()->json(Api::response($status,$errorMsg,$data),$httpcode);
     *         name="billerid",
     *         required=true,
     *         type="string"
-    *     ), 
+    *     ),
     *     @SWG\Parameter(
     *         description="081311529594",
     *         in="formData",
