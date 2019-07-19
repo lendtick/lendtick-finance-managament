@@ -93,3 +93,6 @@ $router->group(['prefix'=>'order'], function() use($router){
 
 
 
+Route::get('/debug-sentry', function () {
+    throw new Exception('Debug Sentry Finance Lentick ! '.time());
+});

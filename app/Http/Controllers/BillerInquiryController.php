@@ -117,42 +117,25 @@ class BillerInquiryController extends Controller {
             DokuBiller::insert($insert_doku_biller);
             // end biller
 
-            /*
-            * $new = array_filter($array2, function ($var) {
-                            return ($var->totalamount >= '50000.00');
-                        });
-            *
-            */
+            if($request->billerid != '9950102' || $request->billerid != '9950101'){
+                $billdetails = $response->billdetails;
+                $new_billdetails = array_filter($billdetails, function ($var) {
+                                return ($var->totalamount >= '50000.00');
+                            });
+                $billdetails = ['billdetails' => @array_values($new_billdetails)];
 
-
-            // $tt = json_decode($test);
-            // // print_r($tt); die();
-
-            // $new_billdetails = array_filter($tt, function ($var) {
-            //                     return ($var->totalamount >= '50000.00');
-            //                 });
-
-            // $data = array_values($new_billdetails);
-            // return response()->json(Api::response(200,'ww',[ 'billdetails' => $data]),200);
-
-
-            /*$billdetails = $response->billdetails;
-            $new_billdetails = array_filter($billdetails, function ($var) {
-                            return ($var->totalamount >= '50000.00');
-                        });
-            $billdetails = ['billdetails' => @array_values($new_billdetails)];
-
-            $data       = array(
-              'system_message'  => @$response->responsemsg ? @$response->responsemsg : '' ,
-              'response'        => @$response ? array_merge((array)$response,$billdetails) : ''
-          ); */
-
-          $data       = array(
-              'system_message'  => @$response->responsemsg ? @$response->responsemsg : '' ,
-              'response'        => @$response ? @$response : '',
-    	      'trace'           => $insert_doku_biller
-          );
-
+                $data       = array(
+                    'system_message'  => @$response->responsemsg ? @$response->responsemsg : '' ,
+                    'response'        => @$response ? array_merge((array)$response,$billdetails) : '',
+                    'trace'           => $insert_doku_biller
+                );
+            } else {
+                $data       = array(
+                    'system_message'  => @$response->responsemsg ? @$response->responsemsg : '' ,
+                    'response'        => @$response ? @$response : '',
+                    'trace'           => $insert_doku_biller
+                );
+            }
 
       } else {
         $httpcode   = 400;
