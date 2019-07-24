@@ -407,9 +407,9 @@ class DokuController extends Controller
                 $number_payment = array(
                     'number_payment' => $order_number
                 );
-                $res_email = RestCurl::exec('POST',env('LINK_FINANCE','https://lentick-api-finance-dev.azurewebsites.net')."/order/payment-to-biller", $number_payment);
+                $res_email = RestCurl::exec('POST',env('LINK_FINANCE','http://13.67.41.162')."/order/payment-to-biller", $number_payment);
                     echo "Continue"; 
-                    die();
+                    //die();
             }
           } else {
                 //echo "proses pembayaran pendaftaran pengguna";
@@ -426,7 +426,7 @@ class DokuController extends Controller
           $member = $member->get()->first(); 
 
           // get generate id_koperasi
-          $nik = RestCurl::get(env('LINK_USER','https://lentick-api-user-dev.azurewebsites.net')."/profile/generate-nik",[]);
+          $nik = RestCurl::get(env('LINK_USER','https://commerce-kai-user.azurewebsites.net')."/profile/generate-nik",[]);
           $member->username = $nik["data"]->data->nomor_NIK;
           $member->save(); 
 
@@ -445,7 +445,7 @@ class DokuController extends Controller
             "anggota_id" => $member->username,
             "password" => $pass
           ]; 
-          $res_email = RestCurl::exec('POST',env('LINK_NOTIF','https://lentick-api-notification-dev.azurewebsites.net')."/send-sms-after-payment", $email);
+          $res_email = RestCurl::exec('POST',env('LINK_NOTIF','https://commerce-kai-notification.azurewebsites.net')."/send-sms-after-payment", $email);
  
           // log 
           $insert = array('value' => json_encode($r->all()));
@@ -484,7 +484,7 @@ class DokuController extends Controller
                     "verifystatus" => $verifystatus
                   ));
                   if(!$doku_update)
-                     die ("Stop2");
+                     //die ("Stop2");
                   else {
                     $doku_data = DokuRepo::getByParam("transidmerchant", $order_number)->first();
 
@@ -494,7 +494,7 @@ class DokuController extends Controller
                     $member = $member->get()->first();
           
                     // get generate id_koperasi
-                    $nik = RestCurl::get(env('LINK_USER','https://lentick-api-user-dev.azurewebsites.net')."/profile/generate-nik",[]);
+                    $nik = RestCurl::get(env('LINK_USER','https://commerce-kai-user.azurewebsites.net')."/profile/generate-nik",[]);
                     $member->username = $nik["data"]->data->nomor_NIK;
                     $member->save();
           
@@ -514,7 +514,7 @@ class DokuController extends Controller
                             "anggota_id" => $profile->username,
                             "password" => $pass
                         ];
-                        $res_email = RestCurl::post(env('LINK_NOTIF','https://lentick-api-notification-dev.azurewebsites.net')."/send-sms-after-payment", $email);
+                        $res_email = RestCurl::post(env('LINK_NOTIF','https://commerce-kai-notification.azurewebsites.net')."/send-sms-after-payment", $email);
                     }
 
                     echo "Continue";
