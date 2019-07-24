@@ -120,7 +120,9 @@ class BillerInquiryController extends Controller {
             if($request->billerid != '9950102' || $request->billerid != '9950101'){
                 $billdetails = $response->billdetails;
                 $new_billdetails = array_filter($billdetails, function ($var) {
-                                return ($var->totalamount >= '50000.00');
+                                $denom = explode(':', $var->body[0]);
+                                return ($denom[1] >= '50000.00');
+                                // return ($var->totalamount >= '50000.00');
                             });
                 $billdetails = ['billdetails' => @array_values($new_billdetails)];
 
