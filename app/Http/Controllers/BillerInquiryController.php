@@ -73,10 +73,12 @@ class BillerInquiryController extends Controller {
 
           $channel_code = env('CHANNELCODE_BILLER');
           $request_date = date('YmdHms');
+          $month = date('m');
           $systraceNow = time();
 
           $sessions = BillerHelper::SessionID();
 
+          $additional3 = ($request->billerid == '3200001') ? $request->accountnumber.'|'.$month : '';
 
           $check = array(
             'CHANNELCODE'       => $channel_code, //Channel Identification Code
@@ -88,7 +90,7 @@ class BillerInquiryController extends Controller {
             'SYSTRACE'          => $systraceNow, // System trace number
             'ADDITIONALDATA1'   => $channel_code,  //Additional information, please fill with channel code
             'ADDITIONALDATA2'   => '', // Additional information
-            'ADDITIONALDATA3'   => '', // Additional information, only BPJS Kesehatan fill this parameter with Phone number and month bill,o i.e "081319422963|2"
+            'ADDITIONALDATA3'   => $additional3, // Additional information, only BPJS Kesehatan fill this parameter with Phone number and month bill,o i.e "081319422963|2"
         );
           $res = (object) RestCurl::hit(env('LINK_DOKU_BILLER').'/DepositSystem-api/Inquiry?',$check,'POST');
           $response = json_decode($res->response);
