@@ -1,7 +1,5 @@
 <?php
-
 namespace App\Http\Controllers;
-
 use Illuminate\Http\Request;
 use Illuminate\Hashing\BcryptHasher AS Hash;
 use App\Helpers\Doku AS Doku;
@@ -12,25 +10,21 @@ use App\Models\User\ProfileManagement AS Profile;
 use App\Models\Master\RegisterMemberFlowMaster AS MasterFlow;
 use App\Models\Master\WorkflowMaster AS MasterWorkflow;
 use App\Models\Finance\LogModel AS LogModel;
-
 use App\Helpers\Api;
 use App\Helpers\Template;
 use App\Helpers\BlobStorage;
 use App\Helpers\RestCurl;
-
 class DokuController extends Controller
 {
   public function __construct(){
     $this->now = date('YmdHis');
-		$this->fields = array('chain_merchant', 'amount', 'invoice', 'email', 'name', 'phone', 'id_user');
+        $this->fields = array('chain_merchant', 'amount', 'invoice', 'email', 'name', 'phone', 'id_user');
   }
-
   public function __destruct(){
       //
   }
-
   // ======================================================================
-	// This for request to virtual account
+    // This for request to virtual account
   // ======================================================================
   /**
     * @SWG\Post(
@@ -101,100 +95,85 @@ class DokuController extends Controller
     *     }
     * )
     * */
-	public function request(Request $r, Doku $doku){
-		// if($this->__check_post()){
+    public function request(Request $r, Doku $doku){
+        // if($this->__check_post()){
                 $post = (array) $r->post();
-
-			 // if($this->__check_var($post)){
-				// set method to doku api
-				$doku::setMethod('generateCodeUrl');
-				// for staging/live method
+             // if($this->__check_var($post)){
+                // set method to doku api
+                $doku::setMethod('generateCodeUrl');
+                // for staging/live method
                 $doku::staging(0);
-
-
-				// collect all data to push it
-				$data = array(
-					'req_chain_merchant' => $post['chain_merchant'],
-					'req_amount' => number_format((is_string($post['amount'])?(float)$post['amount']:$post['amount']),2,'.',''),
-					'req_purchase_amount' => number_format((is_string($post['amount'])?(float)$post['amount']:$post['amount']),2,'.',''),
-					'req_trans_id_merchant' => $post['invoice'],
-					'req_request_date_time' => $this->now,
-					// 'req_expiry_time' => (24*60),
+                // collect all data to push it
+                $data = array(
+                    'req_chain_merchant' => $post['chain_merchant'],
+                    'req_amount' => number_format((is_string($post['amount'])?(float)$post['amount']:$post['amount']),2,'.',''),
+                    'req_purchase_amount' => number_format((is_string($post['amount'])?(float)$post['amount']:$post['amount']),2,'.',''),
+                    'req_trans_id_merchant' => $post['invoice'],
+                    'req_request_date_time' => $this->now,
+                    // 'req_expiry_time' => (24*60),
                     'req_expiry_time' => 150,
-					'req_open_amount_status' => '',
-					'req_mobile_phone' => $post['phone'],
-					'req_session_id' => sha1($this->now),
-					'req_email' => $post['email'],
-					'req_name' => $post['name'],
-					'req_currency' => '360'
-				);
-
+                    'req_open_amount_status' => '',
+                    'req_mobile_phone' => $post['phone'],
+                    'req_session_id' => sha1($this->now),
+                    'req_email' => $post['email'],
+                    'req_name' => $post['name'],
+                    'req_currency' => '360'
+                );
                 // print_r($data); die();
-				$doku::data($data);
+                $doku::data($data);
                 $config = $doku::getConfig();
-
-				// processing send data
-				$doku::send();
-
-				// get respose in json result
-				// ...::json = true;
-
-				// getting response from doku
-				// notes (2 Method):
-				// ...::response() / ...::getResponse()
+                // processing send data
+                $doku::send();
+                // get respose in json result
+                // ...::json = true;
+                // getting response from doku
+                // notes (2 Method):
+                // ...::response() / ...::getResponse()
                 $resp = $doku::response();
-
         // print_r($resp->data->res_pay_code); die();
-
-				// if(isset($resp->data->res_pay_code)){
-				// 	$resp->data->{'va_mandiri'} = $this->config->item('prefix')['mandiri'].$resp->data->res_pay_code;
-				// 	$resp->data->{'va_bca'} = $this->config->item('prefix')['bca'].$resp->data->res_pay_code;
-				// }
-
-				if(isset($resp->data->res_pay_code)){
-					// save to database
-					DokuRepo::create(array(
-						'transidmerchant' 	=> $config['req_trans_id_merchant'],
-						'totalamount' 		=> $config['req_amount'],
-						'words' 			=> $config['req_words'],
-						'statustype' 		=> '',
-						'response_code' 	=> '',
-						'approvalcode' 		=> '',
-						'trxstatus' 		=> 'Requested',
-						'payment_channel' 	=> '',
-						'paymentcode' 		=> $config['req_trans_id_merchant'],
-						'session_id' 		=> $config['req_session_id'],
-						'bank_issuer' 		=> '',
-						'creditcard' 		=> '',
-						'payment_date_time' => '',
-						'verifyid' 			=> '',
-						'verifyscore' 		=> '',
-						'verifystatus' 		=> '',
-						'id_user' 		    => $post['id_user'],
+                // if(isset($resp->data->res_pay_code)){
+                //  $resp->data->{'va_mandiri'} = $this->config->item('prefix')['mandiri'].$resp->data->res_pay_code;
+                //  $resp->data->{'va_bca'} = $this->config->item('prefix')['bca'].$resp->data->res_pay_code;
+                // }
+                if(isset($resp->data->res_pay_code)){
+                    // save to database
+                    DokuRepo::create(array(
+                        'transidmerchant'   => $config['req_trans_id_merchant'],
+                        'totalamount'       => $config['req_amount'],
+                        'words'             => $config['req_words'],
+                        'statustype'        => '',
+                        'response_code'     => '',
+                        'approvalcode'      => '',
+                        'trxstatus'         => 'Requested',
+                        'payment_channel'   => '',
+                        'paymentcode'       => $config['req_trans_id_merchant'],
+                        'session_id'        => $config['req_session_id'],
+                        'bank_issuer'       => '',
+                        'creditcard'        => '',
+                        'payment_date_time' => '',
+                        'verifyid'          => '',
+                        'verifyscore'       => '',
+                        'verifystatus'      => '',
+                        'id_user'           => $post['id_user'],
                         'billertrx'         => $post['billertrx']
-					));
-				return response()->json(Api::response(true,Template::lang('success')),201);
-				} else {
+                    ));
+                return response()->json(Api::response(true,Template::lang('success')),201);
+                } else {
                     
                 return response()->json(Api::response(false,Template::lang('Please POST method')),400);
                 }
-
-			// }
+            // }
       // return response()->json(Api::response(false,Template::lang('Please check your POST data(chain_merchant, amount, invoice, email, name)')),400);
-		// }
-	}
-
-
-	
-	public function notify(Request $r, Hash $h){
-		if($this->__check_post()){
-			// $ip_range = "103.10.129.16";
-			// if ( $_SERVER['REMOTE_ADDR'] != '103.10.129.16' && (substr($_SERVER['REMOTE_ADDR'],0,strlen($ip_range)) !== $ip_range) ){
-			// if(in_array($_SERVER['REMOTE_ADDR'], array('103.10.129.16','103.10.129.9'))){
+        // }
+    }
+    
+    public function notify(Request $r, Hash $h){
+        if($this->__check_post()){
+            // $ip_range = "103.10.129.16";
+            // if ( $_SERVER['REMOTE_ADDR'] != '103.10.129.16' && (substr($_SERVER['REMOTE_ADDR'],0,strlen($ip_range)) !== $ip_range) ){
+            // if(in_array($_SERVER['REMOTE_ADDR'], array('103.10.129.16','103.10.129.9'))){
         $post = (array) $r->post();
-
         
-
     // ======================================================================
     // This function for feedback from doku service
   // ======================================================================
@@ -344,37 +323,30 @@ class DokuController extends Controller
     *     }
     * )
     * */
-
         // print_r($post); die();
-
-				// collecting data
-				$order_number 			= isset($post['TRANSIDMERCHANT'])?$post['TRANSIDMERCHANT']:0;
-				$totalamount 			= $post['AMOUNT'];
-				$words 					= $post['WORDS'];
-				$statustype 			= $post['STATUSTYPE'];
-				$response_code 			= $post['RESPONSECODE'];
-				$approvalcode 			= $post['APPROVALCODE'];
-				$status 				= $post['RESULTMSG'];
-				$paymentchannel 		= $post['PAYMENTCHANNEL'];
-				$paymentcode 			= $post['PAYMENTCODE'];
-				$session_id 			= $post['SESSIONID'];
-				$bank_issuer 			= $post['BANK'];
-				$cardnumber 			= $post['MCN'];
-				$payment_date_time 		= $post['PAYMENTDATETIME'];
-				$verifyid 				= $post['VERIFYID'];
-				$verifyscore 			= $post['VERIFYSCORE'];
-				$verifystatus 			= $post['VERIFYSTATUS'];
-
-				$MALLID 				= env("DOKU_MALL_ID", "");
-				$SHAREDKEY 				= env("DOKU_SHARED_KEY", "");
-
-
-        $WORDS_GENERATED 		= sha1($totalamount.$MALLID.$SHAREDKEY.$order_number.$status.$verifystatus);
+                // collecting data
+                $order_number           = isset($post['TRANSIDMERCHANT'])?$post['TRANSIDMERCHANT']:0;
+                $totalamount            = $post['AMOUNT'];
+                $words                  = $post['WORDS'];
+                $statustype             = $post['STATUSTYPE'];
+                $response_code          = $post['RESPONSECODE'];
+                $approvalcode           = $post['APPROVALCODE'];
+                $status                 = $post['RESULTMSG'];
+                $paymentchannel         = $post['PAYMENTCHANNEL'];
+                $paymentcode            = $post['PAYMENTCODE'];
+                $session_id             = $post['SESSIONID'];
+                $bank_issuer            = $post['BANK'];
+                $cardnumber             = $post['MCN'];
+                $payment_date_time      = $post['PAYMENTDATETIME'];
+                $verifyid               = $post['VERIFYID'];
+                $verifyscore            = $post['VERIFYSCORE'];
+                $verifystatus           = $post['VERIFYSTATUS'];
+                $MALLID                 = env("DOKU_MALL_ID", "");
+                $SHAREDKEY              = env("DOKU_SHARED_KEY", "");
+        $WORDS_GENERATED        = sha1($totalamount.$MALLID.$SHAREDKEY.$order_number.$status.$verifystatus);
         $pass = Api::rstring(8,'alphanumeric');
-
         // print_r($pass);
         // die();
-
         if(env("BYPASS_DOKU", 0) == 1){
             // dd($order_number);
             // $doku_data = DokuRepo::getByParam("transidmerchant", $order_number)->first();
@@ -398,10 +370,9 @@ class DokuController extends Controller
             "verifystatus" => $verifystatus
           ));
           $doku_data = DokuRepo::getByParam("transidmerchant", $order_number)->first();
-
+//print_r('masuk');die();
           // jika transaksi menggunakan layanan biler maka meneruskan ke bawah ini
           if ($doku_data->billertrx) {
-
             if ($status == '0000' && $response_code == 'SUCCESS') {
                 
                 $number_payment = array(
@@ -414,27 +385,21 @@ class DokuController extends Controller
           } else {
                 //echo "proses pembayaran pendaftaran pengguna";
                 //die();
-
           }
-
-
-
           // update flag from not paid to paid
           $master_flow = MasterWorkflow::where('workflow_status_name', "like", "Active%")->where('workflow_status_desc', "like", "%user status%")->get()->first();
           // $member = User::where('id_user',$doku_data->id_user)->get();
           ($member = User::where('id_user',$doku_data->id_user))->update(array('id_workflow_status' => $master_flow->id_workflow_status));
           $member = $member->get()->first(); 
-
+//print_r($member);die();
           // get generate id_koperasi
           $nik = RestCurl::get(env('LINK_USER','https://commerce-kai-user.azurewebsites.net')."/profile/generate-nik",[]);
           $member->username = $nik["data"]->data->nomor_NIK;
           $member->save(); 
-
           $profile = Profile::where('id_user',$member->id_user)->get()->first();
           $profile->id_koperasi = $nik["data"]->data->nomor_NIK;
           $profile->date_become_member = date("Y-m-d H:i:s");
           $profile->save();
-
           // save password to user
           $user = User::where('id_user', $profile->id_user)->get()->first();
           $user->password = $h->make($pass);
@@ -446,14 +411,12 @@ class DokuController extends Controller
             "password" => $pass
           ]; 
           $res_email = RestCurl::exec('POST',env('LINK_NOTIF','https://commerce-kai-notification.azurewebsites.net')."/send-sms-after-payment", $email);
- 
+//  print_r($res_email);die();
           // log 
           $insert = array('value' => json_encode($r->all()));
           LogModel::create($insert);
           // end log 
           echo "Continue"; 
-
-
         } else {
           if ( $words == $WORDS_GENERATED ) {
             $q = DokuRepo::getTransID($order_number);
@@ -484,10 +447,9 @@ class DokuController extends Controller
                     "verifystatus" => $verifystatus
                   ));
                   if(!$doku_update)
-                     //die ("Stop2");
+                     die ("Stop2");
                   else {
                     $doku_data = DokuRepo::getByParam("transidmerchant", $order_number)->first();
-
                     // update flag from not paid to paid
                     $master_flow = MasterWorkflow::where('workflow_status_name', "like", "%active%")->where('workflow_status_desc', "like", "%user status%")->get()->first();
                     ($member = User::where('id_user',$doku_data->id_user))->update(array('id_workflow_status' => $master_flow->id_workflow_status));
@@ -501,7 +463,6 @@ class DokuController extends Controller
                     $profile = Profile::where('id_user',$member->id_user)->get()->first();
                     $profile->id_koperasi = $nik["data"]->data->nomor_NIK;
                     $profile->save();
-
                     // save password to user
                     $user = User::where('id_user', $profile->id_user)->get()->first();
                     $user->password = $h->make($pass);
@@ -516,51 +477,48 @@ class DokuController extends Controller
                         ];
                         $res_email = RestCurl::post(env('LINK_NOTIF','https://commerce-kai-notification.azurewebsites.net')."/send-sms-after-payment", $email);
                     }
-
                     echo "Continue";
+
           
                     // notify to user to get a credential
                     
-
                   }
-                  // // 	$this->response(array('error' => 'Can\'t update success data'));
+                  // //     $this->response(array('error' => 'Can\'t update success data'));
                 } else {
                   // $sql = "UPDATE doku set trxstatus='Failed' where transidmerchant='".$order_number."'";
                   // $this->db->query($sql);
                   // if(!$this->db->affected_rows())
-                  // 	die ("Stop3");
-                  // // 	$this->response(array('error' => 'Can\'t update failed data'));
+                  //    die ("Stop3");
+                  // //     $this->response(array('error' => 'Can\'t update failed data'));
                 }
-                echo 'Continue';
+                echo "Continue STOP";
                 // $this->response(array('status' => true, 'message' => 'Success update data'));
               }
             } else
               echo "No data";
             // else
-            // 	$this->response(array('error' => 'Stop | No data on database'));
+            //  $this->response(array('error' => 'Stop | No data on database'));
           // }
           // else
-          // 	echo "Stop | Words not match";
-          // 	// $this->response(array('error' => 'Stop | Words not match'));
+          //    echo "Stop | Words not match";
+          //    // $this->response(array('error' => 'Stop | Words not match'));
         }
-			}
-		} 
-		// else
-		// 	$this->response(array('error' => 'You don\'t have access'));
-	}
-
-	private function __check_var($post){
-		$ret = true;
-		foreach ($post as $field => $val) {
-			if(!in_array($field, $this->fields)){
-				$ret = false;
-				break;
-			}
-		}
-		return (count($post) == count($this->fields) && $ret);
-	}
-
-	private function __check_post(){
-		return strtoupper($_SERVER['REQUEST_METHOD']) == 'POST';
-	}
+            }
+        } 
+        // else
+        //  $this->response(array('error' => 'You don\'t have access'));
+    }
+    private function __check_var($post){
+        $ret = true;
+        foreach ($post as $field => $val) {
+            if(!in_array($field, $this->fields)){
+                $ret = false;
+                break;
+            }
+        }
+        return (count($post) == count($this->fields) && $ret);
+    }
+    private function __check_post(){
+        return strtoupper($_SERVER['REQUEST_METHOD']) == 'POST';
+    }
 }

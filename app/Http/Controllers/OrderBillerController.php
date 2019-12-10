@@ -201,6 +201,7 @@ class OrderBillerController extends Controller {
                             //$responseMicro = json_decode($responseMicro,true);
                             if($responseMicro->status == 0){
                                 DB::rollback();
+
                                 throw New \Exception('Order gagal pada waktu payment dari microloan, silahkan coba kembali', 500);
                             }
 

@@ -92,7 +92,7 @@ class BillerPaymentController extends Controller {
     * )
     * */
 
-	// get list billers
+    // get list billers
     public function store(Request $request)
     {
 
@@ -103,7 +103,7 @@ class BillerPaymentController extends Controller {
        // bisa semua selain bayar BPJS Kesehatan
 
         $this->validate($request, [
-          'billerid'		  => 'required',
+          'billerid'          => 'required',
           'sessionid'         => 'required', // Please refer to BILLER ID LIST
           'accountnumber'     => 'required', // Meter Serial Number / Subscriber ID
           'inquiryid'         => 'required', // Inquiry ID from inquiry process
@@ -145,7 +145,7 @@ class BillerPaymentController extends Controller {
         
         $responsable = (object) json_decode($res->response);
 
-        $body = json_encode($responsable->receipt->body);
+        $body = json_encode(@$responsable->receipt->body);
 
         $errorMsg   = '';
         //insert log
@@ -158,7 +158,7 @@ class BillerPaymentController extends Controller {
         // SELECT * from [order].[order_detail]
         // where account_number = '' and inquiry_id = '' and biller_id = ''
 
-        // dd($responsable->responsecode);
+//        dd($responsable);
 
         
         if ($responsable->responsecode == '0000') {
@@ -166,7 +166,7 @@ class BillerPaymentController extends Controller {
             // update bill_details 
 
             $update_bill_details = array(
-                'bill_details'    => $body
+                'bill_details'    => @$body
             );
             $resOrderDetail = OrderDetail::where('account_number',$request->accountnumber)->where('inquiry_id',$request->inquiryid)->where('biller_id',$request->billerid)->update($update_bill_details);
             // jika dia biller token listrik / prepaid
@@ -207,16 +207,16 @@ class BillerPaymentController extends Controller {
             $status = 1;
 
         } else {
-            $status   	= 0;
+            $status     = 0;
             $errorMsg   = 'Gagal';
             $res = @$responsable->data;
         } 
         
         // die
 
-        $httpcode 	= 200;
-        // $status   	= 1;
-        $data 		= $res;
+        $httpcode   = 200;
+        // $status      = 1;
+        $data       = $res;
 
     } catch(\Exception $e) {
        $status   = 0;

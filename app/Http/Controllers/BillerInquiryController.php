@@ -66,19 +66,20 @@ class BillerInquiryController extends Controller {
 
        // bisa semua selain bayar BPJS Kesehatan
           $this->validate($request, [
-              'billerid'		      => 'required',
+              'billerid'              => 'required',
           // 'sessionid'         => 'required', // Please refer to BILLER ID LIST
           'accountnumber'     => 'required', // PLN POSTPAID Subscriber ID PLN NONTAGLIS Registration Number TELKOM PSTN Area code (4 digit) + Phone number (9 digit, zero left padding) PDAM Customer ID MULTIFINANCE Subscriber ID
       ]);
 
           $channel_code = env('CHANNELCODE_BILLER');
           $request_date = date('YmdHms');
-          $month = date('m');
           $systraceNow = time();
+          $month = date('n');
 
           $sessions = BillerHelper::SessionID();
-
-          $additional3 = ($request->billerid == '3200001') ? $request->accountnumber.'|'.$month : '';
+          
+          $customPhone = substr($request_date, -5);
+          $additional3 = ($request->billerid == '3200001') ? '0821146'.$customPhone.'|'.$month : '';
 
           $check = array(
             'CHANNELCODE'       => $channel_code, //Channel Identification Code
@@ -87,14 +88,14 @@ class BillerInquiryController extends Controller {
             'WORDS'             => sha1($channel_code.$sessions['SessionID'].$sessions['RequestDate'].env('SHARED_KEY_BILLER').$request->billerid.$request->accountnumber),  // Hashed key combination encryption using SHA1 method. The hashed key generated from combining these parameters in order.
             'BILLERID'          => $request->billerid, // Please refer to BILLER ID LIST
             'ACCOUNT_NUMBER'    => $request->accountnumber,  //PLN POSTPAID Subscriber ID PLN NONTAGLIS Registration Number TELKOM PSTN Area code (4 digit) + Phone number (9 digit, zero left padding) PDAM Customer ID MULTIFINANCE Subscriber ID
-            'SYSTRACE'          => $systraceNow, // System trace number
+        'SYSTRACE'          => $systraceNow, // System trace number
             'ADDITIONALDATA1'   => $channel_code,  //Additional information, please fill with channel code
             'ADDITIONALDATA2'   => '', // Additional information
             'ADDITIONALDATA3'   => $additional3, // Additional information, only BPJS Kesehatan fill this parameter with Phone number and month bill,o i.e "081319422963|2"
         );
-          $res = (object) RestCurl::hit(env('LINK_DOKU_BILLER').'/DepositSystem-api/Inquiry?',$check,'POST');
-          $response = json_decode($res->response);
-
+         $res = (object) RestCurl::hit(env('LINK_DOKU_BILLER').'/DepositSystem-api/Inquiry?',$check,'POST');
+         $response = json_decode($res->response);
+//dd($check);
           // insert to log
           $insert = array('value' => json_encode($check));
           LogModel::create($insert);
@@ -121,25 +122,30 @@ class BillerInquiryController extends Controller {
 
             if($request->billerid != '9950102' || $request->billerid != '9950101'){
                 $billdetails = $response->billdetails;
-                $new_billdetails = array_filter($billdetails, function ($var) {
-                                $denom = explode(':', $var->body[0]);
-                                return ($denom[1] >= '50000.00');
-                                // return ($var->totalamount >= '50000.00');
+//dd($billdetails);
+                /*$new_billdetails = array_filter($billdetails, function ($var) {
+                                //$denom = explode(':', $var->body[0]);
+                                //return ($denom[1] >= '50000');
+                 return ($var->totalamount >= '50000.00');
                             });
                 $billdetails = ['billdetails' => @array_values($new_billdetails)];
-
+    */
                 $data       = array(
                     'system_message'  => @$response->responsemsg ? @$response->responsemsg : '' ,
                     'response'        => @$response ? array_merge((array)$response,$billdetails) : '',
                     'trace'           => $insert_doku_biller
                 );
             } else {
+        $billdetails = $response->billdetails;
+//dd($billdetails);
                 $data       = array(
                     'system_message'  => @$response->responsemsg ? @$response->responsemsg : '' ,
-                    'response'        => @$response ? @$response : '',
+                   'response'        => @$response ? @$response : '',
+            //'response'        => @$response ? array_merge((array)$response,$billdetails) : '',
                     'trace'           => $insert_doku_biller
                 );
             }
+//dd($data);
 
       } else {
         $httpcode   = 400;
@@ -152,7 +158,7 @@ class BillerInquiryController extends Controller {
       );
     }
 
-    $httpcode 	= 200;
+    $httpcode   = 200;
 
 } catch(\Exception $e) {
  $status   = 0;
