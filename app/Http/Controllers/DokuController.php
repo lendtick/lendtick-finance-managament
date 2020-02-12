@@ -343,10 +343,12 @@ class DokuController extends Controller
                 $verifystatus           = $post['VERIFYSTATUS'];
                 $MALLID                 = env("DOKU_MALL_ID", "");
                 $SHAREDKEY              = env("DOKU_SHARED_KEY", "");
-        $WORDS_GENERATED        = sha1($totalamount.$MALLID.$SHAREDKEY.$order_number.$status.$verifystatus);
-        $pass = Api::rstring(8,'alphanumeric');
-        // print_r($pass);
-        // die();
+                $WORDS_GENERATED        = sha1($totalamount.$MALLID.$SHAREDKEY.$order_number.$status.$verifystatus);
+
+                $nik = RestCurl::get(env('LINK_USER','https://commerce-kai-user.azurewebsites.net')."/profile/generate-nik",[]);
+                $nik = $nik["data"]->data->nomor_NIK ?? 0;
+                $pass = $nik ?? Api::rstring(8,'alphanumeric');
+
         if(env("BYPASS_DOKU", 0) == 1){
             // dd($order_number);
             // $doku_data = DokuRepo::getByParam("transidmerchant", $order_number)->first();
@@ -370,7 +372,7 @@ class DokuController extends Controller
             "verifystatus" => $verifystatus
           ));
           $doku_data = DokuRepo::getByParam("transidmerchant", $order_number)->first();
-//print_r('masuk');die();
+          //print_r('masuk');die();
           // jika transaksi menggunakan layanan biler maka meneruskan ke bawah ini
           if ($doku_data->billertrx) {
             if ($status == '0000' && $response_code == 'SUCCESS') {
@@ -391,27 +393,27 @@ class DokuController extends Controller
           // $member = User::where('id_user',$doku_data->id_user)->get();
           ($member = User::where('id_user',$doku_data->id_user))->update(array('id_workflow_status' => $master_flow->id_workflow_status));
           $member = $member->get()->first(); 
-//print_r($member);die();
+          //print_r($member);die();
           // get generate id_koperasi
-          $nik = RestCurl::get(env('LINK_USER','https://commerce-kai-user.azurewebsites.net')."/profile/generate-nik",[]);
-          $member->username = $nik["data"]->data->nomor_NIK;
+          // $nik = RestCurl::get(env('LINK_USER','https://commerce-kai-user.azurewebsites.net')."/profile/generate-nik",[]);
+          $member->username = $nik ?? 0;
           $member->save(); 
           $profile = Profile::where('id_user',$member->id_user)->get()->first();
-          $profile->id_koperasi = $nik["data"]->data->nomor_NIK;
+          $profile->id_koperasi = $nik ?? 0;   //$nik["data"]->data->nomor_NIK;
           $profile->date_become_member = date("Y-m-d H:i:s");
           $profile->save();
           // save password to user
           $user = User::where('id_user', $profile->id_user)->get()->first();
-          $user->password = $h->make($pass);
+          $user->password = $h->make('kop'.$pass);
           $user->save(); 
           // notify to user to get a credential
           $email = [
             "phone_number" => $profile->phone_number,
             "anggota_id" => $member->username,
-            "password" => $pass
+            "password" => 'kop'.$pass
           ]; 
           $res_email = RestCurl::exec('POST',env('LINK_NOTIF','https://commerce-kai-notification.azurewebsites.net')."/send-sms-after-payment", $email);
-//  print_r($res_email);die();
+          //  print_r($res_email);die();
           // log 
           $insert = array('value' => json_encode($r->all()));
           LogModel::create($insert);
@@ -456,16 +458,16 @@ class DokuController extends Controller
                     $member = $member->get()->first();
           
                     // get generate id_koperasi
-                    $nik = RestCurl::get(env('LINK_USER','https://commerce-kai-user.azurewebsites.net')."/profile/generate-nik",[]);
-                    $member->username = $nik["data"]->data->nomor_NIK;
+                    // $nik = RestCurl::get(env('LINK_USER','https://commerce-kai-user.azurewebsites.net')."/profile/generate-nik",[]);
+                    $member->username = $nik ?? 0;
                     $member->save();
           
                     $profile = Profile::where('id_user',$member->id_user)->get()->first();
-                    $profile->id_koperasi = $nik["data"]->data->nomor_NIK;
+                    $profile->id_koperasi = $nik ?? 0;
                     $profile->save();
                     // save password to user
                     $user = User::where('id_user', $profile->id_user)->get()->first();
-                    $user->password = $h->make($pass);
+                    $user->password = $h->make('kop'.$pass);
                     $user->save();
                     
                     if ($status == '0000' && $response_code == 'SUCCESS') {
@@ -473,13 +475,11 @@ class DokuController extends Controller
                         $email = [
                           "phone_number" => $profile->phone_number,
                             "anggota_id" => $profile->username,
-                            "password" => $pass
+                            "password" => 'kop'.$pass
                         ];
                         $res_email = RestCurl::post(env('LINK_NOTIF','https://commerce-kai-notification.azurewebsites.net')."/send-sms-after-payment", $email);
                     }
                     echo "Continue";
-
-          
                     // notify to user to get a credential
                     
                   }
