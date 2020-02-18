@@ -387,7 +387,7 @@ public function __destruct(){
                 $res_email = RestCurl::exec('POST',env('LINK_FINANCE','http://localhost/web/lendtick-finance-managament/public')."/order/payment-to-biller", $number_payment);
 
                 echo "Continue"; 
-                    //die();
+                    die();
             }
         } else {
                 // echo "proses pembayaran pendaftaran pengguna";
