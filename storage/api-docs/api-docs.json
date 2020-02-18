@@ -477,7 +477,7 @@
                         "description": "Response Code From Doku",
                         "required": true,
                         "type": "string",
-                        "default": "0"
+                        "default": "SUCCESS"
                     },
                     {
                         "name": "APPROVALCODE",
@@ -493,7 +493,7 @@
                         "description": "Status Message From Doku",
                         "required": true,
                         "type": "string",
-                        "default": "0"
+                        "default": "0000"
                     },
                     {
                         "name": "PAYMENTCHANNEL",

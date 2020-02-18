@@ -13,6 +13,8 @@ use App\Models\Order\OrderDetail as OrderDetail;
 use App\Models\Order\OrderDelivery as OrderDelivery;
 use App\Models\Order\OrderPayment as OrderPayment;
 
+use App\Models\Finance\DokuBiller;
+
 use App\Helpers\Api;
 use App\Helpers\Template;
 use App\Helpers\RestCurl;
@@ -325,19 +327,24 @@ class OrderBillerController extends Controller {
                             $number_payment = $request->number_payment ? $request->number_payment : 0;
                             if ($number_payment) {
                                 // proses pembayaran ke biller 
-                                $order_payment = OrderPayment::where('number_payment',$number_payment)->join('order.order_detail', 'order_payment.id_order', '=', 'order_detail.id_order')->first();
-                                
+                                $order_payment = OrderPayment::where('number_payment',$number_payment)->join('order.order_detail', 'order_payment.id_order', '=', 'order_detail.id_order')->join('order.order', 'order.id_order', '=', 'order_detail.id_order')->first();
+
+                                $systrace = $order_payment->systrace ?? 0;
+                                $get_biller = DokuBiller::where('systrace',$systrace)->first();
+
                                 $param_payment_biller = array(
                                     'billerid' => $order_payment->biller_id, 
+                                    'sessionid' => $get_biller->session_id ?? 0,
                                     'accountnumber' => $order_payment->account_number,
                                     'inquiryid' => $order_payment->inquiry_id,
                                     'amount' => $order_payment->sell_price,
                                     'billid' => $order_payment->bill_id,
-                                    'sessionid' => 'lorem',
+                                    'request_date' => $get_biller->request_date_time ?? 0,
+                                    'systrace' => $order_payment->systrace,
                                 );
                                 
                                 $payment = (object) RestCurl::exec('POST',env('LINK_FINANCE')."/biller/payment", $param_payment_biller);
-                                
+
                                 $insert = array(
                                     'log_biller_param' => json_encode($param_payment_biller),
                                     'log_biller_response' => json_encode($payment)
