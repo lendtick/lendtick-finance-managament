@@ -19,6 +19,7 @@ use App\Helpers\Api;
 use App\Helpers\Template;
 use App\Helpers\RestCurl;
 use App\Models\Finance\BillerLog;
+use App\Helpers\Telegram;
 
 use App\Helpers\Biller as BillerHelper;
 
@@ -184,6 +185,15 @@ class OrderBillerController extends Controller {
                     }
                     
                 }
+
+                $txt    = "#order__".time()." <strong>Pembelian paket pulsa berhasil</strong>"."\n";
+                $txt    .= json_encode(array_merge($order_header,$order_header_addons))."\n";
+                $txt    .= json_encode($order_detail)."\n";
+                $txt    .= json_encode($order_payment)."\n";
+
+                $telegram = new Telegram(env('TELEGRAM_TOKEN'));
+                $telegram->sendMessage(env('TELEGRAM_CHAT_ID'), $txt, 'HTML');
+
                 OrderPayment::insert($order_payment);  
                 
                 DB::commit();
@@ -200,7 +210,7 @@ class OrderBillerController extends Controller {
                                 'log_biller_response' => json_encode($responseMicro)
                             );
                             Billerlog::create($insert);
-                            //$responseMicro = json_decode($responseMicro,true);
+
                             if($responseMicro->status == 0){
                                 DB::rollback();
 
