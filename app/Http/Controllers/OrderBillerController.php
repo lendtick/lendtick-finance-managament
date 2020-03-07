@@ -186,15 +186,15 @@ class OrderBillerController extends Controller {
                     
                 }
 
-                $txt    = "#order__".time()." <strong>Pembelian Biller </strong>"."\n";
-                $txt    .= json_encode(array_merge($order_header,$order_header_addons))."\n";
-                $txt    .= json_encode($order_detail)."\n";
-                $txt    .= json_encode($order_payment)."\n";
+                // $txt    = "#order__".time()." <strong>Pembelian Biller </strong>"."\n";
+                // $txt    .= json_encode(array_merge($order_header,$order_header_addons))."\n";
+                // $txt    .= json_encode($order_detail)."\n";
+                // $txt    .= json_encode($order_payment)."\n";
 
-                $telegram = new Telegram(env('TELEGRAM_TOKEN'));
-                $telegram->sendMessage(env('TELEGRAM_CHAT_ID'), $txt, 'HTML');
+                // $telegram = new Telegram(env('TELEGRAM_TOKEN'));
+                // $telegram->sendMessage(env('TELEGRAM_CHAT_ID'), $txt, 'HTML');
 
-                OrderPayment::insert($order_payment);  
+                // OrderPayment::insert($order_payment);  
                 
                 DB::commit();
                 
