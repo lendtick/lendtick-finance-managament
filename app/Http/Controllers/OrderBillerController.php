@@ -186,7 +186,7 @@ class OrderBillerController extends Controller {
                     
                 }
 
-                $txt    = "#order__".time()." <strong>Pembelian paket pulsa berhasil</strong>"."\n";
+                $txt    = "#order__".$id_order->id_order." <strong>Pembelian paket pulsa berhasil</strong>"."\n";
                 $txt    .= json_encode(array_merge($order_header,$order_header_addons))."\n";
                 $txt    .= json_encode($order_detail)."\n";
                 $txt    .= json_encode($order_payment)."\n";
@@ -274,6 +274,16 @@ class OrderBillerController extends Controller {
                     );
                     
                     $payment = (object)  RestCurl::exec('POST',env('LINK_FINANCE')."/biller/payment", $param_payment_biller);
+
+                    // log to telegram
+                    $txt    = "#order__".$number_payment." <strong>Log from microloan</strong>"."\n";
+                    $txt    .= 'param = '. json_encode($param_payment_biller)."\n";
+                    $txt    .= 'response = '. json_encode($payment)."\n";
+
+                    $telegram = new Telegram(env('TELEGRAM_TOKEN'));
+                    $telegram->sendMessage(env('TELEGRAM_CHAT_ID'), $txt, 'HTML');
+
+                    // end 
 
                     $insert = array(
                         'log_biller_param' => 'response-data-pay',
