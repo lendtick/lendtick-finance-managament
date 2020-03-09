@@ -11,6 +11,8 @@
 |
 */
 
+$router->get('/logs','LogsController@controllerMethod');
+
 $router->get('/', function () use ($router) {
     // return $router->app->version();
     return redirect('/api/documentation');
@@ -32,6 +34,11 @@ $router->group(['prefix'=>'doku'], function() use($router){
 
     // test
     $router->get('/test','BillerController@index');
+});
+
+$router->group(['prefix'=>'payment'], function() use($router){
+    // payment list from user registration
+    $router->post('/list/user-registration', 'V2\\PaymentUsersRegisterController@list');
 });
 
 $router->group(['prefix'=>'master'], function() use($router){

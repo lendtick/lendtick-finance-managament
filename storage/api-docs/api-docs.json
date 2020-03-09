@@ -50,7 +50,7 @@
                 }
             }
         },
-       
+
         "/biller/list": {
             "get": {
                 "tags": [
@@ -731,41 +731,113 @@
 
     }
 },
- "/order/biller": {
-            "post": {
-                "tags": [
-                    "Order"
-                ],
-                "summary": "Order",
-                "description": "Order",
-                "operationId": "Order_",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "body",
-                        "name": "body",
-                        "description": "",
-                        "required": true,
-                        "schema": {
+"/order/biller": {
+    "post": {
+        "tags": [
+            "Order"
+        ],
+        "summary": "Order",
+        "description": "Order",
+        "operationId": "Order_",
+        "consumes": [
+            "application/json"
+        ],
+        "produces": [
+            "application/json"
+        ],
+        "parameters": [
+            {
+                "in": "body",
+                "name": "body",
+                "description": "",
+                "required": true,
+                "schema": {
 
-                            "$ref": "#/definitions/Order"
+                    "$ref": "#/definitions/Order"
 
-                        },
-                    }],
-                "responses": {
-                    "200": {
-                        "description": ""
-                    }
                 },
-                "security": [{"Bearer": [ ]}]
-            },
-
+            }],
+        "responses": {
+            "200": {
+                "description": ""
+            }
         },
+        "security": [{"Bearer": [ ]}]
+    },
+
+},
+"/payment/list/user-registration": {
+    "post": {
+        "tags": [
+            "Payment"
+        ],
+        "summary": "List payment for backend",
+        "description": "List payment for backend",
+        "operationId": "payment1",
+        "consumes": [
+            "application/x-www-form-urlencoded"
+        ],
+        "produces": [
+            "application/json"
+        ],
+        "parameters": [
+            {
+
+                "name": "start",
+                "in": "query",
+                "description": "Start row",
+                "required": true,
+                "type": "string",
+                "default": "0"
+
+            },
+            {
+
+                "name": "length",
+                "in": "query",
+                "description": "Length of get row",
+                "required": true,
+                "type": "string",
+                "default": "10"
+
+            },
+            {
+
+                "name": "sort",
+                "in": "query",
+                "description": "Sort by",
+                "required": true,
+                "type": "string",
+                "default": "name,asc"
+
+            },
+            {
+
+                "name": "filter",
+                "in": "query",
+                "description": "Filter column",
+                "required": false,
+                "type": "string"
+
+            },
+            {
+
+                "name": "manual_filter",
+                "in": "query",
+                "description": "Manual Filter Column",
+                "required": false,
+                "type": "string",
+                "default": "{\"company\":\"COMP1376\"}}"
+
+                }
+            ],
+        "responses": {
+            "200": {
+                "description": "successful"
+            }
+        }
+    }
+},
 },
 
 "definitions": {"Order": {
