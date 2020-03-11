@@ -63,6 +63,7 @@ class PaymentDokuRepo {
 					LEFT JOIN [user].[user_profile] b ON a.id_user=b.id_user
 					LEFT JOIN [user].[user_company] c ON c.id_user_profile=b.id_user_profile
 					INNER JOIN [user].[master_company] d ON c.id_company=d.id_company
+					INNER JOIN [user].[master_grade] f ON f.id_grade=c.id_grade
 					where e.billertrx is null
 					".$where_not_in.(count((array)$where)>0?"AND (".implode(' OR ', $where).")":"")
 				))[0]->cnt;
@@ -97,12 +98,15 @@ class PaymentDokuRepo {
 					a.id_workflow_status,
 					a.android_device_token,
 					a.ios_device_token,
-					a.is_new_user
+					a.is_new_user,
+					f.name_grade,
+					c.id_employee
 					from [finance].[doku] e
 					inner join [user].[user] a on a.id_user=e.id_user
 					LEFT JOIN [user].[user_profile] b ON a.id_user=b.id_user
 					LEFT JOIN [user].[user_company] c ON c.id_user_profile=b.id_user_profile
 					INNER JOIN [user].[master_company] d ON c.id_company=d.id_company
+					INNER JOIN [user].[master_grade] f ON f.id_grade=c.id_grade
 					where e.billertrx is null
 					".$where_not_in.(count($where)>0?"AND (".implode(' OR ', $where).")":"")." ".$order." ".$length[0]." ".$length[1]
 				));
