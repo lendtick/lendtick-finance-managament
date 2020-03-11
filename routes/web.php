@@ -93,8 +93,11 @@ $router->group(['prefix'=>'order'], function() use($router){
         $router->get('/test','TestMiddlewareBiller@store'); 
     });
 
+    $router->group(['middleware' => ['cors']], function() use ($router){
     // pencarian
-    $router->post('/payment-to-biller','OrderBillerController@paymentBillerFromOrder');    
+        $router->post('/payment-to-biller','OrderBillerController@paymentBillerFromOrder');
+
+    });
     
 });
 

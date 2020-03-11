@@ -28,7 +28,7 @@ $app->withFacades(true, [
     Tymon\JWTAuth\Facades\JWTFactory::class => 'JWTFactory'
 ]);
 
-$app->register(Jenssegers\Mongodb\MongodbServiceProvider::class);
+
 $app->withEloquent();
 
 $app->configure('swagger-lume');
@@ -75,7 +75,7 @@ $app->singleton(
 
 $app->routeMiddleware([
     'authorize' => App\Http\Middleware\AuthenticateMiddleware::class,
-    'cors' => Nord\Lumen\Cors\CorsMiddleware::class
+    'cors' => App\Http\Middleware\CorsMiddleware::class
 ]);
 
 /*
