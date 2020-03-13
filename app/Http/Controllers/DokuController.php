@@ -104,13 +104,29 @@ public function __destruct(){
                 // for staging/live method
     $doku::staging(0);
                 // collect all data to push it
+     /*
+                    req_mall_id = 6875 | 
+                    req_currency = 360 | 
+                    req_name = Super Koperasi Astra | 
+                    req_open_amount_status =  | 
+                    req_email = Hai.dheva@gmail.com | 
+                    req_mobile_phone = 081807836756 | 
+                    req_chain_merchant = 0 | 
+                    req_amount = 5000.00 | 
+                    req_session_id = 4125b3c90c49408cb5b0f74aaa8df7224ae43902 | 
+                    req_purchase_amount = 5000.00 | 
+                    req_trans_id_merchant = 7025000110151349 | 
+                    req_words = 73b49cdde9f969ec8f652fe72db3af28add0f7ed | 
+                    req_expiry_time = 150 | 
+                    req_request_date_time = 20200310151349 |
+    */
+                    
     $data = array(
         'req_chain_merchant' => $post['chain_merchant'],
         'req_amount' => number_format((is_string($post['amount'])?(float)$post['amount']:$post['amount']),2,'.',''),
         'req_purchase_amount' => number_format((is_string($post['amount'])?(float)$post['amount']:$post['amount']),2,'.',''),
-        'req_trans_id_merchant' => $post['invoice'],
+        'req_trans_id_merchant' => $post['trans_id'],
         'req_request_date_time' => $this->now,
-                    // 'req_expiry_time' => (24*60),
         'req_expiry_time' => 150,
         'req_open_amount_status' => '',
         'req_mobile_phone' => $post['phone'],
@@ -346,7 +362,7 @@ public function __destruct(){
         $SHAREDKEY              = env("DOKU_SHARED_KEY", "");
         $WORDS_GENERATED        = sha1($totalamount.$MALLID.$SHAREDKEY.$order_number.$status.$verifystatus);
 
-        $nik = RestCurl::get(env('LINK_USER','https://commerce-kai-user.azurewebsites.net')."/profile/generate-nik",[]);
+        $nik = RestCurl::get(env('LINK_USER','local')."/profile/generate-nik",[]);
         $nik = $nik["data"]->data->nomor_NIK ?? 0;
         $pass = $nik ?? Api::rstring(8,'alphanumeric');
 
@@ -384,7 +400,7 @@ public function __destruct(){
                 $number_payment = array(
                     'number_payment' => $order_number
                 );
-                $res_email = RestCurl::exec('POST',env('LINK_FINANCE','http://localhost/web/lendtick-finance-managament/public')."/order/payment-to-biller", $number_payment);
+                $res_email = RestCurl::exec('POST',env('LINK_FINANCE','local')."/order/payment-to-biller", $number_payment);
 
                 echo "Continue"; 
                     die();
