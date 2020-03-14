@@ -186,7 +186,7 @@ class OrderBillerController extends Controller {
                 
             }
 
-            $txt    = "#order__".$id_order->id_order." <strong>Pembelian paket pulsa berhasil</strong>"."\n";
+            $txt    = "#order__".$id_order->id_order." <strong>Pembelian biller</strong>"."\n";
             $txt    .= json_encode(array_merge($order_header,$order_header_addons))."\n";
             $txt    .= json_encode($order_detail)."\n";
             $txt    .= json_encode($order_payment)."\n";
@@ -247,8 +247,6 @@ class OrderBillerController extends Controller {
     {
         
         try {
-                // return $token;
-                // die;
             
             $number_payment = $request ? $request : 0;
             if ($number_payment) {
