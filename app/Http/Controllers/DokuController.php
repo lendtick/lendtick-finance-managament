@@ -132,7 +132,7 @@ public function __destruct(){
         'req_amount' => number_format((is_string($post['amount'])?(float)$post['amount']:$post['amount']),2,'.',''),
         'req_session_id' => sha1($this->now),
         'req_purchase_amount' => number_format((is_string($post['amount'])?(float)$post['amount']:$post['amount']),2,'.',''),
-        'req_trans_id_merchant' => $post['trans_id'],
+        'req_trans_id_merchant' => $post['invoice'],
         // req_words = 73b49cdde9f969ec8f652fe72db3af28add0f7ed
         'req_expiry_time' => 150,
         'req_request_date_time' => $this->now
@@ -173,7 +173,7 @@ public function __destruct(){
             'verifyscore'       => '',
             'verifystatus'      => '',
             'id_user'           => $post['id_user'],
-            'billertrx'         => $post['billertrx']
+            'billertrx'         => !empty($post['billertrx']) ? $post['billertrx'] : null 
         ));
         return response()->json(Api::response(true,Template::lang('success')),201);
     } else {
