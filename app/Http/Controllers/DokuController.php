@@ -122,18 +122,20 @@ public function __destruct(){
     */
                     
     $data = array(
+        'req_mall_id' => env('DOKU_MALL_ID') ?? '',
+        'req_currency' => '360',
+        'req_name' => $post['name'],
+        'req_open_amount_status' => '',
+        'req_email' => $post['email'],
+        'req_mobile_phone' => $post['phone'],
         'req_chain_merchant' => $post['chain_merchant'],
         'req_amount' => number_format((is_string($post['amount'])?(float)$post['amount']:$post['amount']),2,'.',''),
+        'req_session_id' => sha1($this->now),
         'req_purchase_amount' => number_format((is_string($post['amount'])?(float)$post['amount']:$post['amount']),2,'.',''),
         'req_trans_id_merchant' => $post['trans_id'],
-        'req_request_date_time' => $this->now,
+        // req_words = 73b49cdde9f969ec8f652fe72db3af28add0f7ed
         'req_expiry_time' => 150,
-        'req_open_amount_status' => '',
-        'req_mobile_phone' => $post['phone'],
-        'req_session_id' => sha1($this->now),
-        'req_email' => $post['email'],
-        'req_name' => $post['name'],
-        'req_currency' => '360'
+        'req_request_date_time' => $this->now
     );
                 // print_r($data); die();
     $doku::data($data);
@@ -162,7 +164,7 @@ public function __destruct(){
             'approvalcode'      => '',
             'trxstatus'         => 'Requested',
             'payment_channel'   => '',
-            'paymentcode'       => $config['req_trans_id_merchant'],
+            'paymentcode'       => '',
             'session_id'        => $config['req_session_id'],
             'bank_issuer'       => '',
             'creditcard'        => '',
