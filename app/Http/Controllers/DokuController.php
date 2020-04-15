@@ -337,6 +337,13 @@ public function __destruct(){
     * */
 
   public function notify(Request $r, Hash $h){
+    /*
+    */
+    $from_top_notify_line = array('from_top_notify_line' => json_encode($r->all()));
+    LogModel::create($from_top_notify_line);
+    /*
+    *
+    */
     if($this->__check_post()){
             // $ip_range = "103.10.129.16";
             // if ( $_SERVER['REMOTE_ADDR'] != '103.10.129.16' && (substr($_SERVER['REMOTE_ADDR'],0,strlen($ip_range)) !== $ip_range) ){
@@ -393,11 +400,10 @@ public function __destruct(){
         ));
           $doku_data = DokuRepo::getByParam("transidmerchant", $order_number)->first();
 
-          // dd($doku_data->billertrx);
 
           // jika transaksi menggunakan layanan biler maka meneruskan ke bawah ini
-          if ($doku_data->billertrx == 1) {
-            if ($status == '0000' && $response_code == 'SUCCESS') {
+          if ($doku_data->billertrx == '1' || $doku_data->billertrx || $doku_data->billertrx == 1) {
+            if ($response_code == '0000' && $status == 'SUCCESS') {
 
                 $number_payment = array(
                     'number_payment' => $order_number
@@ -408,9 +414,7 @@ public function __destruct(){
                     die();
             }
         } else {
-                // echo "proses pembayaran pendaftaran pengguna";
-                // die();
-
+                // echo "proses pembayaran pendaftaran pengguna"
         }
           // update flag from not paid to paid
         $master_flow = MasterWorkflow::where('workflow_status_name', "like", "Active%")->where('workflow_status_desc', "like", "%user status%")->get()->first();
