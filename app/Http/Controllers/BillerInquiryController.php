@@ -64,12 +64,12 @@ class BillerInquiryController extends Controller {
 
           if(empty($request->json())) throw New \Exception('Params not found', 500);
 
-       // bisa semua selain bayar BPJS Kesehatan
-          $this->validate($request, [
-              'billerid'              => 'required',
-          // 'sessionid'         => 'required', // Please refer to BILLER ID LIST
-          'accountnumber'     => 'required', // PLN POSTPAID Subscriber ID PLN NONTAGLIS Registration Number TELKOM PSTN Area code (4 digit) + Phone number (9 digit, zero left padding) PDAM Customer ID MULTIFINANCE Subscriber ID
-      ]);
+           // bisa semua selain bayar BPJS Kesehatan
+              $this->validate($request, [
+                  'billerid'              => 'required',
+              // 'sessionid'         => 'required', // Please refer to BILLER ID LIST
+              'accountnumber'     => 'required', // PLN POSTPAID Subscriber ID PLN NONTAGLIS Registration Number TELKOM PSTN Area code (4 digit) + Phone number (9 digit, zero left padding) PDAM Customer ID MULTIFINANCE Subscriber ID
+          ]);
 
           $channel_code = env('CHANNELCODE_BILLER');
           $request_date = date('YmdHms');
@@ -122,14 +122,12 @@ class BillerInquiryController extends Controller {
 
             if($request->billerid != '9950102' || $request->billerid != '9950101'){
                 $billdetails = $response->billdetails;
-//dd($billdetails);
-                /*$new_billdetails = array_filter($billdetails, function ($var) {
+                $new_billdetails = array_filter($billdetails, function ($var) {
                                 //$denom = explode(':', $var->body[0]);
                                 //return ($denom[1] >= '50000');
                  return ($var->totalamount >= '50000.00');
                             });
                 $billdetails = ['billdetails' => @array_values($new_billdetails)];
-    */
                 $data       = array(
                     'system_message'  => @$response->responsemsg ? @$response->responsemsg : '' ,
                     'response'        => @$response ? array_merge((array)$response,$billdetails) : '',
