@@ -120,14 +120,18 @@ class BillerInquiryController extends Controller {
             DokuBiller::insert($insert_doku_biller);
             // end biller
 
-            if($request->billerid != '9950102' || $request->billerid != '9950101'){
+//            if($request->billerid != '9950102' || $request->billerid != '9950101' || $request->billerid != '3200001' || $request->billerid != '9900015' ){
+$billerid = array('9900001', '9900002', '9900003', '9900004','9900005','9900006','9900007','9900008','9900009','9900010');
+if (in_array($request->billerid, $billerid)) {
                 $billdetails = $response->billdetails;
+
               $new_billdetails = array_filter($billdetails, function ($var) {
                                  $denom = explode(':', $var->body[0]);
                                  return ($denom[1] >= '50000');
 //                 return($var->totalamount >= '50000.00');
                             });
                 $billdetails = ['billdetails' => @array_values($new_billdetails)];
+
 //               });
 		 $data       = array(
                     'system_message'  => @$response->responsemsg ? @$response->responsemsg : '' ,
