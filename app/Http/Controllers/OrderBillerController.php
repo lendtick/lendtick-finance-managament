@@ -45,7 +45,6 @@ class OrderBillerController extends Controller {
             
             $params = (json_decode($request->getContent(), true));
             
-                // print_r(DC::request()); die();
             
             $order_header = array(
                 'id_user'              => $request->id_user,
@@ -95,7 +94,7 @@ class OrderBillerController extends Controller {
                     'additional_data_2'  => $cart['additional_data_2'] ? $cart['additional_data_2'] : '',
                     'additional_data_3'  => $cart['additional_data_3'] ? $cart['additional_data_3'] : '',
                     'inquiry_id'         => $cart['inquiry_id'] ? $cart['inquiry_id'] : '',
-                    'account_number'         => $cart['account_number'] ? $cart['account_number'] : '',
+                    'account_number'     => $cart['account_number'] ? $cart['account_number'] : '',
                 );
                 
             }
@@ -156,9 +155,9 @@ class OrderBillerController extends Controller {
                         'invoice'           => $va_number,
                         'email'             => $prof->email,
                         'name'              => $prof->name,
-                        'phone'             => $prof->phone_number,
+                        'phone'             => $prof->phone_number, // phone ini sengaja diambil dari profile karena memang untuk kebutuhan pencatatan dari sisi profile
                         'id_user'           => $request->id_user,
-                            'billertrx'         => $billertrx // 1 = yes
+                        'billertrx'         => $billertrx // 1 = yes
                             
                         );
                     
@@ -186,17 +185,9 @@ class OrderBillerController extends Controller {
                 
             }
 
-            $txt    = "#order__".$id_order->id_order." <strong>Pembelian biller</strong>"."\n";
-            $txt    .= json_encode(array_merge($order_header,$order_header_addons))."\n";
-            $txt    .= json_encode($order_detail)."\n";
-            $txt    .= json_encode($order_payment)."\n";
-
-            $telegram = new Telegram(env('TELEGRAM_TOKEN'));
-            $telegram->sendMessage(env('TELEGRAM_CHAT_ID'), $txt, 'HTML');
-
-            OrderPayment::insert($order_payment);  
             
-            DB::commit();
+            
+            // DB::commit();
             
             
             if ($insert_delivery) {
@@ -204,7 +195,9 @@ class OrderBillerController extends Controller {
                 if ($payment_type == 'PAY001') {
                     if ($category_id == 'CATBILLER') {
                             // call direct biller
-                        $responseMicro = (object) $this->paymentBillerFromMicroloan($payment_number , $request->header('Authorization') , $request->id_user);
+                        $phone_number = $cart['account_number'] ? $cart['account_number'] : null; // phone number, affected if order pulsa or paket data
+                        //
+                        $responseMicro = (object) $this->paymentBillerFromMicroloan($payment_number , $request->header('Authorization') , $request->id_user, $phone_number );
                         $insert = array(
                             'log_biller_param' => 'from-logic-order-microloan',
                             'log_biller_response' => json_encode($responseMicro)
@@ -229,6 +222,18 @@ class OrderBillerController extends Controller {
             }
                 // baru diinsert after lolos semua validasi
             DB::commit();
+
+
+            OrderPayment::insert($order_payment);  
+
+
+            $txt    = "#order__".$id_order->id_order." <strong>Pembelian biller</strong>"."\n";
+            $txt    .= json_encode(array_merge($order_header,$order_header_addons))."\n";
+            $txt    .= json_encode($order_detail)."\n";
+            $txt    .= json_encode($order_payment)."\n";
+
+            $telegram = new Telegram(env('TELEGRAM_TOKEN'));
+            $telegram->sendMessage(env('TELEGRAM_CHAT_ID'), $txt, 'HTML');
             
         } catch(\Exception $e) {
             DB::rollback();
@@ -243,7 +248,7 @@ class OrderBillerController extends Controller {
     }
     
         //cari trans
-    public function paymentBillerFromMicroloan($request = null , $token = null, $id_user = null)
+    public function paymentBillerFromMicroloan($request = null , $token = null, $id_user = null , $phone_number = null)
     {
         
         try {
@@ -255,9 +260,12 @@ class OrderBillerController extends Controller {
                     // proses pembayaran ke biller 
                 $order_payment = OrderPayment::where('number_payment',$number_payment)->join('order.order_detail', 'order_payment.id_order', '=', 'order_detail.id_order')->join('order.order', 'order_payment.id_order', '=', 'order.id_order')->first();
                 
-                
-                
                 $get_profile = (object) RestCurl::exec('GET',env('LINK_USER').'/profile/get?id='.$id_user,[],$token);
+                
+                if(is_null($phone_number)){
+                    $phone_number = !empty($get_profile->data->data->phone_number) ? $get_profile->data->data->phone_number: null;
+                }
+                
                 $param_payment_biller = array(
                     'billerid' => $order_payment->biller_id, 
                     'accountnumber' => $order_payment->account_number,
@@ -268,13 +276,19 @@ class OrderBillerController extends Controller {
                     'request_date' => $sessions['RequestDate'],
                     'systrace' => $order_payment->systrace,
                     'email' => !empty($get_profile->data->data->email) ? $get_profile->data->data->email: null,
-                    'phone_number' => !empty($get_profile->data->data->phone_number) ? $get_profile->data->data->phone_number: null
+                    'phone_number' => $phone_number
                 );
                 
                 $payment = (object)  RestCurl::exec('POST',env('LINK_FINANCE')."/biller/payment", $param_payment_biller);
 
+                $insert = array(
+                    'log_biller_param' => 'param_payment_biller_from_microloan',
+                    'log_biller_response' => json_encode($param_payment_biller)
+                );
+                Billerlog::create($insert);
+
                     // log to telegram
-                $txt    = "#order__".$number_payment." <strong>Log from microloan</strong>"."\n";
+                $txt    = "#order__".$number_payment." <strong>Log from microloan param_payment_biller_from_microloan</strong>"."\n";
                 $txt    .= 'param = '. json_encode($param_payment_biller)."\n";
                 $txt    .= 'response = '. json_encode($payment)."\n";
 
@@ -292,29 +306,29 @@ class OrderBillerController extends Controller {
                 $status = 0;
                     // if($payment->data->responsecode == '0000' || $payment->data->responsemsg == 'SUCCESS'){
                 if($payment->status == 200 && $payment->data->status == 1){
-                    $status = 1;
+                    $update_status = OrderHeader::where('id_order', $order_payment->id_order)
+                    ->update([
+                        'total_payment'         => $order_payment->sell_price,
+                        'id_workflow_status'    => 'ODSTS05',
+                        'repayment_date'        => date('Y-m-d H:i:s'),
+                    ]);
+                    
+                    $update_status = OrderPayment::where('id_order', $order_payment->id_order)
+                    ->update([
+                        'payment_date'         => date('Y-m-d H:i:s') 
+                    ]);
+                    
+                    $httpcode   = 200;
+                    $status     = 1;
+                    $data       = $payment->data->data;
+                    $errorMsg   = 'Sukses';
+
                 } else {
                     throw New \Exception('Payment Biller Gagal, silahkan coba kembali', 500);
                 }
 
                 
-                $update_status = OrderHeader::where('id_order', $order_payment->id_order)
-                ->update([
-                    'total_payment'         => $order_payment->sell_price,
-                    'id_workflow_status'    => 'ODSTS05',
-                    'repayment_date'        => date('Y-m-d H:i:s'),
-                ]);
-                
-                $update_status = OrderPayment::where('id_order', $order_payment->id_order)
-                ->update([
-                    'payment_date'         => date('Y-m-d H:i:s')
-                ]);
-                
-                
-                $httpcode   = 200;
-                $status     = 1;
-                $data       = $payment->data->data;
-                $errorMsg   = 'Sukses';
+               
             } else {
                 throw New \Exception('Order gagal, silahkan coba kembali', 500);
             }
