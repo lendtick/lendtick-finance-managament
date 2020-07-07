@@ -4,36 +4,33 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit447381d6730de6e3b7197115a771441d
+class ComposerStaticInita6977417f23b1b74501bf632ecc63126
 {
     public static $files = array (
         '0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/bootstrap.php',
         '023d27dca8066ef29e6739335ea73bad' => __DIR__ . '/..' . '/symfony/polyfill-php70/bootstrap.php',
         '320cde22f66dd4f5d3fd621d3e88b98f' => __DIR__ . '/..' . '/symfony/polyfill-ctype/bootstrap.php',
+        'bd9634f2d41831496de0d3dfe4c94881' => __DIR__ . '/..' . '/symfony/polyfill-php56/bootstrap.php',
         '72579e7bd17821bb1321b87411366eae' => __DIR__ . '/..' . '/illuminate/support/helpers.php',
         '7b11c4dc42b3b3023073cb14e519683c' => __DIR__ . '/..' . '/ralouphie/getallheaders/src/getallheaders.php',
         'a0edc8309cc5e1d60e3047b5df6b7052' => __DIR__ . '/..' . '/guzzlehttp/psr7/src/functions_include.php',
-        'cf97c57bfe0f23854afd2f3818abb7a0' => __DIR__ . '/..' . '/zendframework/zend-diactoros/src/functions/create_uploaded_file.php',
-        '9bf37a3d0dad93e29cb4e1b1bfab04e9' => __DIR__ . '/..' . '/zendframework/zend-diactoros/src/functions/marshal_headers_from_sapi.php',
-        'ce70dccb4bcc2efc6e94d2ee526e6972' => __DIR__ . '/..' . '/zendframework/zend-diactoros/src/functions/marshal_method_from_sapi.php',
-        'f86420df471f14d568bfcb71e271b523' => __DIR__ . '/..' . '/zendframework/zend-diactoros/src/functions/marshal_protocol_version_from_sapi.php',
-        'b87481e008a3700344428ae089e7f9e5' => __DIR__ . '/..' . '/zendframework/zend-diactoros/src/functions/marshal_uri_from_sapi.php',
-        '0b0974a5566a1077e4f2e111341112c1' => __DIR__ . '/..' . '/zendframework/zend-diactoros/src/functions/normalize_server.php',
-        '1ca3bc274755662169f9629d5412a1da' => __DIR__ . '/..' . '/zendframework/zend-diactoros/src/functions/normalize_uploaded_files.php',
-        '40360c0b9b437e69bcbb7f1349ce029e' => __DIR__ . '/..' . '/zendframework/zend-diactoros/src/functions/parse_cookie_header.php',
+        'a4a119a56e50fbb293281d9a48007e0e' => __DIR__ . '/..' . '/symfony/polyfill-php80/bootstrap.php',
         '9c67151ae59aff4788964ce8eb2a0f43' => __DIR__ . '/..' . '/clue/stream-filter/src/functions_include.php',
+        '6e3fae29631ef280660b3cdad06f25a8' => __DIR__ . '/..' . '/symfony/deprecation-contracts/function.php',
         '8cff32064859f4559445b89279f3199c' => __DIR__ . '/..' . '/php-http/message/src/filters.php',
-        '1d1b89d124cc9cb8219922c9d5569199' => __DIR__ . '/..' . '/hamcrest/hamcrest-php/hamcrest/Hamcrest.php',
-        '9077b4d8b12bf36c716ea93b712cf7a4' => __DIR__ . '/..' . '/sentry/sentry/src/Sdk.php',
         'c964ee0ededf28c96ebd9db5099ef910' => __DIR__ . '/..' . '/guzzlehttp/promises/src/functions_include.php',
-        '253c157292f75eb38082b5acb06f3f01' => __DIR__ . '/..' . '/nikic/fast-route/src/functions.php',
+        '25072dd6e2470089de65ae7bf11d3109' => __DIR__ . '/..' . '/symfony/polyfill-php72/bootstrap.php',
+        '09f6b20656683369174dd6fa83b7e5fb' => __DIR__ . '/..' . '/symfony/polyfill-uuid/bootstrap.php',
+        'fb4ca2d97fe7ba6af750497425204e70' => __DIR__ . '/..' . '/sentry/sentry/src/functions.php',
+        'f598d06aa772fa33d905e87be6398fb1' => __DIR__ . '/..' . '/symfony/polyfill-intl-idn/bootstrap.php',
         '37a3dc5111fe8f707ab4c132ef1dbc62' => __DIR__ . '/..' . '/guzzlehttp/guzzle/src/functions_include.php',
+        '1d1b89d124cc9cb8219922c9d5569199' => __DIR__ . '/..' . '/hamcrest/hamcrest-php/hamcrest/Hamcrest.php',
+        '253c157292f75eb38082b5acb06f3f01' => __DIR__ . '/..' . '/nikic/fast-route/src/functions.php',
         'bee9632da3ca00a99623b9c35d0c4f8b' => __DIR__ . '/..' . '/laravel/lumen-framework/src/helpers.php',
-        'bd9634f2d41831496de0d3dfe4c94881' => __DIR__ . '/..' . '/symfony/polyfill-php56/bootstrap.php',
         '6124b4c8570aa390c21fafd04a26c69f' => __DIR__ . '/..' . '/myclabs/deep-copy/src/DeepCopy/deep_copy.php',
         '0ccdf99b8f62f02c52cba55802e0c2e7' => __DIR__ . '/..' . '/zircote/swagger-php/src/functions.php',
-        '3a37ebac017bc098e9a86b35401e7a68' => __DIR__ . '/..' . '/mongodb/mongodb/src/functions.php',
         '3585c46f9622c6b622ab0011d4d72b3a' => __DIR__ . '/..' . '/darkaonline/swagger-lume/src/helpers.php',
+        '4e99a91d5061101f71c3c488c41e2866' => __DIR__ . '/..' . '/vluzrmos/slack-api/src/Vluzrmos/SlackApi/helpers.php',
     );
 
     public static $prefixLengthsPsr4 = array (
@@ -41,13 +38,13 @@ class ComposerStaticInit447381d6730de6e3b7197115a771441d
         array (
             'phpDocumentor\\Reflection\\' => 25,
         ),
-        'Z' => 
-        array (
-            'Zend\\Diactoros\\' => 15,
-        ),
         'W' => 
         array (
             'Webmozart\\Assert\\' => 17,
+        ),
+        'V' => 
+        array (
+            'Vluzrmos\\' => 9,
         ),
         'T' => 
         array (
@@ -55,12 +52,17 @@ class ComposerStaticInit447381d6730de6e3b7197115a771441d
         ),
         'S' => 
         array (
+            'Symfony\\Polyfill\\Uuid\\' => 22,
             'Symfony\\Polyfill\\Util\\' => 22,
+            'Symfony\\Polyfill\\Php80\\' => 23,
+            'Symfony\\Polyfill\\Php72\\' => 23,
             'Symfony\\Polyfill\\Php70\\' => 23,
             'Symfony\\Polyfill\\Php56\\' => 23,
             'Symfony\\Polyfill\\Mbstring\\' => 26,
+            'Symfony\\Polyfill\\Intl\\Idn\\' => 26,
             'Symfony\\Polyfill\\Ctype\\' => 23,
-            'Symfony\\Contracts\\' => 18,
+            'Symfony\\Contracts\\Translation\\' => 30,
+            'Symfony\\Contracts\\EventDispatcher\\' => 34,
             'Symfony\\Component\\Translation\\' => 30,
             'Symfony\\Component\\Process\\' => 26,
             'Symfony\\Component\\OptionsResolver\\' => 34,
@@ -74,10 +76,6 @@ class ComposerStaticInit447381d6730de6e3b7197115a771441d
             'SwaggerLume\\' => 12,
             'Sentry\\' => 7,
         ),
-        'R' => 
-        array (
-            'Ramsey\\Uuid\\' => 12,
-        ),
         'P' => 
         array (
             'Psr\\SimpleCache\\' => 16,
@@ -85,6 +83,7 @@ class ComposerStaticInit447381d6730de6e3b7197115a771441d
             'Psr\\Http\\Message\\' => 17,
             'Psr\\Http\\Client\\' => 16,
             'Psr\\Container\\' => 14,
+            'Prophecy\\' => 9,
             'PackageVersions\\' => 16,
         ),
         'N' => 
@@ -95,7 +94,6 @@ class ComposerStaticInit447381d6730de6e3b7197115a771441d
         'M' => 
         array (
             'Monolog\\' => 8,
-            'MongoDB\\' => 8,
             'MicrosoftAzure\\Storage\\Common\\' => 30,
             'MicrosoftAzure\\Storage\\Blob\\' => 28,
         ),
@@ -139,9 +137,9 @@ class ComposerStaticInit447381d6730de6e3b7197115a771441d
             'Http\\Message\\' => 13,
             'Http\\Factory\\Guzzle\\' => 20,
             'Http\\Discovery\\' => 15,
-            'Http\\Client\\Curl\\' => 17,
             'Http\\Client\\Common\\' => 19,
             'Http\\Client\\' => 12,
+            'Http\\Adapter\\Guzzle6\\' => 21,
         ),
         'G' => 
         array (
@@ -158,6 +156,8 @@ class ComposerStaticInit447381d6730de6e3b7197115a771441d
         array (
             'Dotenv\\' => 7,
             'Doctrine\\Instantiator\\' => 22,
+            'Doctrine\\Inflector\\' => 19,
+            'Doctrine\\Common\\Lexer\\' => 22,
             'Doctrine\\Common\\Inflector\\' => 26,
             'Doctrine\\Common\\Annotations\\' => 28,
             'DeepCopy\\' => 9,
@@ -180,21 +180,33 @@ class ComposerStaticInit447381d6730de6e3b7197115a771441d
             1 => __DIR__ . '/..' . '/phpdocumentor/reflection-docblock/src',
             2 => __DIR__ . '/..' . '/phpdocumentor/type-resolver/src',
         ),
-        'Zend\\Diactoros\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/zendframework/zend-diactoros/src',
-        ),
         'Webmozart\\Assert\\' => 
         array (
             0 => __DIR__ . '/..' . '/webmozart/assert/src',
+        ),
+        'Vluzrmos\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/vluzrmos/slack-api/src/Vluzrmos',
         ),
         'Tymon\\JWTAuth\\' => 
         array (
             0 => __DIR__ . '/..' . '/tymon/jwt-auth/src',
         ),
+        'Symfony\\Polyfill\\Uuid\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/polyfill-uuid',
+        ),
         'Symfony\\Polyfill\\Util\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/polyfill-util',
+        ),
+        'Symfony\\Polyfill\\Php80\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/polyfill-php80',
+        ),
+        'Symfony\\Polyfill\\Php72\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/polyfill-php72',
         ),
         'Symfony\\Polyfill\\Php70\\' => 
         array (
@@ -208,13 +220,21 @@ class ComposerStaticInit447381d6730de6e3b7197115a771441d
         array (
             0 => __DIR__ . '/..' . '/symfony/polyfill-mbstring',
         ),
+        'Symfony\\Polyfill\\Intl\\Idn\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/polyfill-intl-idn',
+        ),
         'Symfony\\Polyfill\\Ctype\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/polyfill-ctype',
         ),
-        'Symfony\\Contracts\\' => 
+        'Symfony\\Contracts\\Translation\\' => 
         array (
-            0 => __DIR__ . '/..' . '/symfony/contracts',
+            0 => __DIR__ . '/..' . '/symfony/translation-contracts',
+        ),
+        'Symfony\\Contracts\\EventDispatcher\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/event-dispatcher-contracts',
         ),
         'Symfony\\Component\\Translation\\' => 
         array (
@@ -264,10 +284,6 @@ class ComposerStaticInit447381d6730de6e3b7197115a771441d
         array (
             0 => __DIR__ . '/..' . '/sentry/sentry/src',
         ),
-        'Ramsey\\Uuid\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/ramsey/uuid/src',
-        ),
         'Psr\\SimpleCache\\' => 
         array (
             0 => __DIR__ . '/..' . '/psr/simple-cache/src',
@@ -278,8 +294,8 @@ class ComposerStaticInit447381d6730de6e3b7197115a771441d
         ),
         'Psr\\Http\\Message\\' => 
         array (
-            0 => __DIR__ . '/..' . '/psr/http-message/src',
-            1 => __DIR__ . '/..' . '/psr/http-factory/src',
+            0 => __DIR__ . '/..' . '/psr/http-factory/src',
+            1 => __DIR__ . '/..' . '/psr/http-message/src',
         ),
         'Psr\\Http\\Client\\' => 
         array (
@@ -289,9 +305,13 @@ class ComposerStaticInit447381d6730de6e3b7197115a771441d
         array (
             0 => __DIR__ . '/..' . '/psr/container/src',
         ),
+        'Prophecy\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/phpspec/prophecy/src/Prophecy',
+        ),
         'PackageVersions\\' => 
         array (
-            0 => __DIR__ . '/..' . '/ocramius/package-versions/src/PackageVersions',
+            0 => __DIR__ . '/..' . '/composer/package-versions-deprecated/src/PackageVersions',
         ),
         'Nord\\Lumen\\Cors\\' => 
         array (
@@ -304,10 +324,6 @@ class ComposerStaticInit447381d6730de6e3b7197115a771441d
         'Monolog\\' => 
         array (
             0 => __DIR__ . '/..' . '/monolog/monolog/src/Monolog',
-        ),
-        'MongoDB\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/mongodb/mongodb/src',
         ),
         'MicrosoftAzure\\Storage\\Common\\' => 
         array (
@@ -423,8 +439,8 @@ class ComposerStaticInit447381d6730de6e3b7197115a771441d
         ),
         'Http\\Message\\' => 
         array (
-            0 => __DIR__ . '/..' . '/php-http/message-factory/src',
-            1 => __DIR__ . '/..' . '/php-http/message/src',
+            0 => __DIR__ . '/..' . '/php-http/message/src',
+            1 => __DIR__ . '/..' . '/php-http/message-factory/src',
         ),
         'Http\\Factory\\Guzzle\\' => 
         array (
@@ -434,10 +450,6 @@ class ComposerStaticInit447381d6730de6e3b7197115a771441d
         array (
             0 => __DIR__ . '/..' . '/php-http/discovery/src',
         ),
-        'Http\\Client\\Curl\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/php-http/curl-client/src',
-        ),
         'Http\\Client\\Common\\' => 
         array (
             0 => __DIR__ . '/..' . '/php-http/client-common/src',
@@ -445,6 +457,10 @@ class ComposerStaticInit447381d6730de6e3b7197115a771441d
         'Http\\Client\\' => 
         array (
             0 => __DIR__ . '/..' . '/php-http/httplug/src',
+        ),
+        'Http\\Adapter\\Guzzle6\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/php-http/guzzle6-adapter/src',
         ),
         'GuzzleHttp\\Psr7\\' => 
         array (
@@ -473,6 +489,14 @@ class ComposerStaticInit447381d6730de6e3b7197115a771441d
         'Doctrine\\Instantiator\\' => 
         array (
             0 => __DIR__ . '/..' . '/doctrine/instantiator/src/Doctrine/Instantiator',
+        ),
+        'Doctrine\\Inflector\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/doctrine/inflector/lib/Doctrine/Inflector',
+        ),
+        'Doctrine\\Common\\Lexer\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/doctrine/lexer/lib/Doctrine/Common/Lexer',
         ),
         'Doctrine\\Common\\Inflector\\' => 
         array (
@@ -505,6 +529,13 @@ class ComposerStaticInit447381d6730de6e3b7197115a771441d
     );
 
     public static $prefixesPsr0 = array (
+        'U' => 
+        array (
+            'UpdateHelper\\' => 
+            array (
+                0 => __DIR__ . '/..' . '/kylekatarnls/update-helper/src',
+            ),
+        ),
         'S' => 
         array (
             'Sentry\\Laravel\\' => 
@@ -512,32 +543,11 @@ class ComposerStaticInit447381d6730de6e3b7197115a771441d
                 0 => __DIR__ . '/..' . '/sentry/sentry-laravel/src',
             ),
         ),
-        'P' => 
-        array (
-            'Prophecy\\' => 
-            array (
-                0 => __DIR__ . '/..' . '/phpspec/prophecy/src',
-            ),
-        ),
         'M' => 
         array (
             'Mockery' => 
             array (
                 0 => __DIR__ . '/..' . '/mockery/mockery/library',
-            ),
-        ),
-        'J' => 
-        array (
-            'Jenssegers\\Mongodb' => 
-            array (
-                0 => __DIR__ . '/..' . '/jenssegers/mongodb/src',
-            ),
-        ),
-        'D' => 
-        array (
-            'Doctrine\\Common\\Lexer\\' => 
-            array (
-                0 => __DIR__ . '/..' . '/doctrine/lexer/lib',
             ),
         ),
     );
@@ -1152,6 +1162,7 @@ class ComposerStaticInit447381d6730de6e3b7197115a771441d
         'SebastianBergmann\\ResourceOperations\\ResourceOperations' => __DIR__ . '/..' . '/sebastian/resource-operations/src/ResourceOperations.php',
         'SebastianBergmann\\Version' => __DIR__ . '/..' . '/sebastian/version/src/Version.php',
         'SessionUpdateTimestampHandlerInterface' => __DIR__ . '/..' . '/symfony/polyfill-php70/Resources/stubs/SessionUpdateTimestampHandlerInterface.php',
+        'Stringable' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/Stringable.php',
         'TestCase' => __DIR__ . '/../..' . '/tests/TestCase.php',
         'Text_Template' => __DIR__ . '/..' . '/phpunit/php-text-template/src/Template.php',
         'TheSeer\\Tokenizer\\Exception' => __DIR__ . '/..' . '/theseer/tokenizer/src/Exception.php',
@@ -1163,16 +1174,17 @@ class ComposerStaticInit447381d6730de6e3b7197115a771441d
         'TheSeer\\Tokenizer\\Tokenizer' => __DIR__ . '/..' . '/theseer/tokenizer/src/Tokenizer.php',
         'TheSeer\\Tokenizer\\XMLSerializer' => __DIR__ . '/..' . '/theseer/tokenizer/src/XMLSerializer.php',
         'TypeError' => __DIR__ . '/..' . '/symfony/polyfill-php70/Resources/stubs/TypeError.php',
+        'ValueError' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/ValueError.php',
     );
 
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit447381d6730de6e3b7197115a771441d::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit447381d6730de6e3b7197115a771441d::$prefixDirsPsr4;
-            $loader->fallbackDirsPsr4 = ComposerStaticInit447381d6730de6e3b7197115a771441d::$fallbackDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInit447381d6730de6e3b7197115a771441d::$prefixesPsr0;
-            $loader->classMap = ComposerStaticInit447381d6730de6e3b7197115a771441d::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInita6977417f23b1b74501bf632ecc63126::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInita6977417f23b1b74501bf632ecc63126::$prefixDirsPsr4;
+            $loader->fallbackDirsPsr4 = ComposerStaticInita6977417f23b1b74501bf632ecc63126::$fallbackDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInita6977417f23b1b74501bf632ecc63126::$prefixesPsr0;
+            $loader->classMap = ComposerStaticInita6977417f23b1b74501bf632ecc63126::$classMap;
 
         }, null, ClassLoader::class);
     }

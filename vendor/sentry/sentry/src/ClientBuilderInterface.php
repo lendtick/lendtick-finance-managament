@@ -4,25 +4,30 @@ declare(strict_types=1);
 
 namespace Sentry;
 
-use Http\Client\Common\Plugin;
+use Http\Client\Common\Plugin as PluginInterface;
 use Http\Client\HttpAsyncClient;
-use Http\Message\MessageFactory;
-use Http\Message\UriFactory;
+use Http\Message\MessageFactory as MessageFactoryInterface;
+use Http\Message\UriFactory as UriFactoryInterface;
+use Psr\Log\LoggerInterface;
 use Sentry\Serializer\RepresentationSerializerInterface;
 use Sentry\Serializer\SerializerInterface;
+use Sentry\Transport\TransportFactoryInterface;
 use Sentry\Transport\TransportInterface;
 
 /**
  * A configurable builder for Client objects.
  *
  * @author Stefano Arlandini <sarlandini@alice.it>
+ *
+ * @method self setTransportFactory(TransportFactoryInterface $transportFactory)
+ * @method self setLogger(LoggerInterface $logger)
  */
 interface ClientBuilderInterface
 {
     /**
      * Creates a new instance of this builder.
      *
-     * @param array $options The client options, in naked array form
+     * @param array<string, mixed> $options The client options, in naked array form
      *
      * @return static
      */
@@ -30,28 +35,30 @@ interface ClientBuilderInterface
 
     /**
      * The options that will be used to create the {@see Client}.
-     *
-     * @return Options
      */
     public function getOptions(): Options;
 
     /**
      * Sets the factory to use to create URIs.
      *
-     * @param UriFactory $uriFactory The factory
+     * @param UriFactoryInterface $uriFactory The factory
      *
      * @return $this
+     *
+     * @deprecated Since version 2.3, to be removed in 3.0
      */
-    public function setUriFactory(UriFactory $uriFactory): self;
+    public function setUriFactory(UriFactoryInterface $uriFactory): self;
 
     /**
      * Sets the factory to use to create PSR-7 messages.
      *
-     * @param MessageFactory $messageFactory The factory
+     * @param MessageFactoryInterface $messageFactory The factory
      *
      * @return $this
+     *
+     * @deprecated Since version 2.3, to be removed in 3.0
      */
-    public function setMessageFactory(MessageFactory $messageFactory): self;
+    public function setMessageFactory(MessageFactoryInterface $messageFactory): self;
 
     /**
      * Sets the transport that will be used to send events.
@@ -59,6 +66,8 @@ interface ClientBuilderInterface
      * @param TransportInterface $transport The transport
      *
      * @return $this
+     *
+     * @deprecated Since version 2.3, to be removed in 3.0
      */
     public function setTransport(TransportInterface $transport): self;
 
@@ -68,17 +77,21 @@ interface ClientBuilderInterface
      * @param HttpAsyncClient $httpClient The HTTP client
      *
      * @return $this
+     *
+     * @deprecated Since version 2.3, to be removed in 3.0
      */
     public function setHttpClient(HttpAsyncClient $httpClient): self;
 
     /**
      * Adds a new HTTP client plugin to the end of the plugins chain.
      *
-     * @param Plugin $plugin The plugin instance
+     * @param PluginInterface $plugin The plugin instance
      *
      * @return $this
+     *
+     * @deprecated Since version 2.3, to be removed in 3.0
      */
-    public function addHttpClientPlugin(Plugin $plugin): self;
+    public function addHttpClientPlugin(PluginInterface $plugin): self;
 
     /**
      * Removes a HTTP client plugin by its fully qualified class name (FQCN).
@@ -86,13 +99,13 @@ interface ClientBuilderInterface
      * @param string $className The class name
      *
      * @return $this
+     *
+     * @deprecated Since version 2.3, to be removed in 3.0
      */
     public function removeHttpClientPlugin(string $className): self;
 
     /**
      * Gets the instance of the client built using the configured options.
-     *
-     * @return ClientInterface
      */
     public function getClient(): ClientInterface;
 

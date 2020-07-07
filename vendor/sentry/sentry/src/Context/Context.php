@@ -9,36 +9,53 @@ namespace Sentry\Context;
  * being sent.
  *
  * @author Stefano Arlandini <sarlandini@alice.it>
+ *
+ * @psalm-template T
+ *
+ * @template-implements \ArrayAccess<string, T>
+ * @template-implements \IteratorAggregate<string, T>
  */
 class Context implements \ArrayAccess, \JsonSerializable, \IteratorAggregate
 {
     /**
      * This constant defines the alias used for the user context.
+     *
+     * @deprecated To be removed in 3.0 because unused
      */
     public const CONTEXT_USER = 'user';
 
     /**
      * This constant defines the alias used for the runtime context.
+     *
+     * @deprecated To be removed in 3.0 because unused
      */
     public const CONTEXT_RUNTIME = 'runtime';
 
     /**
      * This constant defines the alias used for the tags context.
+     *
+     * @deprecated To be removed in 3.0 because unused
      */
     public const CONTEXT_TAGS = 'tags';
 
     /**
      * This constant defines the alias used for the extra context.
+     *
+     * @deprecated To be removed in 3.0 because unused
      */
     public const CONTEXT_EXTRA = 'extra';
 
     /**
      * This constant defines the alias used for the server OS context.
+     *
+     * @deprecated To be removed in 3.0 because unused
      */
     public const CONTEXT_SERVER_OS = 'server_os';
 
     /**
      * @var array The data stored in this object
+     *
+     * @psalm-var array<string, T>
      */
     protected $data = [];
 
@@ -46,6 +63,8 @@ class Context implements \ArrayAccess, \JsonSerializable, \IteratorAggregate
      * Constructor.
      *
      * @param array $data The initial data to store
+     *
+     * @psalm-param array<string, T> $data
      */
     public function __construct(array $data = [])
     {
@@ -58,6 +77,8 @@ class Context implements \ArrayAccess, \JsonSerializable, \IteratorAggregate
      *
      * @param array $data      The data to merge
      * @param bool  $recursive Whether to merge the data recursively or not
+     *
+     * @psalm-param array<string, T> $data
      */
     public function merge(array $data, bool $recursive = false): void
     {
@@ -65,9 +86,12 @@ class Context implements \ArrayAccess, \JsonSerializable, \IteratorAggregate
     }
 
     /**
-     * Sets the given data into this object.
+     * Sets each element of the array to the value of the corresponding key in
+     * the given input data.
      *
-     * @param array $data
+     * @param array $data The data to set
+     *
+     * @psalm-param array<string, T> $data
      */
     public function setData(array $data): void
     {
@@ -80,6 +104,8 @@ class Context implements \ArrayAccess, \JsonSerializable, \IteratorAggregate
      * Replaces all the data contained in this object with the given one.
      *
      * @param array $data The data to set
+     *
+     * @psalm-param array<string, T> $data
      */
     public function replaceData(array $data): void
     {
@@ -96,8 +122,6 @@ class Context implements \ArrayAccess, \JsonSerializable, \IteratorAggregate
 
     /**
      * Checks whether the object is not storing any data.
-     *
-     * @return bool
      */
     public function isEmpty(): bool
     {
@@ -107,7 +131,7 @@ class Context implements \ArrayAccess, \JsonSerializable, \IteratorAggregate
     /**
      * Returns an array representation of the data stored by the object.
      *
-     * @return array
+     * @psalm-return array<string, T>
      */
     public function toArray(): array
     {
@@ -148,6 +172,8 @@ class Context implements \ArrayAccess, \JsonSerializable, \IteratorAggregate
 
     /**
      * {@inheritdoc}
+     *
+     * @psalm-return array<string, T>
      */
     public function jsonSerialize(): array
     {

@@ -27,7 +27,7 @@ final class Handler extends AbstractProcessingHandler
      * Constructor.
      *
      * @param HubInterface $hub    The hub to which errors are reported
-     * @param int          $level  The minimum logging level at which this
+     * @param int|string   $level  The minimum logging level at which this
      *                             handler will be triggered
      * @param bool         $bubble Whether the messages that are handled can
      *                             bubble up the stack or not
@@ -45,8 +45,9 @@ final class Handler extends AbstractProcessingHandler
     protected function write(array $record): void
     {
         $payload = [
-            'level' => $this->getSeverityFromLevel($record['level']),
+            'level' => self::getSeverityFromLevel($record['level']),
             'message' => $record['message'],
+            'logger' => 'monolog.' . $record['channel'],
         ];
 
         if (isset($record['context']['exception']) && $record['context']['exception'] instanceof \Throwable) {
@@ -59,7 +60,7 @@ final class Handler extends AbstractProcessingHandler
 
             if (isset($record['context']['extra']) && \is_array($record['context']['extra'])) {
                 foreach ($record['context']['extra'] as $key => $value) {
-                    $scope->setExtra($key, $value);
+                    $scope->setExtra((string) $key, $value);
                 }
             }
 
@@ -77,10 +78,8 @@ final class Handler extends AbstractProcessingHandler
      * Translates the Monolog level into the Sentry severity.
      *
      * @param int $level The Monolog log level
-     *
-     * @return Severity
      */
-    private function getSeverityFromLevel(int $level): Severity
+    private static function getSeverityFromLevel(int $level): Severity
     {
         switch ($level) {
             case Logger::DEBUG:

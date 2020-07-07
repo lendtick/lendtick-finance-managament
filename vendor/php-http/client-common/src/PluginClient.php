@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Http\Client\Common;
 
-use Http\Client\Common\Exception\LoopException;
 use Http\Client\Exception as HttplugException;
 use Http\Client\HttpAsyncClient;
 use Http\Client\HttpClient;
@@ -44,14 +43,12 @@ final class PluginClient implements HttpClient, HttpAsyncClient
     private $options;
 
     /**
-     * @param ClientInterface|HttpAsyncClient $client
-     * @param Plugin[]                        $plugins
+     * @param ClientInterface|HttpAsyncClient $client  An HTTP async client
+     * @param Plugin[]                        $plugins A plugin chain
      * @param array                           $options {
      *
-     *     @var int      $max_restarts
+     *     @var int $max_restarts
      * }
-     *
-     * @throws \RuntimeException if client is not an instance of HttpClient or HttpAsyncClient
      */
     public function __construct($client, array $plugins = [], array $options = [])
     {
@@ -60,7 +57,9 @@ final class PluginClient implements HttpClient, HttpAsyncClient
         } elseif ($client instanceof ClientInterface) {
             $this->client = new EmulatedHttpAsyncClient($client);
         } else {
-            throw new \LogicException(sprintf('Client must be an instance of %s or %s', ClientInterface::class, HttpAsyncClient::class));
+            throw new \TypeError(
+                sprintf('%s::__construct(): Argument #1 ($client) must be of type %s|%s, %s given', self::class, ClientInterface::class, HttpAsyncClient::class, get_debug_type($client))
+            );
         }
 
         $this->plugins = $plugins;
@@ -120,32 +119,11 @@ final class PluginClient implements HttpClient, HttpAsyncClient
     /**
      * Create the plugin chain.
      *
-     * @param Plugin[] $pluginList     A list of plugins
+     * @param Plugin[] $plugins        A plugin chain
      * @param callable $clientCallable Callable making the HTTP call
      */
-    private function createPluginChain(array $pluginList, callable $clientCallable): callable
+    private function createPluginChain(array $plugins, callable $clientCallable): callable
     {
-        $firstCallable = $lastCallable = $clientCallable;
-
-        while ($plugin = array_pop($pluginList)) {
-            $lastCallable = function (RequestInterface $request) use ($plugin, $lastCallable, &$firstCallable) {
-                return $plugin->handleRequest($request, $lastCallable, $firstCallable);
-            };
-
-            $firstCallable = $lastCallable;
-        }
-
-        $firstCalls = 0;
-        $firstCallable = function (RequestInterface $request) use ($lastCallable, &$firstCalls) {
-            if ($firstCalls > $this->options['max_restarts']) {
-                throw new LoopException('Too many restarts in plugin client', $request);
-            }
-
-            ++$firstCalls;
-
-            return $lastCallable($request);
-        };
-
-        return $firstCallable;
+        return new PluginChain($plugins, $clientCallable, $this->options);
     }
 }

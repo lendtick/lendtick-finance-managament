@@ -7,7 +7,6 @@ namespace Sentry;
 use Sentry\Exception\EventCreationException;
 use Sentry\Serializer\RepresentationSerializerInterface;
 use Sentry\Serializer\SerializerInterface;
-use Zend\Diactoros\ServerRequestFactory;
 
 /**
  * Factory for the {@see Event} class.
@@ -60,23 +59,27 @@ final class EventFactory implements EventFactoryInterface
     /**
      * {@inheritdoc}
      */
-    public function createWithStacktrace(array $payload): Event
+    public function createWithStacktrace(array $payload/*, bool $shouldReadSourceCodeExcerpts = true*/): Event
     {
-        $event = $this->create($payload);
-
-        if (!$event->getStacktrace()) {
-            $stacktrace = Stacktrace::createFromBacktrace($this->options, $this->serializer, $this->representationSerializer, debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS), __FILE__, __LINE__);
-
-            $event->setStacktrace($stacktrace);
+        if (!isset($payload['stacktrace']) || !$payload['stacktrace'] instanceof Stacktrace) {
+            $payload['stacktrace'] = Stacktrace::createFromBacktrace(
+                $this->options,
+                $this->serializer,
+                $this->representationSerializer,
+                debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS),
+                __FILE__,
+                __LINE__ - 6,
+                \func_num_args() > 1 ? func_get_arg(1) : true
+            );
         }
 
-        return $event;
+        return $this->create($payload);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function create(array $payload): Event
+    public function create(array $payload/*, bool $shouldReadSourceCodeExcerpts = true*/): Event
     {
         try {
             $event = new Event();
@@ -91,17 +94,6 @@ final class EventFactory implements EventFactoryInterface
         $event->getTagsContext()->merge($this->options->getTags());
         $event->setEnvironment($this->options->getEnvironment());
 
-        if (isset($payload['transaction'])) {
-            $event->setTransaction($payload['transaction']);
-        } else {
-            $request = ServerRequestFactory::fromGlobals();
-            $serverParams = $request->getServerParams();
-
-            if (isset($serverParams['PATH_INFO'])) {
-                $event->setTransaction($serverParams['PATH_INFO']);
-            }
-        }
-
         if (isset($payload['logger'])) {
             $event->setLogger($payload['logger']);
         }
@@ -115,7 +107,7 @@ final class EventFactory implements EventFactoryInterface
         }
 
         if (isset($payload['exception']) && $payload['exception'] instanceof \Throwable) {
-            $this->addThrowableToEvent($event, $payload['exception']);
+            $this->addThrowableToEvent($event, $payload['exception'], \func_num_args() > 1 ? func_get_arg(1) : true);
         }
 
         if (isset($payload['level']) && $payload['level'] instanceof Severity) {
@@ -132,10 +124,15 @@ final class EventFactory implements EventFactoryInterface
     /**
      * Stores the given exception in the passed event.
      *
-     * @param Event      $event     The event that will be enriched with the exception
-     * @param \Throwable $exception The exception that will be processed and added to the event
+     * @param Event      $event                        The event that will be enriched with the
+     *                                                 exception
+     * @param \Throwable $exception                    The exception that will be processed and
+     *                                                 added to the event
+     * @param bool       $shouldReadSourceCodeExcerpts Whether to read the source code excerpts
+     *                                                 using the legacy method instead of using
+     *                                                 the integration
      */
-    private function addThrowableToEvent(Event $event, \Throwable $exception): void
+    private function addThrowableToEvent(Event $event, \Throwable $exception, bool $shouldReadSourceCodeExcerpts): void
     {
         if ($exception instanceof \ErrorException) {
             $event->setLevel(Severity::fromError($exception->getSeverity()));
@@ -145,21 +142,19 @@ final class EventFactory implements EventFactoryInterface
         $currentException = $exception;
 
         do {
-            $data = [
+            $exceptions[] = [
                 'type' => \get_class($currentException),
-                'value' => $this->serializer->serialize($currentException->getMessage()),
+                'value' => $currentException->getMessage(),
+                'stacktrace' => Stacktrace::createFromBacktrace(
+                    $this->options,
+                    $this->serializer,
+                    $this->representationSerializer,
+                    $currentException->getTrace(),
+                    $currentException->getFile(),
+                    $currentException->getLine(),
+                    $shouldReadSourceCodeExcerpts
+                ),
             ];
-
-            $data['stacktrace'] = Stacktrace::createFromBacktrace(
-                $this->options,
-                $this->serializer,
-                $this->representationSerializer,
-                $currentException->getTrace(),
-                $currentException->getFile(),
-                $currentException->getLine()
-            );
-
-            $exceptions[] = $data;
         } while ($currentException = $currentException->getPrevious());
 
         $event->setExceptions($exceptions);

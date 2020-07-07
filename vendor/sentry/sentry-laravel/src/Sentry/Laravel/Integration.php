@@ -2,15 +2,14 @@
 
 namespace Sentry\Laravel;
 
+use Sentry\FlushableClientInterface;
+use Sentry\SentrySdk;
 use function Sentry\addBreadcrumb;
 use function Sentry\configureScope;
 use Sentry\Breadcrumb;
 use Sentry\Event;
-use Sentry\Client;
 use Sentry\Integration\IntegrationInterface;
-use Sentry\State\Hub;
 use Sentry\State\Scope;
-use Sentry\Transport\HttpTransport;
 
 class Integration implements IntegrationInterface
 {
@@ -25,7 +24,7 @@ class Integration implements IntegrationInterface
     public function setupOnce(): void
     {
         Scope::addGlobalEventProcessor(function (Event $event): Event {
-            $self = Hub::getCurrent()->getIntegration(self::class);
+            $self = SentrySdk::getCurrentHub()->getIntegration(self::class);
 
             if (!$self instanceof self) {
                 return $event;
@@ -44,7 +43,7 @@ class Integration implements IntegrationInterface
      */
     public static function addBreadcrumb(Breadcrumb $breadcrumb): void
     {
-        $self = Hub::getCurrent()->getIntegration(self::class);
+        $self = SentrySdk::getCurrentHub()->getIntegration(self::class);
 
         if (!$self instanceof self) {
             return;
@@ -60,7 +59,7 @@ class Integration implements IntegrationInterface
      */
     public static function configureScope(callable $callback): void
     {
-        $self = Hub::getCurrent()->getIntegration(self::class);
+        $self = SentrySdk::getCurrentHub()->getIntegration(self::class);
 
         if (!$self instanceof self) {
             return;
@@ -93,21 +92,10 @@ class Integration implements IntegrationInterface
      */
     public static function flushEvents(): void
     {
-        $client = Hub::getCurrent()->getClient();
+        $client = SentrySdk::getCurrentHub()->getClient();
 
-        if ($client instanceof Client) {
-            $transportProperty = new \ReflectionProperty(Client::class, 'transport');
-            $transportProperty->setAccessible(true);
-
-            $transport = $transportProperty->getValue($client);
-
-            if ($transport instanceof HttpTransport) {
-                $closure = \Closure::bind(function () {
-                    $this->cleanupPendingRequests();
-                }, $transport, $transport);
-
-                $closure();
-            }
+        if ($client instanceof FlushableClientInterface) {
+            $client->flush();
         }
     }
 }

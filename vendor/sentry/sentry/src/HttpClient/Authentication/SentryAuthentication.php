@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace Sentry\HttpClient\Authentication;
 
-use Http\Message\Authentication;
+use Http\Message\Authentication as AuthenticationInterface;
 use Psr\Http\Message\RequestInterface;
 use Sentry\Client;
+use Sentry\Dsn;
 use Sentry\Options;
 
 /**
@@ -15,7 +16,7 @@ use Sentry\Options;
  *
  * @author Stefano Arlandini <sarlandini@alice.it>
  */
-final class SentryAuthentication implements Authentication
+final class SentryAuthentication implements AuthenticationInterface
 {
     /**
      * @var Options The Sentry client configuration
@@ -51,15 +52,20 @@ final class SentryAuthentication implements Authentication
      */
     public function authenticate(RequestInterface $request): RequestInterface
     {
+        $dsn = $this->options->getDsn(false);
+
+        if (!$dsn instanceof Dsn) {
+            return $request;
+        }
+
         $data = [
             'sentry_version' => Client::PROTOCOL_VERSION,
             'sentry_client' => $this->sdkIdentifier . '/' . $this->sdkVersion,
-            'sentry_timestamp' => sprintf('%F', microtime(true)),
-            'sentry_key' => $this->options->getPublicKey(),
+            'sentry_key' => $dsn->getPublicKey(),
         ];
 
-        if ($this->options->getSecretKey()) {
-            $data['sentry_secret'] = $this->options->getSecretKey();
+        if (null !== $dsn->getSecretKey()) {
+            $data['sentry_secret'] = $dsn->getSecretKey();
         }
 
         $headers = [];
@@ -68,9 +74,6 @@ final class SentryAuthentication implements Authentication
             $headers[] = $headerKey . '=' . $headerValue;
         }
 
-        /** @var RequestInterface $request */
-        $request = $request->withHeader('X-Sentry-Auth', 'Sentry ' . implode(', ', $headers));
-
-        return $request;
+        return $request->withHeader('X-Sentry-Auth', 'Sentry ' . implode(', ', $headers));
     }
 }
