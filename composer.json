@@ -12,8 +12,8 @@
         "darkaonline/swagger-lume": "5.5.*",
         "microsoft/azure-storage-blob": "^1.2",
         "nordsoftware/lumen-cors": "^2.2",
-        "jenssegers/mongodb": "^3.2",
-        "sentry/sentry-laravel": "1.1.0"
+        "sentry/sentry-laravel": "1.8.0",
+        "vluzrmos/slack-api": "^0.4.8"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

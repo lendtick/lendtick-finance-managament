@@ -31,6 +31,7 @@ $app->withFacades(true, [
 
 $app->withEloquent();
 
+$app->configure('app');
 $app->configure('swagger-lume');
 
 /*

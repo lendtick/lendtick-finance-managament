@@ -11,6 +11,11 @@
 |
 */
 
+$router->get('/debug-sentry', function () {
+    throw new \Exception('Service Finance!');
+});
+
+
 $router->get('/logs','LogsController@controllerMethod');
 
 $router->get('/', function () use ($router) {
@@ -36,7 +41,7 @@ $router->group(['prefix'=>'doku'], function() use($router){
     $router->get('/test','BillerController@index');
 });
 
-$router->group(['prefix'=>'payment'], function() use($router){
+$router->group(['prefix'=>'payment', 'middleware' => ['cors']], function() use($router){
     // payment list from user registration
     $router->post('/list/user-registration', 'V2\\PaymentUsersRegisterController@list');
 });
@@ -93,16 +98,9 @@ $router->group(['prefix'=>'order'], function() use($router){
         $router->get('/test','TestMiddlewareBiller@store'); 
     });
 
-    $router->group(['middleware' => ['cors']], function() use ($router){
     // pencarian
-        $router->post('/payment-to-biller','OrderBillerController@paymentBillerFromOrder');
+    $router->post('/payment-to-biller','OrderBillerController@paymentBillerFromOrder');
 
-    });
     
 });
-
-
-
-Route::get('/debug-sentry', function () {
-    throw new Exception('Debug Sentry Finance Lentick ! '.time());
-});
+ 
