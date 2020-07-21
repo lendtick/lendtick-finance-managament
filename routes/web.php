@@ -104,3 +104,12 @@ $router->group(['prefix'=>'order'], function() use($router){
     
 });
  
+/**
+ * jobs
+ */
+$router->group(['prefix'=>'jobs'], function() use($router){
+    // check expired
+    // run
+    $router->get('/expired-product-digital','Jobs\ExpiredOrderController@run');
+    
+});
