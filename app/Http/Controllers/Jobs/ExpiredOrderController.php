@@ -64,12 +64,10 @@ class ExpiredOrderController extends Controller {
                 }
             }
 
-            die;
-
 
             $httpcode 	= 200;
             $errorMsg 	= 'Sukses';
-            $res = $data; //BillersMaster::where('billers_id',$request->billers_id)->update($update);
+            $res = []; //Order::where('billers_id',$request->billers_id)->update($update);
             
             // response
             $status   	= 1;
